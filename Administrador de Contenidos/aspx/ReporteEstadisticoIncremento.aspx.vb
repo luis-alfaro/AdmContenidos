@@ -151,7 +151,7 @@ Partial Class aspx_ReporteEstadisticoIncremento
             rowFooter1.Cells.Add(footerCell4)
             rowFooter1.Cells.Add(footerCell5)
             rowFooter1.Cells.Add(footerCell6)
-            If feet = 2 Then
+            If feet = 1 Then
                 gvdetalle.Controls(0).Controls.Add(rowFooter1)
             End If
             feet += 1
@@ -188,12 +188,10 @@ Partial Class aspx_ReporteEstadisticoIncremento
             lblhasta.Visible = False
         End If
 
-        Dim rep As String = ""
         Dim cadena As String = ""
-        rep = Microsoft.VisualBasic.Trim("Tipo Reporte")
         Dim Suc As String = Me.ddltiendas.SelectedItem.Text
-        cadena = "VistaImpresion.aspx?tiporeporte=" & 1 & "&tienda=" & Me.ddltiendas.SelectedValue & "&fechainicio=" & Me.txtfechadesde.Text & "&fechafin=" & Me.txtfechahasta.Text & "&Reporte=" & rep & "&Sucursal=" & Suc
-        Response.Redirect("VistaImpresion.aspx?tiporeporte=" & 1 & "&tienda=" & Me.ddltiendas.SelectedValue & "&fechainicio=" & Me.txtfechadesde.Text & "&fechafin=" & Me.txtfechahasta.Text & "&Reporte=" & rep & "&Sucursal=" & Suc)
+        cadena = "VistaImpresionIncremento.aspx?&tienda=" & Me.ddltiendas.SelectedValue & "&fechainicio=" & Me.txtfechadesde.Text & "&fechafin=" & Me.txtfechahasta.Text & "&Sucursal=" & Suc
+        Response.Redirect("VistaImpresionIncremento.aspx?&tienda=" & Me.ddltiendas.SelectedValue & "&fechainicio=" & Me.txtfechadesde.Text & "&fechafin=" & Me.txtfechahasta.Text & "&Sucursal=" & Suc)
 
     End Sub
 

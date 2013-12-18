@@ -93,41 +93,41 @@ Partial Class MasterPage
                 Else
                     TViewIndice.Nodes.Item(5).SelectAction = TreeNodeSelectAction.None
                 End If
-                'If oDT.Rows(0).Item("Consultas") = True Then
-                '    TViewIndice.Nodes.Item(6).SelectAction = TreeNodeSelectAction.Select
-                'Else
-                '    TViewIndice.Nodes.Item(6).SelectAction = TreeNodeSelectAction.None
-                'End If
                 If oDT.Rows(0).Item("Reporte") = True Then
                     TViewIndice.Nodes.Item(6).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(6).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.None
                 End If
-                If oDT.Rows(0).Item("Actualizar") = True Then
+                If oDT.Rows(0).Item("Consultas") = True Then
                     TViewIndice.Nodes.Item(7).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(7).SelectAction = TreeNodeSelectAction.None
                 End If
-
-                If oDT.Rows(0).Item("Temporizador") = True Then
+                If oDT.Rows(0).Item("Actualizar") = True Then
                     TViewIndice.Nodes.Item(8).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(8).SelectAction = TreeNodeSelectAction.None
                 End If
-                If oDT.Rows(0).Item("Mensajes") = True Then
+
+                If oDT.Rows(0).Item("Temporizador") = True Then
                     TViewIndice.Nodes.Item(9).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(9).SelectAction = TreeNodeSelectAction.None
                 End If
-                If oDT.Rows(0).Item("Tiempos") = True Then
+                If oDT.Rows(0).Item("Mensajes") = True Then
                     TViewIndice.Nodes.Item(10).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(10).SelectAction = TreeNodeSelectAction.None
                 End If
-                If oDT.Rows(0).Item("Tarifas") = True Then
+                If oDT.Rows(0).Item("Tiempos") = True Then
                     TViewIndice.Nodes.Item(11).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(11).SelectAction = TreeNodeSelectAction.None
+                End If
+                If oDT.Rows(0).Item("Tarifas") = True Then
+                    TViewIndice.Nodes.Item(12).SelectAction = TreeNodeSelectAction.Select
+                Else
+                    TViewIndice.Nodes.Item(12).SelectAction = TreeNodeSelectAction.None
                 End If
             End If
 

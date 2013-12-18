@@ -99,6 +99,11 @@
                                                 NavigateUrl="~/aspx/ReporteEstadisticos.aspx" Text="Reporte Estadístico" 
                                                 Value="Reporte Estadistico"></asp:TreeNode>
                                         </asp:TreeNode>
+                                        <asp:TreeNode ImageUrl="~/images/19.png" Text="Consultas" Value="Consultas">
+                                            <asp:TreeNode ImageUrl="~/images/13.png" 
+                                                NavigateUrl="~/aspx/ReporteEstadisticoIncremento.aspx" Text="Consulta Incremento" 
+                                                Value="Consulta Incremento"></asp:TreeNode>
+                                        </asp:TreeNode>
                                         <asp:TreeNode NavigateUrl="~/aspx/EdicionRipleyMatico.aspx" Text="Actualizar Imágenes" 
                                             Value="Nuevo nodo" ImageUrl="~/images/18.png"></asp:TreeNode>
                                         <asp:TreeNode NavigateUrl="~/aspx/EdiciónTiempoSalvapantallas.aspx" 
