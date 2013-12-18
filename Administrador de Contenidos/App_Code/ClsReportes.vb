@@ -103,4 +103,13 @@ Public Class ClsReportes
         End Try
         Return r
     End Function
+    Public Function sp_get_incrementoPorRypleymatico(ByVal tipo As String, _
+                                        ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime) As DataSet
+        Dim dts As New DataSet
+        cn.abrirconexion()
+        dts = cn.consultar("dbo.Usp_Get_IncrementoLineaPorRipleymatico", tipo, f1, f2)
+        cn.cerrarconexion()
+        Return dts
+    End Function
 End Class
