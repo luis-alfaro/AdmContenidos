@@ -1,0 +1,118 @@
+﻿body
+{
+	margin:10px auto 0;
+	padding:0;
+    text-align:center;
+    text-decoration: none;
+	font:normal 11px arial, tahoma, helvetica, sans-serif;
+}
+
+.letranormal {color:#000000;font-size: 8pt;font-style:normal;font-weight:normal}
+
+.gridcontainer  
+{
+    border: solid 1px #F2E8DA;
+    border-top-width:0px;
+    width: 75%;
+}
+.grid {width: 100%;border-width:0px;}
+
+.grid caption {
+	background:#f9f9f9 url(../images/brown/captionbckg.gif) repeat-x;
+    color:#333333;
+	text-align:left;
+	line-height:22px;
+	font-size:11px;
+	font-weight:bold;
+	padding-top:4px;
+	padding-left:4px;
+	font-family:tahoma,arial,verdana,sans-serif;
+}
+
+.grid table 
+{
+	border-color:#F2E8DA;
+	border-width:1px;
+}
+	
+.grid td, .grid th
+{
+    height:18px;
+    vertical-align:middle;
+}
+
+.grid th
+{
+	background:transparent url(../images/brown/thbackground.gif) repeat-x;
+    height:19px;
+    border:solid 1px #D0D0D0;
+    font-weight:normal;
+}
+
+.grid td
+{
+	border:1px solid #F2E8DA;
+    border-top-color:#fff;
+    width:100%;
+    cursor:default;
+}
+
+.selectedrow 
+{
+	background: #AD9E87;
+	border:1px dotted #A3BAE9;
+}
+
+.altrow 
+{
+	background-color:#f2e8da;
+}
+
+.altoverow
+{
+	border:10px solid #f2e8da;
+    background-color: #AA7F55;
+}
+
+.pagerstyle 
+{
+	font-size:x-small;
+	text-align:right;
+    background-position: bottom left;
+    background: #D0DEF0 url(../images/brown/toolbarbck.gif) repeat-x scroll left top;
+}
+
+.gopag {
+    font-size:x-small;
+    width:20px;
+}
+
+.pagprev{
+    background:transparent url(../images/brown/previous.png) no-repeat scroll center;
+    height:1.3em;
+    width:16px;
+    cursor:pointer;
+    border:0px;
+}
+.pagnext{
+    background:transparent url(../images/brown/next.png) no-repeat scroll center;
+    height:1.3em;
+    width:16px;
+    cursor:pointer;
+    border:0px;
+}
+
+.pagfirst{
+    background:transparent url(../images/brown/first.png) no-repeat scroll center;
+    height:1.3em;
+    width:16px;
+    cursor:pointer;
+    border:0px;
+}
+.paglast{
+    background:transparent url(../images/brown/last.png) no-repeat scroll center;
+    height:1.3em;
+    width:16px;
+    cursor:pointer;
+    border:0px;
+}

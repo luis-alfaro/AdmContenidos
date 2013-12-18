@@ -1,0 +1,39 @@
+﻿.button
+{
+    background: white;
+    border: solid 1px grey;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: #001563;    
+    height: 25px;  
+
+}
+
+.button:hover
+{
+    background: white;
+    border: solid 1px grey;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: Red;   
+    height: 25px;
+
+}
+
+/* Gradient 2 */
+/* Gradient 1 */
+.tb10 {
+	background-image:url(images/form_bg.jpg);
+	background-repeat:repeat-x;
+	border:1px solid #d1c7ac;
+	width: 230px;
+	color:#333333;
+	padding:3px;
+	margin-right:4px;
+	margin-bottom:8px;
+	font-family:tahoma, arial, sans-serif;
+}
+
+

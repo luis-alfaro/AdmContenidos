@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="Administrador de Contenidos">
+</Property><Property Name="Archivo de la solución" Value="F:\Administrador de Contenidos\Administrador de Contenidos.sln">
+</Property><Property Name="Archivo de opciones de usuario" Value="F:\Administrador de Contenidos\Administrador de Contenidos.suo">
+</Property><Property Name="Date" Value="viernes, 17 de junio de 2011">
+</Property><Property Name="Time" Value="02:09 a.m.">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="Administrador de Contenidos.sln" Description="La copia F:\Administrador de Contenidos Presentar\Backup\Administrador de Contenidos.sln del archivo se ha realizado correctamente">
+</Event><Event ErrorLevel="0" Project="" Source="Administrador de Contenidos.suo" Description="La copia F:\Administrador de Contenidos Presentar\Backup\Administrador de Contenidos.suo del archivo se ha realizado correctamente">
+</Event><Event ErrorLevel="1" Project="Administrador de Contenidos(No Relaciones)" Source="..\Administrador de Contenidos(No Relaciones)" Description="Advertencia: se está haciendo una copia de seguridad del archivo de proyecto en una ruta de acceso relativa que es diferente de la ruta de acceso relativa de la solución original. La diferencia en la jerarquía de carpetas puede crear problemas al abrir o gene">
+</Event><Event ErrorLevel="2" Project="F:\Administrador de Contenidos(No Relaciones)" Source="..\Administrador de Contenidos(No Relaciones)" Description="ERROR: error al crear una copia de seguridad del sitio web F:\Administrador de Contenidos(No Relaciones)">
+</Event><Event ErrorLevel="1" Project="Administrador de Contenidos Presentar" Source="..\Administrador de Contenidos Presentar" Description="Advertencia: se está haciendo una copia de seguridad del archivo de proyecto en una ruta de acceso relativa que es diferente de la ruta de acceso relativa de la solución original. La diferencia en la jerarquía de carpetas puede crear problemas al abrir o gene">
+</Event><Event ErrorLevel="0" Project="" Source="Administrador de Contenidos.sln" Description="La solución se convirtió correctamente">
+</Event><Event ErrorLevel="3" Project="" Source="Administrador de Contenidos.sln" Description="Converted">
+</Event></UpgradeLog>

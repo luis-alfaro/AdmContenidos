@@ -1,0 +1,141 @@
+﻿<%@ Master Language="VB" CodeFile="MasterPage.master.vb" Inherits="MasterPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<title>Administrador de Contenidos</title>
+<head runat="server">
+    
+    <style type="text/css">
+        .style1
+        {
+            height: 264px;
+        }
+                
+        .style8
+        {
+            width: 100%;
+        }
+        .style9
+        {
+            width: 183px;
+        }
+        .style10
+        {
+            width: 199px;
+        }
+    </style>
+</head>
+
+<body topmargin="0" leftmargin="0" rightmargin="0" bottommargn="0" 
+    marginwidth="0" marginheight="0" bgcolor="#FFFFFF" alink="#ffffff">
+    <FORM id="formMaster" name="frmMaster" method="post" encType="application/x-www-form-urlencoded" runat="server">
+    <div>
+       
+        <table cellpadding="0" cellspacing="0" class="style1" 
+            
+            
+            style="width: 30%; height: 738px; top: 0px; right: 0px; bottom: 0px; left: 0px">
+            <tr>
+                <td  align=justify valign=top class="style9" bgcolor="#DBDBDB" colspan="1" 
+                    style="background-image: none; background-color: #888888;" >
+                    <table align="left" cellpadding="0" cellspacing="0" class="style8" style="FONT-SIZE: 8pt; FONT-FAMILY: Verdana">
+                        <tr>
+                            <td align="center" title="Administrador de Contenidos" class="style10">
+                                &nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td align="center" title="Administrador de Contenidos" class="style10">
+                                &nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td align="center" title="Administrador de Contenidos" class="style10">
+                                Usuario:
+                                <asp:Label ID="lbllogin" runat="server" Text="#"></asp:Label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="style10">
+                                &nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="style10">
+                                <asp:TreeView ID="TViewIndice" runat="server" ImageSet="News" NodeIndent="10" 
+                                    Width="194px">
+                                    <ParentNodeStyle Font-Bold="False" />
+                                    <HoverNodeStyle Font-Underline="True" />
+                                    <SelectedNodeStyle Font-Underline="True" HorizontalPadding="0px" 
+                                        VerticalPadding="0px" />
+                                    <Nodes>
+                                        <asp:TreeNode Text="Panel" Value="P1" ImageUrl="~/images/panel.png"></asp:TreeNode>
+                                        <asp:TreeNode Text="Programación de Videos" Value="P2" 
+                                            ImageUrl="~/images/videos.png">
+                                        </asp:TreeNode>
+                                        <asp:TreeNode Text="Secuencia de Banners" Value="P3" 
+                                            ImageUrl="~/images/banners.png">
+                                        </asp:TreeNode>
+                                        <asp:TreeNode Text="Seguridad" Value="SG" ShowCheckBox="False" 
+                                            ImageUrl="~/images/seguridad.png">
+                                            <asp:TreeNode Text="Usuarios" Value="S1" ImageUrl="~/images/usuarios.png"></asp:TreeNode>
+                                            <asp:TreeNode Text="Roles" Value="S2" ImageUrl="~/images/roles.png"></asp:TreeNode>
+                                            <asp:TreeNode Text="Accesos" Value="S3" ImageUrl="~/images/acceses.png"></asp:TreeNode>
+                                        </asp:TreeNode>
+                                        <asp:TreeNode Text="Mantenimientos" Value="Ubigeo" 
+                                            ImageUrl="~/images/7.png">
+                                            <asp:TreeNode Text="Ubigeo" Value="Uigeo" NavigateUrl="~/aspx/MantUbigeo.aspx" 
+                                                ImageUrl="~/images/25.png"></asp:TreeNode>
+                                            <asp:TreeNode Text="Tiendas/Sucursales" Value="Tiendas/Sucursales" 
+                                                NavigateUrl="~/aspx/ListadoTiendas.aspx" ImageUrl="~/images/16.png">
+                                            </asp:TreeNode>
+                                            <asp:TreeNode Text="Kioscos" Value="Kioskos" 
+                                                NavigateUrl="~/aspx/ListadoKioskos.aspx" ImageUrl="~/images/37.png"></asp:TreeNode>
+                                            <asp:TreeNode Text="Áreas" Value="Areas" NavigateUrl="~/aspx/MantAreas.aspx" 
+                                                ImageUrl="~/images/27.png"></asp:TreeNode>
+                                        </asp:TreeNode>
+                                        <asp:TreeNode NavigateUrl="~/aspx/ListadoCriterios.aspx" Text="Criterios" 
+                                            Value="Criterios" ImageUrl="~/images/20.png"></asp:TreeNode>
+                                        <asp:TreeNode ImageUrl="~/images/19.png" Text="Reportes" Value="Reportes">
+                                            <asp:TreeNode ImageUrl="~/images/13.png" 
+                                                NavigateUrl="~/aspx/ReporteEstadisticos.aspx" Text="Reporte Estadístico" 
+                                                Value="Reporte Estadistico"></asp:TreeNode>
+                                        </asp:TreeNode>
+                                        <asp:TreeNode NavigateUrl="~/aspx/EdicionRipleyMatico.aspx" Text="Actualizar Imágenes" 
+                                            Value="Nuevo nodo" ImageUrl="~/images/18.png"></asp:TreeNode>
+                                        <asp:TreeNode NavigateUrl="~/aspx/EdiciónTiempoSalvapantallas.aspx" 
+                                            Text="Temporizador" Value="Nuevo nodo" 
+                                            ImageUrl="~/aspx/images/15.png"></asp:TreeNode>
+                                        <asp:TreeNode ImageUrl="~/aspx/images/CommentHS.png" 
+                                            NavigateUrl="~/aspx/lista_mensajes.aspx" Text="Mensajes Ticket" 
+                                            Value="Mensajes Ticket"></asp:TreeNode>
+                                        <asp:TreeNode ImageUrl="~/aspx/images/ExpirationHS.png" 
+                                            NavigateUrl="~/aspx/MantTiempos.aspx" Text="Tiempos de Inactividad" 
+                                            Value="Tiempos de Inactividad"></asp:TreeNode>
+                                        <asp:TreeNode NavigateUrl="~/aspx/MantTarifa.aspx" Text="Tarifas DPF" 
+                                            Value="New Node" ImageUrl="~/images/calculator.ico"></asp:TreeNode>
+                                        <asp:TreeNode NavigateUrl="~/aspx/LogEnvioData.aspx" Text="Registro de Errores" 
+                                            Value="Registro de Errores" ImageUrl="~/images/table_edit.ico"></asp:TreeNode>
+                                        <asp:TreeNode Text="Cerrar Sesión" Value="CS" ImageUrl="~/images/cerrar.png"></asp:TreeNode>
+                                    </Nodes>
+                                    <NodeStyle Font-Names="Verdana" Font-Size="8pt" ForeColor="Black" 
+                                        HorizontalPadding="5px" NodeSpacing="0px" VerticalPadding="0px" />
+                                </asp:TreeView>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="style10">
+                                &nbsp;</td>
+                        </tr>
+                    </table>
+                </td>
+                <td align=justify valign=top >
+                    <asp:ContentPlaceHolder ID="CPHContenido" runat="server">
+                   
+                    </asp:ContentPlaceHolder>
+                </td>
+            </tr>
+            </table>
+       
+    </div>
+    </form>
+</body>
+</html>
