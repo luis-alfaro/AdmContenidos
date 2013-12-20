@@ -46,6 +46,12 @@ Partial Class MasterPage
                     TViewIndice.Nodes.Item(2).SelectAction = TreeNodeSelectAction.None
                 End If
 
+                If oDT.Rows(0).Item("Usu") = False And oDT.Rows(0).Item("Rol") = False And oDT.Rows(0).Item("Acc") = True Then
+                    TViewIndice.Nodes.Item(3).SelectAction = TreeNodeSelectAction.Select
+                Else
+                    TViewIndice.Nodes.Item(3).SelectAction = TreeNodeSelectAction.None
+                End If
+
                 If oDT.Rows(0).Item("Usu") = True Then
                     TViewIndice.Nodes.Item(3).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
                 Else
@@ -63,9 +69,6 @@ Partial Class MasterPage
                 Else
                     TViewIndice.Nodes.Item(3).ChildNodes.Item(2).SelectAction = TreeNodeSelectAction.None
                 End If
-
-
-
 
 
                 If oDT.Rows(0).Item("Ubigeo") = True Then
@@ -129,10 +132,12 @@ Partial Class MasterPage
                 Else
                     TViewIndice.Nodes.Item(12).SelectAction = TreeNodeSelectAction.None
                 End If
+
+                'RemoveChilds(TViewIndice.Nodes)
             End If
 
-            oDT.Clear()
-            oDT = Nothing
+                oDT.Clear()
+                oDT = Nothing
 
         Catch ex As Exception
             sMensajeError = ""
@@ -140,6 +145,23 @@ Partial Class MasterPage
             Response.Redirect("aspx/error.aspx?mensajeerror=" + sMensajeError)
         End Try
 
+
+
+    End Sub
+    Sub RemoveChilds(ByVal childNodeCollection As TreeNodeCollection)
+        For Each childNode As TreeNode In childNodeCollection
+            If childNode.ChildNodes.Count > 0 Then
+                RemoveChilds(childNode.ChildNodes)
+                If childNode.SelectAction = TreeNodeSelectAction.None Then
+                    Dim parentNode As TreeNode = childNode.Parent
+                    If parentNode Is Nothing Then
+                        TViewIndice.Nodes.Remove(childNode)
+                    Else
+                        parentNode.ChildNodes.Remove(childNode)
+                    End If
+                End If
+            End If
+        Next
 
 
     End Sub

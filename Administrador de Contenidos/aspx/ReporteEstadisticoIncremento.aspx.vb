@@ -104,7 +104,7 @@ Partial Class aspx_ReporteEstadisticoIncremento
 
         End If
         If e.Row.RowType = DataControlRowType.Footer Then
-            Dim rowFooter1 As GridViewRow = New GridViewRow(0, 1, DataControlRowType.Footer, DataControlRowState.Normal)
+            Dim rowFooter1 As GridViewRow = New GridViewRow(0, 0, DataControlRowType.Footer, DataControlRowState.Normal)
             Dim footerCell0 As TableCell = New TableCell()
             Dim footerCell1 As TableCell = New TableCell()
             Dim footerCell2 As TableCell = New TableCell()
@@ -151,10 +151,12 @@ Partial Class aspx_ReporteEstadisticoIncremento
             rowFooter1.Cells.Add(footerCell4)
             rowFooter1.Cells.Add(footerCell5)
             rowFooter1.Cells.Add(footerCell6)
-            If feet = 1 Then
-                gvdetalle.Controls(0).Controls.Add(rowFooter1)
-            End If
             feet += 1
+            If feet = 2 Then
+                gvdetalle.Controls(0).Controls.Add(rowFooter1)
+                feet = 0
+            End If
+
         End If
     End Sub
     Public Sub gvdetalle_RowDataBound(sender As Object, e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvdetalle.RowDataBound

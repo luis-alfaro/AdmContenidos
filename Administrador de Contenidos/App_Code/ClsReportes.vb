@@ -112,4 +112,13 @@ Public Class ClsReportes
         cn.cerrarconexion()
         Return dts
     End Function
+    Public Function sp_get_ConsultaIncrementoPorRypleymatico(ByVal nro_DNI As String, ByVal nro_tarjeta As String, _
+                                        ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime) As DataSet
+        Dim dts As New DataSet
+        cn.abrirconexion()
+        dts = cn.consultar("dbo.Usp_Get_ConsultaIncrementoPorRipleymatico", nro_DNI, nro_tarjeta, f1, f2)
+        cn.cerrarconexion()
+        Return dts
+    End Function
 End Class
