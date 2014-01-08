@@ -49,3 +49,16 @@
 	height: 23px;
 }
 
+.ui-dialog-title
+{
+    font-size: 12px !important;
+}
+#dialog-alert
+{
+    font-size: 12px !important;
+}
+th.ui-th-column div{
+    white-space:normal !important;
+    height:auto !important;
+    padding:2px;
+}

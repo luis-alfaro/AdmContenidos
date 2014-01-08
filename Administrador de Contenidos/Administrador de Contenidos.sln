@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Administrador de Contenidos", "..\Administrador de Contenidos", "{22C1163B-C25A-4ACF-8A52-49E807D601D8}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Administrador de Contenidos", ".", "{22C1163B-C25A-4ACF-8A52-49E807D601D8}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		ProjectReferences = "{E190C076-74E7-4D5C-BAFC-E40E2AEC39A5}|UtilitarioEnvioData.dll;"
