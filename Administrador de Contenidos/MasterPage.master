@@ -99,9 +99,14 @@
                                                 NavigateUrl="~/aspx/ReporteEstadisticos.aspx" Text="Reporte Estadístico" 
                                                 Value="Reporte Estadistico"></asp:TreeNode>
                                         </asp:TreeNode>
+                                        <asp:TreeNode ImageUrl="~/images/19.png" Text="Estadísticas" Value="Estadisticas">
+                                            <asp:TreeNode ImageUrl="~/images/13.png" 
+                                                NavigateUrl="~/aspx/ReporteEstadisticoIncremento.aspx" Text="Incremento de Línea" 
+                                                Value="Reporte Estadistico"></asp:TreeNode>
+                                        </asp:TreeNode>
                                         <asp:TreeNode ImageUrl="~/images/19.png" Text="Consultas" Value="Consultas">
                                             <asp:TreeNode ImageUrl="~/images/13.png" 
-                                                NavigateUrl="~/aspx/ReporteEstadisticoIncremento.aspx" Text="Consulta Incremento" 
+                                                NavigateUrl="~/aspx/ReporteConsultaIncremento.aspx" Text="Incremento de Línea" 
                                                 Value="Consulta Incremento"></asp:TreeNode>
                                         </asp:TreeNode>
                                         <asp:TreeNode NavigateUrl="~/aspx/EdicionRipleyMatico.aspx" Text="Actualizar Imágenes" 
@@ -115,8 +120,27 @@
                                         <asp:TreeNode ImageUrl="~/aspx/images/ExpirationHS.png" 
                                             NavigateUrl="~/aspx/MantTiempos.aspx" Text="Tiempos de Inactividad" 
                                             Value="Tiempos de Inactividad"></asp:TreeNode>
-                                        <asp:TreeNode NavigateUrl="~/aspx/MantTarifa.aspx" Text="Tarifas DPF" 
-                                            Value="New Node" ImageUrl="~/images/calculator.ico"></asp:TreeNode>
+                                        <%--<asp:TreeNode NavigateUrl="~/aspx/MantTarifa.aspx" Text="Tarifas DPF" 
+                                            Value="New Node" ImageUrl="~/images/calculator.ico"></asp:TreeNode>--%>
+                                        <asp:TreeNode Text="Simuladores" Value="Simuladores" 
+                                            ImageUrl="~/images/7.png">
+                                            <asp:TreeNode Text="Depósito a Plazo" Value="Depósito a Plazo" NavigateUrl="~/aspx/MantSimDepositoPlazo.aspx" 
+                                                ImageUrl="~/images/16.png"></asp:TreeNode>
+                                            <asp:TreeNode Text="Reprogramaciones" Value="Reprogramaciones" NavigateUrl="~/aspx/MantSimReprogramaciones.aspx" 
+                                                ImageUrl="~/images/16.png"></asp:TreeNode>     
+                                            <asp:TreeNode Text="Diferido" Value="Diferido" NavigateUrl="~/aspx/MantSimDiferido.aspx" 
+                                                ImageUrl="~/images/16.png"></asp:TreeNode> 
+                                            <asp:TreeNode Text="Super Efectivo" Value="Super Efectivo" NavigateUrl="~/aspx/MantSimSuperEfectivo.aspx" 
+                                                ImageUrl="~/images/16.png"></asp:TreeNode> 
+                                            <asp:TreeNode Text="Compras" Value="Compras" NavigateUrl="~/aspx/MantSimCompras.aspx" 
+                                                ImageUrl="~/images/16.png"></asp:TreeNode> 
+                                            <asp:TreeNode Text="Efectivo Express" Value="Efectivo Express" NavigateUrl="~/aspx/MantSimEfectivoExpress.aspx" 
+                                                ImageUrl="~/images/16.png"></asp:TreeNode> 
+                                            <asp:TreeNode Text="Préstamo de Efectivo" Value="Préstamo de Efectivo" NavigateUrl="~/aspx/MantSimPrestamoEfectivo.aspx" 
+                                                ImageUrl="~/images/16.png"></asp:TreeNode> 
+                                            <asp:TreeNode Text="Consolidación De Deuda" Value="Consolidación De Deuda" NavigateUrl="~/aspx/MantSimConsolidacionDeDeuda.aspx" 
+                                                ImageUrl="~/images/16.png"></asp:TreeNode>                                        
+                                        </asp:TreeNode>
                                         <asp:TreeNode NavigateUrl="~/aspx/LogEnvioData.aspx" Text="Registro de Errores" 
                                             Value="Registro de Errores" ImageUrl="~/images/table_edit.ico"></asp:TreeNode>
                                         <asp:TreeNode Text="Cerrar Sesión" Value="CS" ImageUrl="~/images/cerrar.png"></asp:TreeNode>

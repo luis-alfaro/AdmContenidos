@@ -59,8 +59,8 @@ Partial Class aspx_ReporteConsultaIncremento
     Public Sub gvdetalle_RowDataBound(sender As Object, e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvdetalle.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
             For index = 0 To e.Row.Cells.Count - 1
-                If gvdetalle.HeaderRow.Cells(index).Text = "Fecha" Then
-                    If e.Row.Cells(index).Text <> "" Then
+                If gvdetalle.HeaderRow.Cells(index).Text = "Fecha" Or gvdetalle.HeaderRow.Cells(index).Text = "Inicio Vigencia" Or gvdetalle.HeaderRow.Cells(index).Text = "Fin Vigencia" Then
+                    If e.Row.Cells(index).Text.Contains("/") Then
                         e.Row.Cells(index).Text = String.Format("{0:d}", CType(e.Row.Cells(index).Text, Date))
                     End If
                 End If

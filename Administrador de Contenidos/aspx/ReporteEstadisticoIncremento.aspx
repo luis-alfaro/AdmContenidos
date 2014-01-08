@@ -39,7 +39,7 @@
                     </tr>
                     <tr>
                         <td>Desde:</td>
-                        <td colspan="2">&nbsp;<asp:TextBox  ID="txtfechadesde" runat="server" data-entryType="Date"></asp:TextBox></td>
+                        <td colspan="2"><asp:TextBox  ID="txtfechadesde" runat="server" data-entryType="Date"></asp:TextBox></td>
                         <td>Hasta:</td>
                         <td colspan="2"><asp:TextBox ID="txtfechahasta" runat="server" data-entryType="Date"></asp:TextBox></td>
                         <td>Tienda:</td>

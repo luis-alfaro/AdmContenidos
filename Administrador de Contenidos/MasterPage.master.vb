@@ -46,51 +46,60 @@ Partial Class MasterPage
                     TViewIndice.Nodes.Item(2).SelectAction = TreeNodeSelectAction.None
                 End If
 
-                If oDT.Rows(0).Item("Usu") = False And oDT.Rows(0).Item("Rol") = False And oDT.Rows(0).Item("Acc") = True Then
+                If oDT.Rows(0).Item("Usu") = True And oDT.Rows(0).Item("Rol") = True And oDT.Rows(0).Item("Acc") = True Then
                     TViewIndice.Nodes.Item(3).SelectAction = TreeNodeSelectAction.Select
+                    If oDT.Rows(0).Item("Usu") = True Then
+                        TViewIndice.Nodes.Item(3).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(3).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.None
+                    End If
+
+                    If oDT.Rows(0).Item("Rol") = True Then
+                        TViewIndice.Nodes.Item(3).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(3).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.None
+                    End If
+
+                    If oDT.Rows(0).Item("Acc") = True Then
+                        TViewIndice.Nodes.Item(3).ChildNodes.Item(2).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(3).ChildNodes.Item(2).SelectAction = TreeNodeSelectAction.None
+                    End If
                 Else
                     TViewIndice.Nodes.Item(3).SelectAction = TreeNodeSelectAction.None
+                    TViewIndice.Nodes.Item(3).ChildNodes.Clear()
                 End If
 
-                If oDT.Rows(0).Item("Usu") = True Then
-                    TViewIndice.Nodes.Item(3).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
+                
+
+                If oDT.Rows(0).Item("Ubigeo") = True And oDT.Rows(0).Item("Tiendas") = True And oDT.Rows(0).Item("Kioscos") = True And oDT.Rows(0).Item("Areas") = True Then
+                    TViewIndice.Nodes.Item(4).SelectAction = TreeNodeSelectAction.Select
+                    If oDT.Rows(0).Item("Ubigeo") = True Then
+                        TViewIndice.Nodes.Item(4).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(4).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.None
+                    End If
+                    If oDT.Rows(0).Item("Tiendas") = True Then
+                        TViewIndice.Nodes.Item(4).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(4).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.None
+                    End If
+                    If oDT.Rows(0).Item("Kioscos") = True Then
+                        TViewIndice.Nodes.Item(4).ChildNodes.Item(2).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(4).ChildNodes.Item(2).SelectAction = TreeNodeSelectAction.None
+                    End If
+                    If oDT.Rows(0).Item("Areas") = True Then
+                        TViewIndice.Nodes.Item(4).ChildNodes.Item(3).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(4).ChildNodes.Item(3).SelectAction = TreeNodeSelectAction.None
+                    End If
                 Else
-                    TViewIndice.Nodes.Item(3).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.None
+                    TViewIndice.Nodes.Item(4).SelectAction = TreeNodeSelectAction.None
+                    TViewIndice.Nodes.Item(4).ChildNodes.Clear()
                 End If
 
-                If oDT.Rows(0).Item("Rol") = True Then
-                    TViewIndice.Nodes.Item(3).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.Select
-                Else
-                    TViewIndice.Nodes.Item(3).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.None
-                End If
-
-                If oDT.Rows(0).Item("Acc") = True Then
-                    TViewIndice.Nodes.Item(3).ChildNodes.Item(2).SelectAction = TreeNodeSelectAction.Select
-                Else
-                    TViewIndice.Nodes.Item(3).ChildNodes.Item(2).SelectAction = TreeNodeSelectAction.None
-                End If
-
-
-                If oDT.Rows(0).Item("Ubigeo") = True Then
-                    TViewIndice.Nodes.Item(4).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
-                Else
-                    TViewIndice.Nodes.Item(4).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.None
-                End If
-                If oDT.Rows(0).Item("Tiendas") = True Then
-                    TViewIndice.Nodes.Item(4).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.Select
-                Else
-                    TViewIndice.Nodes.Item(4).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.None
-                End If
-                If oDT.Rows(0).Item("Kioscos") = True Then
-                    TViewIndice.Nodes.Item(4).ChildNodes.Item(2).SelectAction = TreeNodeSelectAction.Select
-                Else
-                    TViewIndice.Nodes.Item(4).ChildNodes.Item(2).SelectAction = TreeNodeSelectAction.None
-                End If
-                If oDT.Rows(0).Item("Areas") = True Then
-                    TViewIndice.Nodes.Item(4).ChildNodes.Item(3).SelectAction = TreeNodeSelectAction.Select
-                Else
-                    TViewIndice.Nodes.Item(4).ChildNodes.Item(3).SelectAction = TreeNodeSelectAction.None
-                End If
+                
                 If oDT.Rows(0).Item("Criterios") = True Then
                     TViewIndice.Nodes.Item(5).SelectAction = TreeNodeSelectAction.Select
                 Else
@@ -101,38 +110,59 @@ Partial Class MasterPage
                 Else
                     TViewIndice.Nodes.Item(6).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.None
                 End If
-                If oDT.Rows(0).Item("Consultas") = True Then
+
+                If oDT.Rows(0).Item("Estadisticas") = True Then
                     TViewIndice.Nodes.Item(7).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(7).SelectAction = TreeNodeSelectAction.None
+                    TViewIndice.Nodes.Item(7).ChildNodes.Clear()
                 End If
-                If oDT.Rows(0).Item("Actualizar") = True Then
+
+                If oDT.Rows(0).Item("Consultas") = True Then
                     TViewIndice.Nodes.Item(8).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(8).SelectAction = TreeNodeSelectAction.None
+                    TViewIndice.Nodes.Item(8).ChildNodes.Clear()
                 End If
 
-                If oDT.Rows(0).Item("Temporizador") = True Then
+                If oDT.Rows(0).Item("Actualizar") = True Then
                     TViewIndice.Nodes.Item(9).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(9).SelectAction = TreeNodeSelectAction.None
                 End If
-                If oDT.Rows(0).Item("Mensajes") = True Then
+
+                If oDT.Rows(0).Item("Temporizador") = True Then
                     TViewIndice.Nodes.Item(10).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(10).SelectAction = TreeNodeSelectAction.None
                 End If
-                If oDT.Rows(0).Item("Tiempos") = True Then
+                If oDT.Rows(0).Item("Mensajes") = True Then
                     TViewIndice.Nodes.Item(11).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(11).SelectAction = TreeNodeSelectAction.None
                 End If
-                If oDT.Rows(0).Item("Tarifas") = True Then
+                If oDT.Rows(0).Item("Tiempos") = True Then
                     TViewIndice.Nodes.Item(12).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(12).SelectAction = TreeNodeSelectAction.None
                 End If
-
+                
+                If oDT.Rows(0).Item("Simuladores") = True Then
+                    TViewIndice.Nodes.Item(13).SelectAction = TreeNodeSelectAction.Select
+                Else
+                    TViewIndice.Nodes.Item(13).SelectAction = TreeNodeSelectAction.None
+                    TViewIndice.Nodes.Item(13).ChildNodes.Clear()
+                End If
+                If oDT.Rows(0).Item("Errores") = True Then
+                    TViewIndice.Nodes.Item(14).SelectAction = TreeNodeSelectAction.Select
+                Else
+                    TViewIndice.Nodes.Item(14).SelectAction = TreeNodeSelectAction.None
+                End If
+                'If oDT.Rows(0).Item("Tarifas") = True Then
+                '    TViewIndice.Nodes.Item(15).SelectAction = TreeNodeSelectAction.Select
+                'Else
+                '    TViewIndice.Nodes.Item(15).SelectAction = TreeNodeSelectAction.None
+                'End If
                 'RemoveChilds(TViewIndice.Nodes)
             End If
 

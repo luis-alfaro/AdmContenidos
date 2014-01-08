@@ -226,10 +226,21 @@
                 <td class="style9" style="width: 24px; height: 22px;">
                     &nbsp;</td>
                 <td class="style9" style="width: 173px; height: 22px;">
-                    <asp:CheckBox ID="ckTarifas" runat="server" Text="Tarifas DPF" />
+                    <asp:CheckBox ID="ckTarifas" Visible="false" runat="server" Text="Tarifas DPF" />
+                    <asp:CheckBox ID="ckEstadisticas" runat="server" Text="Estadísticas" />
                 </td>
                 <td style="height: 22px; width: 222px;">
+                    <asp:CheckBox ID="ckSimuladores" runat="server" Text="Simuladores" /></td>
+                <td style="height: 22px">
                     &nbsp;</td>
+            </tr>
+            <tr>
+                <td class="style9" style="width: 24px; height: 22px;">
+                    &nbsp;</td>
+                <td class="style9" style="width: 173px; height: 22px;">
+                    <asp:CheckBox ID="ckErrores" runat="server" Text="Errores" />
+                </td>
+                <td style="height: 22px; width: 222px;"></td>
                 <td style="height: 22px">
                     &nbsp;</td>
             </tr>
