@@ -89,10 +89,15 @@ Partial Class MasterPage
                     Else
                         TViewIndice.Nodes.Item(4).ChildNodes.Item(2).SelectAction = TreeNodeSelectAction.None
                     End If
-                    If oDT.Rows(0).Item("Areas") = True Then
+                    If oDT.Rows(0).Item("ConfiguracionKiosko") = True Then
                         TViewIndice.Nodes.Item(4).ChildNodes.Item(3).SelectAction = TreeNodeSelectAction.Select
                     Else
                         TViewIndice.Nodes.Item(4).ChildNodes.Item(3).SelectAction = TreeNodeSelectAction.None
+                    End If
+                    If oDT.Rows(0).Item("Areas") = True Then
+                        TViewIndice.Nodes.Item(4).ChildNodes.Item(4).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(4).ChildNodes.Item(4).SelectAction = TreeNodeSelectAction.None
                     End If
                 Else
                     TViewIndice.Nodes.Item(4).SelectAction = TreeNodeSelectAction.None

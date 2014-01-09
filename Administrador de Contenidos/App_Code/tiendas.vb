@@ -9,13 +9,15 @@ Public Class tiendas
                            ByVal hora1fin As String,
                            ByVal hora2ini As String,
                            ByVal hora2fin As String,
+                           ByVal hini_cli As String,
+                           ByVal hfin_cli As String,
                            ByVal tipo As String, _
                         ByRef rpta As Integer, ByRef mensaje As String) As Integer
         Dim r As Integer = 0
         Try
             cn.abrirconexion()
             cn.ejecutar("dbo.sp_mantenimiento_tienda", True, rpta, mensaje, _
-                        direccion, idtienda, nombre, idubigeo, estado, tipo, 0, hora1ini, hora1fin, hora2ini, hora2fin, "")
+                        direccion, idtienda, nombre, idubigeo, estado, tipo, 0, hora1ini, hora1fin, hora2ini, hora2fin, hini_cli, hfin_cli, "")
             cn.cerrarconexion()
             r = 1
         Catch ex As Exception

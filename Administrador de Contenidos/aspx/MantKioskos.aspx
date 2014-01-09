@@ -76,9 +76,7 @@
                 </td>
 			</tr>
 			<tr>
-			    &nbsp;</td>
-			<td style="height: 160px; width: 38px;" >
-                                                &nbsp;</td>
+			<td style="height: 160px; width: 38px;" >&nbsp;</td>
 			<td style="height: 160px; width: 368px;" >
                                                 <asp:TreeView ID="treetienda" runat="server" 
                     ExpandDepth="0" ImageSet="Simple" 
@@ -96,9 +94,10 @@
 			<td style="width: 236px; height: 160px;" ></td>
 			<td style="width: 236px; height: 160px;" >&nbsp;</td>
 			</tr>
-			</tr>
+            <tr>
 			<td style="height: 80px; width: 38px;" >
-                &nbsp;<td style="height: 80px; width: 368px;" >
+                &nbsp;</td>
+                <td style="height: 80px; width: 368px;" >
                 <table style="width:100%;">
                     <tr>
                         <td style="width: 13px; height: 33px;">
@@ -146,19 +145,35 @@
                         <td style="width: 13px">
                             Área:</td>
                         <td style="width: 180px">
-                <asp:DropDownList ID="ddlareas" runat="server">
-                </asp:DropDownList>
+                            <asp:DropDownList ID="ddlareas" runat="server">
+                            </asp:DropDownList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 13px">
+                            MAC:</td>
+                        <td style="width: 180px">
+                            <asp:TextBox ID="txtMAC" runat="server" MaxLength="24" Width="272px"></asp:TextBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 13px">
+                            Configuración:</td>
+                        <td style="width: 180px">
+                            <asp:DropDownList ID="ddlConfiguracion" runat="server">
+                            </asp:DropDownList>
                         </td>
                     </tr>
                 </table>
+                </td>
                 <td style="width: 236px; height: 80px;" >
                 <asp:HiddenField ID="hddkiosko" runat="server" Value="0" />
                 </td>
                 <td style="width: 236px; height: 80px;" >
                     &nbsp;</td>
 			</tr>
-			</tr>
-			</tr>
+			
+			<tr>
 			<td style="height: 8px; width: 38px;">&nbsp;</td>
 			<td style="height: 8px; width: 368px;">&nbsp;</td>
 			<td style="width: 236px; height: 8px;" >
@@ -166,7 +181,7 @@
 			<td style="width: 236px; height: 8px;" >
                 &nbsp;</td>
 			</tr>
-			</tr>
+			<tr>
 			<td style="height: 39px; width: 38px;">
                 &nbsp;</td>
 			<td style="height: 39px; width: 368px;">
@@ -177,14 +192,23 @@
                                                 &nbsp;<asp:Button ID="btnEliminar" 
                     runat="server" CssClass="button" Text="Eliminar Kiosco" Width="99px" />
                                                 </td>
-			<td style="width: 236px; height: 39px" >
+			<td style="width: 236px; height: 39px" >            
                 <asp:TextBox ID="TextBox1" runat="server" Height="16px" Visible="False" 
                     Width="16px"></asp:TextBox>
                 </td>
 			<td style="width: 236px; height: 39px" >
                 &nbsp;</td>
 			</tr>
-			    </table>
+
+            <tr>
+			<td style="height: 39px; width: 38px;">&nbsp;</td>
+			<td style="height: 39px; width: 368px;">
+                <asp:Label ID="lblError" runat="server" ForeColor="#FF3300" Text="Label" Visible="False"></asp:Label>
+            </td>
+			<td style="width: 236px; height: 39px" ></td>
+			<td style="width: 236px; height: 39px" >&nbsp;</td>
+			</tr>
+			</table>
 			</td>
 			</tr>
 </TABLE>

@@ -26,6 +26,12 @@ Partial Class aspx_MantKioskos
                 Me.ddlareas.DataValueField = "IdArea"
                 Me.ddlareas.DataBind()
 
+                Me.ddlConfiguracion.DataSource = kio.listarConfiguracionKioskos()
+                Me.ddlConfiguracion.DataTextField = "NOMBRE"
+                Me.ddlConfiguracion.DataValueField = "ID"
+                Me.ddlConfiguracion.DataBind()
+
+
                 If idkiosko <> "0" Then
                     dts = kio.listarkioskos("2", idkiosko, "", "", "", "")
                     If dts.Tables("consulta").Rows.Count > 0 Then
@@ -58,6 +64,8 @@ Partial Class aspx_MantKioskos
 
 
                         Me.ddlareas.SelectedValue = dts.Tables("consulta").Rows(0).Item("idarea").ToString
+                        Me.txtMAC.Text = dts.Tables("consulta").Rows(0).Item("MAC").ToString
+                        Me.ddlConfiguracion.SelectedValue = dts.Tables("consulta").Rows(0).Item("CONFIGURACION_ID").ToString
                         Me.hddidtienda.Value = dts.Tables("consulta").Rows(0).Item("id_sucursal").ToString
                         dts = tienda.ListarTiendas("3", Me.hddidtienda.Value, "", "", "", "1")
                         If dts.Tables("consulta").Rows.Count > 0 Then
@@ -149,16 +157,24 @@ Partial Class aspx_MantKioskos
     
     Protected Sub btngrabar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btngrabar.Click
         Try
-            If valor = "N" Then
-                If kio.grabar(0, "1", Me.hddidtienda.Value, Me.txtnombre.Text, Me.Text1.Value, (Me.txtip1.Text & "." & Me.txtip2.Text & "." & Me.txtip3.Text & "." & Me.txtip4.Text), Me.ddlareas.SelectedValue, rp, mensaje) >= 1 Then
-                    Response.Redirect("ListadoKioskos.aspx")
-                End If
+            If Me.ddlConfiguracion.SelectedValue = 0 Or Me.ddlConfiguracion.SelectedValue = "" Then
+                lblError.Visible = True
+                lblError.Text = "Debe ingresar una Configuración y luego relacionarla con este Kiosko"
+
             Else
-                If kio.grabar(Me.hddkiosko.Value, "2", Me.hddidtienda.Value, Me.txtnombre.Text, Me.Text1.Value, (Me.txtip1.Text & "." & Me.txtip2.Text & "." & Me.txtip3.Text & "." & Me.txtip4.Text), Me.ddlareas.SelectedValue, rp, mensaje) >= 1 Then
-                    Response.Redirect("ListadoKioskos.aspx")
+                If valor = "N" Then
+                    If kio.grabar(0, "1", Me.hddidtienda.Value, Me.txtnombre.Text, Me.Text1.Value, (Me.txtip1.Text & "." & Me.txtip2.Text & "." & Me.txtip3.Text & "." & Me.txtip4.Text), Me.ddlareas.SelectedValue, Me.ddlConfiguracion.SelectedValue, txtMAC.Text, rp, mensaje) >= 1 Then
+                        Response.Redirect("ListadoKioskos.aspx")
+                    End If
+                Else
+                    If kio.grabar(Me.hddkiosko.Value, "2", Me.hddidtienda.Value, Me.txtnombre.Text, Me.Text1.Value, (Me.txtip1.Text & "." & Me.txtip2.Text & "." & Me.txtip3.Text & "." & Me.txtip4.Text), Me.ddlareas.SelectedValue, Me.ddlConfiguracion.SelectedValue, txtMAC.Text, rp, mensaje) >= 1 Then
+                        Response.Redirect("ListadoKioskos.aspx")
+                    End If
                 End If
             End If
         Catch ex As Exception
+            lblError.Visible = True
+            lblError.Text = "Hubo un error y no se pudieron guardar los cambios, intentelo más tarde."
             'MsgBox(ex.ToString)
         End Try
     End Sub

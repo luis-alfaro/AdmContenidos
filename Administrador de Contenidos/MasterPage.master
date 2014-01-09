@@ -18,7 +18,7 @@
         }
         .style9
         {
-            width: 183px;
+            width: 200px;
         }
         .style10
         {
@@ -89,6 +89,8 @@
                                             </asp:TreeNode>
                                             <asp:TreeNode Text="Kioscos" Value="Kioskos" 
                                                 NavigateUrl="~/aspx/ListadoKioskos.aspx" ImageUrl="~/images/37.png"></asp:TreeNode>
+                                            <asp:TreeNode Text="Configuración Kioscos" Value="Configuración Kioskos" 
+                                                NavigateUrl="~/aspx/ListadoConfiguracionKioskos.aspx" ImageUrl="~/images/banners.png"></asp:TreeNode>
                                             <asp:TreeNode Text="Áreas" Value="Areas" NavigateUrl="~/aspx/MantAreas.aspx" 
                                                 ImageUrl="~/images/27.png"></asp:TreeNode>
                                         </asp:TreeNode>

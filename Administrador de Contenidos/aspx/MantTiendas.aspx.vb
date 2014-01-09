@@ -36,7 +36,7 @@ Partial Class aspx_MantTiendas
             End If
             If Me.hddtienda.Value > 0 Then
                 'cambio v2
-                If cn.grabar(Me.txtdireccion.Text, Me.hddtienda.Value, Me.txttienda.Text, Me.hddidubigeo.Value, es, txtHor1Inicio.Text, txtHor1Fin.Text, txtHor2Inicio.Text, txtHor2Fin.Text, 2, rp, rpp) >= 1 Then
+                If cn.grabar(Me.txtdireccion.Text, Me.hddtienda.Value, Me.txttienda.Text, Me.hddidubigeo.Value, es, txtHor1Inicio.Text, txtHor1Fin.Text, txtHor2Inicio.Text, txtHor2Fin.Text, txthini_cli.Text, txthfin_cli.Text, 2, rp, rpp) >= 1 Then
                     'edita
                     For cant As Integer = 0 To Me.chklstareas.Items.Count - 1
                         Dim val As Integer
@@ -52,7 +52,7 @@ Partial Class aspx_MantTiendas
                 End If
             Else
 
-                If cn.grabar(Me.txtdireccion.Text, 0, Me.txttienda.Text, Me.hddidubigeo.Value, es, txtHor1Inicio.Text, txtHor1Fin.Text, txtHor2Inicio.Text, txtHor2Fin.Text, 1, rp, rpp) >= 1 Then
+                If cn.grabar(Me.txtdireccion.Text, 0, Me.txttienda.Text, Me.hddidubigeo.Value, es, txtHor1Inicio.Text, txtHor1Fin.Text, txtHor2Inicio.Text, txtHor2Fin.Text, txthini_cli.Text, txthfin_cli.Text, 1, rp, rpp) >= 1 Then
                     For cant As Integer = 0 To Me.chklstareas.Items.Count - 1
                         If Me.chklstareas.Items(cant).Selected = True Then
                             If Me.chklstareas.Items(cant).Selected = True Then
@@ -130,6 +130,8 @@ Partial Class aspx_MantTiendas
                     txtHor1Fin.Text = dts.Rows(0).Item("hfin_com1").ToString()
                     txtHor2Inicio.Text = dts.Rows(0).Item("hini_com2").ToString()
                     txtHor2Fin.Text = dts.Rows(0).Item("hfin_com2").ToString()
+                    txthini_cli.Text = dts.Rows(0).Item("hini_cli").ToString()
+                    txthfin_cli.Text = dts.Rows(0).Item("hfin_cli").ToString()
                     If dts.Rows(0).Item("esttienda").ToString() = "1" Then
                         Me.CheckBox1.Checked = True
                     Else

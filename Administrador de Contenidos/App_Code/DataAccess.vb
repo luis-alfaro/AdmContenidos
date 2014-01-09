@@ -514,4 +514,21 @@ Public Module DataAccess
 
     End Function
 
+    Public Function Sql_Detele_ConfiguracionKiosco(ByVal ID As Integer) As Boolean
+
+        Dim SQLCon As New SqlConnection(Get_CadenaConexion())
+        Dim cmd As New SqlCommand("Usp_Delete_Configuracionkiosco", SQLCon)
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.Parameters.AddWithValue("@ID", ID)
+
+        SQLCon.Open()
+        Dim filas As Integer = cmd.ExecuteNonQuery()
+        SQLCon.Close()
+
+        If filas > 0 Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
 End Module

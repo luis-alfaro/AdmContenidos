@@ -20,7 +20,9 @@
             $("#txtHor1Inicio").mask("99:99");
             $("#txtHor1Fin").mask("99:99");
             $("#txtHor2Inicio").mask("99:99");
-            $("#txtHor2Fin").setMask("99:99");
+            $("#txtHor2Fin").mask("99:99");
+            $("#txthini_cli").mask("99:99");
+            $("#txthfin_cli").mask("99:99");
 
 
         });
@@ -129,6 +131,12 @@
         </tr>
         <tr>
             <td style="width: 17px">&nbsp;</td>
+            <td colspan="2">
+                Horario para uso de Personal.
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 17px">&nbsp;</td>
             <td style="width: 17px">&nbsp;</td>
             <td style="width: 323px">
                 <table style="width: 148%;">
@@ -169,6 +177,49 @@
                         </td>
                         <td style="width: 64px">
                             <asp:TextBox ID="txtHor2Fin" runat="server" Width="65px" ClientIDMode="Static"></asp:TextBox>
+                        </td>
+                        <td>
+                            &nbsp;</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width: 17px">&nbsp;</td>
+            <td colspan="2">
+                Horario para uso de Clientes.
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 17px">&nbsp;</td>
+            <td style="width: 17px">&nbsp;</td>
+            <td style="width: 323px">
+                <table style="width: 148%;">
+                    <tr>
+                        <td style="height: 17px; width: 78px">
+                            Desde</td>
+                        <td style="height: 17px; width: 82px">
+                        </td>
+                        <td style="height: 17px; width: 73px">
+                            Hasta</td>
+                        <td style="height: 17px; width: 64px">
+                            &nbsp;</td>
+                        <td style="height: 17px">
+                            &nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 78px">
+                            <asp:TextBox ID="txthini_cli" runat="server" Width="65px" ClientIDMode="Static"></asp:TextBox>
+                        </td>
+                        <td style="width: 82px">
+                        </td>
+                        <td style="width: 73px">
+                            <asp:TextBox ID="txthfin_cli" runat="server" Width="65px" ClientIDMode="Static"></asp:TextBox>
+                        </td>
+                        <td style="width: 64px">
                         </td>
                         <td>
                             &nbsp;</td>

@@ -129,6 +129,7 @@ Partial Class aspx_accesos
                 ckTarifas.Checked = oDT.Rows(0).Item("Tarifas")
                 ckSimuladores.Checked = oDT.Rows(0).Item("Simuladores")
                 ckEstadisticas.Checked = oDT.Rows(0).Item("Estadisticas")
+                ckConfiguracionKiosko.Checked = oDT.Rows(0).Item("ConfiguracionKiosko")
                 ckErrores.Checked = oDT.Rows(0).Item("Errores")
                 fun_buscar_acceso_rol = oDT.Rows(0).Item("AccessID")
             Else
@@ -185,7 +186,7 @@ Partial Class aspx_accesos
         Try
 
 
-            objAccesos.Update_Accesos(lblcodacceso.Text, CkPanel.Checked, CkSvideo.Checked, CkSbanner.Checked, CkUsuario.Checked, CkRoles.Checked, CkAccesos.Checked, ckUbigeo.Checked, ckTiendas.Checked, ckKioscos.Checked, ckAreas.Checked, ckCriterios.Checked, ckTemporizador.Checked, ckReporte.Checked, ckActualizar.Checked, ckTemporizador.Checked, ckMensajes.Checked, ckTiempos.Checked, ckSimuladores.Checked, ckEstadisticas.Checked, ckErrores.Checked)
+            objAccesos.Update_Accesos(lblcodacceso.Text, CkPanel.Checked, CkSvideo.Checked, CkSbanner.Checked, CkUsuario.Checked, CkRoles.Checked, CkAccesos.Checked, ckUbigeo.Checked, ckTiendas.Checked, ckKioscos.Checked, ckAreas.Checked, ckCriterios.Checked, ckTemporizador.Checked, ckReporte.Checked, ckActualizar.Checked, ckTemporizador.Checked, ckMensajes.Checked, ckTiempos.Checked, ckSimuladores.Checked, ckEstadisticas.Checked, ckConfiguracionKiosko.Checked, ckErrores.Checked)
 
             'strSQL = "UPDATE  app_Accesos SET Pane=" & IIf(CkPanel.Checked = True, 1, 0) & ",Svid=" & IIf(CkSvideo.Checked = True, 1, 0)
             'strSQL = strSQL & ",Sban=" & IIf(CkSbanner.Checked = True, 1, 0) & ",Usu=" & IIf(CkUsuario.Checked = True, 1, 0)
