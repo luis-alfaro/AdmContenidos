@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="VB" MasterPageFile="~/MasterPage.master" AutoEventWireup="false"
-    CodeFile="ReporteConsultaIncremento.aspx.vb" Inherits="aspx_ReporteConsultaIncremento" %>
+    CodeFile="ReporteAceptacionIncremento.aspx.vb" Inherits="aspx_ReporteAceptacionIncremento" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="CPHContenido" runat="Server">
     <head>
@@ -13,7 +13,20 @@
         <script type="text/javascript">
             $(document).ready(DocReady);
             function DocReady() {
-                $("input[data-entryType = 'Date']").datepicker();
+                $("input[data-entryType = 'Date']").datepicker();                
+            }
+            function validarSiNumero(numero){
+                if (!/^([0-9])*$/.test(numero)) {
+                    alert("El valor " + numero + " no es un número");
+                    return "";
+                }
+            }
+            function isNumberKey(evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode
+                if (charCode > 31 && (charCode < 48 || charCode > 57))
+                    return false;
+
+                return true;
             }
         </script>
         <table style="width: 100%;" bgcolor="#FFFFFF">
@@ -36,7 +49,7 @@
                                 &nbsp;
                             </td>
                             <td colspan="7">
-                                <b>Consultar Incrementos de Línea</b>
+                                <b>Consultar Aceptación Incremento de Línea</b>
                             </td>
                             <td style="width: 133px">
                                 &nbsp;
@@ -44,16 +57,15 @@
                         </tr>
                         <tr>
                             <td>
-                                Nro DNI:
+                                Tipo:
                             </td>
                             <td colspan="2">
-                                &nbsp;<asp:TextBox ID="txtnro_dni" runat="server"></asp:TextBox>
+                                <asp:DropDownList ID="ddltipo" runat="server">
+                                </asp:DropDownList>
                             </td>
                             <td>
-                                Nro Tarjeta:
                             </td>
                             <td colspan="2">
-                                <asp:TextBox ID="txtnro_tarjeta" runat="server"></asp:TextBox>
                             </td>
                             <td>
                             </td>
@@ -97,8 +109,7 @@
                             </td>
                             <td>
                             </td>
-                            <td>
-                                <asp:Label ID="lblNroDocumento" runat="server" ForeColor="#FF3300" Text="Label" Visible="False"></asp:Label>
+                            <td>                                
                             </td>
                             <td>
                             </td>
@@ -113,8 +124,8 @@
                                 <center>
                                     <asp:Button ID="BtnBuscar" runat="server" Text="Mostrar Datos" Style="text-align: center"
                                         CssClass="button" />
-                                    <asp:Button ID="BtnImprimir" runat="server" Text="Imprimir" Width="122px" CssClass="button" />
-                                    <asp:Button ID="Button7" runat="server" Text="Salir" Width="122px" CssClass="button" />
+                                    <%--<asp:Button ID="BtnImprimir" runat="server" Text="Imprimir" Width="122px" CssClass="button" />--%>
+                                    <asp:Button ID="btnSalir" runat="server" Text="Salir" Width="122px" CssClass="button" />
                                     &nbsp;<asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
                                 </center>
                             </th>
@@ -144,7 +155,7 @@
                                                 </b>
                                                 <br />
                                                 <asp:GridView ID="gvdetalle" runat="server" BackColor="White" BorderColor="#DEDFDE"
-                                                    BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" Font-Size="Small">
+                                                    BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" Font-Size="Small" OnPageIndexChanging = "OnPaging">
                                                     <RowStyle BackColor="#F7F7DE" />
                                                     <FooterStyle BackColor="#CCCC99" />
                                                     <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
@@ -152,7 +163,28 @@
                                                     <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
                                                     <AlternatingRowStyle BackColor="White" />
                                                 </asp:GridView>
-                                                <asp:Button ID="BtnExporarExcel" runat="server" Text="Exportar a Excel" CssClass="button" />
+                                                <table style="width:100%;" id="tblPaginacion" runat="server">
+                                                    <tr>
+                                                        <td style="width:30%;"></td>
+                                                        <td style="width:20px;"><asp:Button ID="btnPrev" runat="server" Text="<<" Style="text-align: center"
+                                                            CssClass="button" />
+                                                        </td>
+                                                        <td style="width:180px;"><asp:Label ID="lblpagina" runat="server" Text="Página " Font-Bold="True" ForeColor="Black"
+                                                            Font-Size="Smaller"></asp:Label>
+                                                        <asp:TextBox ID="txtPagina" runat="server" width="40px" onkeypress="return isNumberKey(event)"></asp:TextBox>
+                                                        <asp:Label ID="Label1" runat="server" Text=" de " Font-Bold="True" ForeColor="Black"
+                                                            Font-Size="Smaller"></asp:Label>
+                                                            <asp:TextBox ID="txtTotalPaginas" runat="server" width="40px" ReadOnly="true"></asp:TextBox>
+                                                            <asp:Button ID="btnGo" runat="server" Text="ir" Style="text-align: center"
+                                                            CssClass="button" /></td>
+                                                        <td style="width:20px;"><asp:Button ID="btnNext" runat="server" Text=">>" Style="text-align: center"
+                                                            CssClass="button" /></td>
+                                                        <td><asp:Label ID="lblTotal" runat="server" Text="" Font-Bold="True" ForeColor="Black"
+                                                            Font-Size="Smaller"></asp:Label></td>
+                                                    </tr>
+                                                </table>
+                                                <asp:Button ID="BtnExporarExcel" runat="server" Text="Exportar Pagina a Excel" CssClass="button" />
+                                                <asp:Button ID="BtnExporarTodoExcel" runat="server" Text="Exportar todo a Excel" CssClass="button" />
                                             </div>
                                         </td>
                                         <td>

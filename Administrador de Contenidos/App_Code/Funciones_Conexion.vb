@@ -882,4 +882,28 @@ Public Class Funciones_Conexion
     End Function
 
 #End Region
+
+    Public Function contarRegistros(ByVal procedimiento As String, _
+                              ByVal ParamArray x() As Object) As Integer
+        Dim cmd_consulta As New SqlCommand
+        Dim count As New Integer
+        cmd_consulta.CommandType = CommandType.StoredProcedure
+        cmd_consulta.CommandText = LTrim(RTrim(procedimiento))
+        cmd_consulta.Connection = cn
+        If transaccion = True Then
+            cmd_consulta.Transaction = tsql
+        End If
+        Dim y As SqlParameter
+        SqlCommandBuilder.DeriveParameters(cmd_consulta)
+        Dim i As Integer = 0
+        For Each y In cmd_consulta.Parameters
+            If y.ParameterName <> "@RETURN_VALUE" Then
+                y.Value = x(i)
+                i = i + 1
+            End If
+        Next
+        count = cmd_consulta.ExecuteScalar()
+        contarRegistros = count
+        cmd_consulta.Dispose()
+    End Function
 End Class

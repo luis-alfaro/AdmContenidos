@@ -121,6 +121,17 @@ Public Class ClsReportes
         cn.cerrarconexion()
         Return dts
     End Function
+    Public Function sp_get_ConsultaAceptacionIncremento(ByVal tipo As String, _
+                                        ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime, _
+                                        ByVal nroRegistros As Integer, _
+                                        ByVal pagina As Integer) As DataSet
+        Dim dts As New DataSet
+        cn.abrirconexion()
+        dts = cn.consultar("dbo.Usp_Get_ConsultaAceptacionIncremento", tipo, f1, f2, nroRegistros, pagina)
+        cn.cerrarconexion()
+        Return dts
+    End Function
 
 #Region "Mantenedor Simuladores"
 
@@ -279,4 +290,40 @@ Public Class ClsReportes
         Return resultado
     End Function
 #End Region
+
+    Public Function listar_TipoSistemaTarjeta() As DataSet
+        Try
+            Dim dts As New DataSet
+            cn.abrirconexion()
+            dts = cn.consultar("dbo.Usp_Get_TipoSistemaTarjeta")
+            cn.cerrarconexion()
+            Dim nrow As DataRow = dts.Tables(0).NewRow()
+
+            nrow("ID") = "0"
+            nrow("TIPO") = "--Seleccionar--"
+
+            dts.Tables(0).Rows.Add(nrow)
+            dts.Tables(0).DefaultView.Sort = "ID"
+            Return dts
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
+        Return New DataSet
+    End Function
+
+    Public Function Usp_get_Count_ConsultaAceptacionIncremento(ByVal tipo As String, _
+                                        ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime) As Integer
+        Try
+            Dim nro As New Integer
+            cn.abrirconexion()
+            nro = cn.contarRegistros("dbo.Usp_get_Count_ConsultaAceptacionIncremento", tipo, f1, f2)
+            cn.cerrarconexion()
+
+            Return nro
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
+        Return 0
+    End Function
 End Class

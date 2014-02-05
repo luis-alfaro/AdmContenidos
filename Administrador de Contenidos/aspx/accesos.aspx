@@ -189,7 +189,7 @@
                 <td class="style9" style="width: 24px; height: 22px;">
                     &nbsp;</td>
                 <td class="style9" style="width: 173px; height: 22px;">
-                    <asp:CheckBox ID="ckCriterios" runat="server" Text="Criterios" />
+                    <asp:CheckBox ID="ckConfiguracionKiosko" runat="server" Text="Configuración Kioskos" />
                 </td>
                 <td style="height: 22px; width: 222px;">
                     <asp:CheckBox ID="ckActualizar" runat="server" Text="Actualizar Imágenes" />
@@ -201,7 +201,7 @@
                 <td class="style9" style="width: 24px; height: 22px;">
                     &nbsp;</td>
                 <td class="style9" style="width: 173px; height: 22px;">
-                    <asp:CheckBox ID="ckReporte" runat="server" Text="Reporte Estadístico" />
+                    <asp:CheckBox ID="ckCriterios" runat="server" Text="Criterios" />
                 </td>
                 <td style="height: 22px; width: 222px;">
                     <asp:CheckBox ID="ckTemporizador" runat="server" 
@@ -214,7 +214,7 @@
                 <td class="style9" style="width: 24px; height: 22px;">
                     &nbsp;</td>
                 <td class="style9" style="width: 173px; height: 22px;">
-                    <asp:CheckBox ID="ckMensajes" runat="server" Text="Mensajes Ticket" />
+                    <asp:CheckBox ID="ckReporte" runat="server" Text="Reporte Estadístico" />
                 </td>
                 <td style="height: 22px; width: 222px;">
                     <asp:CheckBox ID="ckTiempos" runat="server" Text="Tiempos de Inactividad" />
@@ -230,7 +230,8 @@
                     <asp:CheckBox ID="ckEstadisticas" runat="server" Text="Estadísticas" />
                 </td>
                 <td style="height: 22px; width: 222px;">
-                    <asp:CheckBox ID="ckSimuladores" runat="server" Text="Simuladores" /></td>
+                        <asp:CheckBox ID="ckSimuladores" runat="server" Text="Simuladores" />
+                    </td>
                 <td style="height: 22px">
                     &nbsp;</td>
             </tr>
@@ -238,10 +239,20 @@
                 <td class="style9" style="width: 24px; height: 22px;">
                     &nbsp;</td>
                 <td class="style9" style="width: 173px; height: 22px;">
-                    <asp:CheckBox ID="ckErrores" runat="server" Text="Errores" />
+                    <asp:CheckBox ID="ckConsultas" runat="server" Text="Consultas" />
                 </td>
                 <td style="height: 22px; width: 222px;">
-                <asp:CheckBox ID="ckConfiguracionKiosko" runat="server" Text="Configuración Kioskos" /></td>
+                <asp:CheckBox ID="ckMensajes" runat="server" Text="Mensajes Ticket" /></td>
+                <td style="height: 22px">                
+                    &nbsp;</td>
+            </tr>
+            <tr>
+                <td class="style9" style="width: 24px; height: 22px;">
+                    &nbsp;</td>
+                <td class="style9" style="width: 173px; height: 22px;">
+                    <asp:CheckBox ID="ckConsultaAceptacionIncremento" runat="server" Text="Consultas Aceptacion" />
+                </td>
+                <td style="height: 22px; width: 222px;"> <asp:CheckBox ID="ckErrores" runat="server" Text="Errores" /></td>
                 <td style="height: 22px">                
                     &nbsp;</td>
             </tr>

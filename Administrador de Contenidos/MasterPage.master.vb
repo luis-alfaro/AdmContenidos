@@ -123,8 +123,17 @@ Partial Class MasterPage
                     TViewIndice.Nodes.Item(7).ChildNodes.Clear()
                 End If
 
-                If oDT.Rows(0).Item("Consultas") = True Then
-                    TViewIndice.Nodes.Item(8).SelectAction = TreeNodeSelectAction.Select
+                If oDT.Rows(0).Item("Consultas") = True Or oDT.Rows(0).Item("ConsultaAceptacionIncremento") = True Then
+                    If oDT.Rows(0).Item("Consultas") = True Then
+                        TViewIndice.Nodes.Item(8).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(8).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.None
+                    End If
+                    If oDT.Rows(0).Item("ConsultaAceptacionIncremento") = True Then
+                        TViewIndice.Nodes.Item(8).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(8).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.None
+                    End If
                 Else
                     TViewIndice.Nodes.Item(8).SelectAction = TreeNodeSelectAction.None
                     TViewIndice.Nodes.Item(8).ChildNodes.Clear()

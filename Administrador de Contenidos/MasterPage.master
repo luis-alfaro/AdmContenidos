@@ -104,12 +104,15 @@
                                         <asp:TreeNode ImageUrl="~/images/19.png" Text="Estadísticas" Value="Estadisticas">
                                             <asp:TreeNode ImageUrl="~/images/13.png" 
                                                 NavigateUrl="~/aspx/ReporteEstadisticoIncremento.aspx" Text="Incremento de Línea" 
-                                                Value="Reporte Estadistico"></asp:TreeNode>
+                                                Value="Incremento de Linea"></asp:TreeNode>
                                         </asp:TreeNode>
                                         <asp:TreeNode ImageUrl="~/images/19.png" Text="Consultas" Value="Consultas">
                                             <asp:TreeNode ImageUrl="~/images/13.png" 
                                                 NavigateUrl="~/aspx/ReporteConsultaIncremento.aspx" Text="Incremento de Línea" 
-                                                Value="Consulta Incremento"></asp:TreeNode>
+                                                Value="Consulta Incremento de Linea"></asp:TreeNode>
+                                                <asp:TreeNode ImageUrl="~/images/13.png" 
+                                                NavigateUrl="~/aspx/ReporteAceptacionIncremento.aspx" Text="Aceptación Incremento" 
+                                                Value="Aceptacion Incremento"></asp:TreeNode>
                                         </asp:TreeNode>
                                         <asp:TreeNode NavigateUrl="~/aspx/EdicionRipleyMatico.aspx" Text="Actualizar Imágenes" 
                                             Value="Nuevo nodo" ImageUrl="~/images/18.png"></asp:TreeNode>

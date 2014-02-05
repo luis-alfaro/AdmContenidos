@@ -76,7 +76,8 @@ Public Class Accesos
     Public Function Update_Accesos(ByVal AccesoID As Integer, ByVal Pane As Boolean, ByVal Svid As Boolean, ByVal Sban As Boolean, ByVal Usu As Boolean, ByVal Rol As Boolean, _
                                    ByVal Acc As Boolean, ByVal Ubigeo As Boolean, ByVal Tiendas As Boolean, ByVal Kioscos As Boolean, ByVal Areas As Boolean, _
                                    ByVal Criterios As Boolean, ByVal consultas As Boolean, ByVal reporte As Boolean, ByVal Actualizar As Boolean, ByVal Temporizador As Boolean, _
-                                   ByVal Mensajes As Boolean, ByVal Tiempos As Boolean, ByVal Simuladores As Boolean, ByVal Estadisticas As Boolean, ByVal ConfiguracionKiosko As Boolean, ByVal Errores As Boolean) As Boolean
+                                   ByVal Mensajes As Boolean, ByVal Tiempos As Boolean, ByVal Simuladores As Boolean, ByVal Estadisticas As Boolean, _
+                                   ByVal ConfiguracionKiosko As Boolean, ByVal Errores As Boolean, ByVal ConsultaAceptacionIncremento As Boolean) As Boolean
         cn = New SqlConnection(Get_CadenaConexion())
         Dim cmd As New SqlCommand("Usp_Update_Accesos", cn)
         cmd.CommandType = CommandType.StoredProcedure
@@ -104,6 +105,7 @@ Public Class Accesos
         cmd.Parameters.AddWithValue("@Estadisticas", Estadisticas)
         cmd.Parameters.AddWithValue("@ConfiguracionKiosko", ConfiguracionKiosko)
         cmd.Parameters.AddWithValue("@Errores", Errores)
+        cmd.Parameters.AddWithValue("@ConsultaAceptacionIncremento", ConsultaAceptacionIncremento)
 
         cn.Open()
         cmd.ExecuteNonQuery()

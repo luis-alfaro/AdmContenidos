@@ -29,9 +29,11 @@ Partial Class aspx_ReporteConsultaIncremento
         End Try
     End Sub
     Protected Sub BtnBuscar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnBuscar.Click
+        Dim dts As New DataSet()
         If txtnro_dni.Text.Trim() = "" And txtnro_tarjeta.Text.Trim() = "" Then
             lblNroDocumento.Visible = True
-            lblNroDocumento.Text = "ingrese un número de DNI o número de Tarjeta"
+            lblNroDocumento.Text = "Ingrese un número de DNI o número de Tarjeta"
+            Me.gvdetalle.DataSource = dts : Me.gvdetalle.DataBind()
             Exit Sub
         Else
             lblNroDocumento.Visible = False
@@ -40,6 +42,7 @@ Partial Class aspx_ReporteConsultaIncremento
         If txtfechadesde.Text.Trim() = "" Then
             lbldesde.Visible = True
             lbldesde.Text = "ingrese una fecha"
+            Me.gvdetalle.DataSource = dts : Me.gvdetalle.DataBind()
             Exit Sub
         Else
             lbldesde.Visible = False
@@ -48,6 +51,7 @@ Partial Class aspx_ReporteConsultaIncremento
         If txtfechahasta.Text.Trim() = "" Then
             lblhasta.Visible = True
             lblhasta.Text = "ingrese una fecha"
+            Me.gvdetalle.DataSource = dts : Me.gvdetalle.DataBind()
             Exit Sub
         Else
             lblhasta.Visible = False
@@ -73,7 +77,7 @@ Partial Class aspx_ReporteConsultaIncremento
     Protected Sub BtnImprimir_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnImprimir.Click
         If txtnro_dni.Text.Trim() = "" And txtnro_tarjeta.Text.Trim() = "" Then
             lblNroDocumento.Visible = True
-            lblNroDocumento.Text = "ingrese un número de DNI o número de Tarjeta"
+            lblNroDocumento.Text = "Ingrese un número de DNI o número de Tarjeta"
             Exit Sub
         Else
             lblNroDocumento.Visible = False
@@ -81,7 +85,7 @@ Partial Class aspx_ReporteConsultaIncremento
 
         If txtfechadesde.Text.Trim() = "" Then
             lbldesde.Visible = True
-            lbldesde.Text = "ingrese una fecha"
+            lbldesde.Text = "Ingrese una fecha"
             Exit Sub
         Else
             lbldesde.Visible = False
@@ -89,7 +93,7 @@ Partial Class aspx_ReporteConsultaIncremento
 
         If txtfechahasta.Text.Trim() = "" Then
             lblhasta.Visible = True
-            lblhasta.Text = "ingrese una fecha"
+            lblhasta.Text = "Ingrese una fecha"
             Exit Sub
         Else
             lblhasta.Visible = False
