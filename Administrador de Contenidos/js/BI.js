@@ -59,5 +59,53 @@
                 }
             });
         }
+    },
+    CreateDialogLog: function (arrayDialog) {
+
+        for (var i = 0; i < arrayDialog.length; i++) {
+            $("#" + arrayDialog[i].name).dialog({
+                autoOpen: false,
+                resizable: true,
+                closeOnEscape: false,
+                height: arrayDialog[i].height,
+                width: arrayDialog[i].width,
+                title: arrayDialog[i].title,
+                modal: false,
+                open: function () {
+                    //$(this).parent().appendTo($('#aspnetForm'));
+                },
+                close: function () {
+                    var name = $(this).attr('id');
+                    $.each(arrayDialog, function (index, v) {
+                        if (v.name == name) {
+                            if (v.closePopUp != null && typeof (v.closePopUp) == "function") {
+                                v.closePopUp(name);
+                                //return false;
+                            }
+                            else {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    },
+    AjaxJson: function (type, url, parameters, async, methodSuccess) {
+        var rsp;
+        $.ajax({
+            type: type,
+            url: url,
+            cache: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: async,
+            data: JSON.stringify(parameters),
+            success: methodSuccess,
+            failure: function (msg) {
+                rsp = -1;
+            }
+        });
+        return rsp;
     }
 };

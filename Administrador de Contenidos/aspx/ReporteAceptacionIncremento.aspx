@@ -8,12 +8,54 @@
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
         <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+        <script src="../js/BI.js" type="text/javascript"></script>
     </head>
     <body>
         <script type="text/javascript">
+            var dialogAlter = 'dialog-alert';
             $(document).ready(DocReady);
             function DocReady() {
-                $("input[data-entryType = 'Date']").datepicker();                
+                $("input[data-entryType = 'Date']").datepicker();
+                var arrayDialog = [{ name: dialogAlter, height: 140, width: 350, title: 'Reporte Aceptación Incremento'}];
+                BI.CreateDialogs(arrayDialog);
+                var error = '<%= lblError.ClientID %>';
+
+                var txtfechadesde = '<%= txtfechadesde.ClientID %>';
+                var txtfechahasta = '<%= txtfechahasta.ClientID %>';
+                var BtnBuscar = '<%= BtnBuscar.ClientID %>';
+
+                var txtPagina = '<%= txtPagina.ClientID %>';
+                var txtPaginaActual = '<%= txtPaginaActual.ClientID %>';
+                var txtTotalPaginas = '<%= txtTotalPaginas.ClientID %>'; 
+                var btnGo = '<%= btnGo.ClientID %>';
+                
+                $("#" + BtnBuscar).click(function (e) {
+                    if ($("#" + txtfechadesde).val() == "" || $("#" + txtfechahasta).val() == "") {
+                        BI.ShowAlert('', "Ingrese un rango de fechas");
+                        return false;
+                    e.preventDefault();
+                    }
+                });
+
+                $("#" + btnGo).click(function (e) {
+                    if ($("#" + txtPagina).val() == "") {
+                        BI.ShowAlert('', "Ingrese un número de página a buscar.");
+                        var page = $("#" + txtPaginaActual).val()
+                        $("#" + txtPagina).val(page);
+                        return false; e.preventDefault();
+                    }
+                    if ($("#" + txtPagina).val() == "0" || parseInt($("#" + txtPagina).val()) > parseInt($("#" + txtTotalPaginas).val())) {
+                        BI.ShowAlert('', "El nro de la página no puede ser cero o mayor al nro total de páginas.");
+                        var page = $("#" + txtPaginaActual).val()
+                        $("#" + txtPagina).val(page);
+                        return false; e.preventDefault();
+                    }
+
+                });
+
+                if ($("#" + error).text() != "") {
+                    BI.ShowAlert('', $("#" + error).text());
+                }
             }
             function validarSiNumero(numero){
                 if (!/^([0-9])*$/.test(numero)) {
@@ -29,6 +71,8 @@
                 return true;
             }
         </script>
+        <div id='dialog-alert' style="display: none">   
+        </div>
         <table style="width: 100%;" bgcolor="#FFFFFF">
             <tr>
                 <td background="images/topLarge.png">
@@ -126,7 +170,7 @@
                                         CssClass="button" />
                                     <%--<asp:Button ID="BtnImprimir" runat="server" Text="Imprimir" Width="122px" CssClass="button" />--%>
                                     <asp:Button ID="btnSalir" runat="server" Text="Salir" Width="122px" CssClass="button" />
-                                    &nbsp;<asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
+                                    &nbsp;<div style="display:none;"><asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label></div>
                                 </center>
                             </th>
                             <th style="width: 133px">
@@ -171,6 +215,7 @@
                                                         </td>
                                                         <td style="width:180px;"><asp:Label ID="lblpagina" runat="server" Text="Página " Font-Bold="True" ForeColor="Black"
                                                             Font-Size="Smaller"></asp:Label>
+                                                        <asp:HiddenField ID="txtPaginaActual" runat="server"/>
                                                         <asp:TextBox ID="txtPagina" runat="server" width="40px" onkeypress="return isNumberKey(event)"></asp:TextBox>
                                                         <asp:Label ID="Label1" runat="server" Text=" de " Font-Bold="True" ForeColor="Black"
                                                             Font-Size="Smaller"></asp:Label>
