@@ -2,6 +2,7 @@
 Imports UtilitarioEnvioData.EnvioData
 Imports System.Data
 Imports System.Configuration
+Imports System.Web.Services
 
 Partial Class aspx_EdicionRipleyMatico
     Inherits System.Web.UI.Page
@@ -72,7 +73,7 @@ Partial Class aspx_EdicionRipleyMatico
 
         Try
 
-        
+
             directorioSeleccionado = tvDirectorios.SelectedValue
             'tvDirectorios.Enabled = False
 
@@ -270,5 +271,15 @@ Partial Class aspx_EdicionRipleyMatico
         Return IP
     End Function
 
-
+    <WebMethod()>
+    Public Shared Function ObtenerLogPantalla(ByVal identificador As String) As List(Of String)
+        Dim lista As New List(Of String)
+        If identificador <> "" Then
+            lista = EnvioData.Instancia.ConsultarLog(identificador, DateTime.Now)
+        End If
+        If lista.Count = 0 Then
+            lista.Add("aaaaaa")
+        End If
+        Return lista
+    End Function
 End Class

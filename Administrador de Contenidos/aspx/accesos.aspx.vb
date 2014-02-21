@@ -133,6 +133,7 @@ Partial Class aspx_accesos
                 ckConfiguracionKiosko.Checked = oDT.Rows(0).Item("ConfiguracionKiosko")
                 ckErrores.Checked = oDT.Rows(0).Item("Errores")
                 ckConsultaAceptacionIncremento.Checked = oDT.Rows(0).Item("ConsultaAceptacionIncremento")
+                ckActualizacionRipleymatico.Checked = oDT.Rows(0).Item("ActualizacionRipleymatico")
                 fun_buscar_acceso_rol = oDT.Rows(0).Item("AccessID")
             Else
 
@@ -193,7 +194,7 @@ Partial Class aspx_accesos
                                       ckAreas.Checked, ckCriterios.Checked, ckConsultas.Checked, ckReporte.Checked, _
                                       ckActualizar.Checked, ckTemporizador.Checked, ckMensajes.Checked, ckTiempos.Checked, _
                                       ckSimuladores.Checked, ckEstadisticas.Checked, ckConfiguracionKiosko.Checked, _
-                                      ckErrores.Checked, ckConsultaAceptacionIncremento.Checked)
+                                      ckErrores.Checked, ckConsultaAceptacionIncremento.Checked, ckActualizacionRipleymatico.Checked)
 
             'strSQL = "UPDATE  app_Accesos SET Pane=" & IIf(CkPanel.Checked = True, 1, 0) & ",Svid=" & IIf(CkSvideo.Checked = True, 1, 0)
             'strSQL = strSQL & ",Sban=" & IIf(CkSbanner.Checked = True, 1, 0) & ",Usu=" & IIf(CkUsuario.Checked = True, 1, 0)

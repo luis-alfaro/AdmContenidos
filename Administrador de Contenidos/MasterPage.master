@@ -114,8 +114,14 @@
                                                 NavigateUrl="~/aspx/ReporteAceptacionIncremento.aspx" Text="Aceptación Incremento" 
                                                 Value="Aceptacion Incremento"></asp:TreeNode>
                                         </asp:TreeNode>
-                                        <asp:TreeNode NavigateUrl="~/aspx/EdicionRipleyMatico.aspx" Text="Actualizar Imágenes" 
-                                            Value="Nuevo nodo" ImageUrl="~/images/18.png"></asp:TreeNode>
+                                        <asp:TreeNode ImageUrl="~/images/18.png" Text="Actualización" Value="Actualizacion">
+                                            <asp:TreeNode ImageUrl="~/images/18.png" 
+                                                NavigateUrl="~/aspx/EdicionRipleyMatico.aspx" Text="Actualizar Imágenes" 
+                                                Value="Actualizar Imagenes"></asp:TreeNode>
+                                                <asp:TreeNode ImageUrl="~/images/18.png" 
+                                                NavigateUrl="~/aspx/ActualizacionRipleyMatico.aspx" Text="Actualizar Ripleymático" 
+                                                Value="Aceptacion Ripleymatico"></asp:TreeNode>
+                                        </asp:TreeNode>
                                         <asp:TreeNode NavigateUrl="~/aspx/EdiciónTiempoSalvapantallas.aspx" 
                                             Text="Temporizador" Value="Nuevo nodo" 
                                             ImageUrl="~/aspx/images/15.png"></asp:TreeNode>
@@ -146,8 +152,14 @@
                                             <asp:TreeNode Text="Consolidación De Deuda" Value="Consolidación De Deuda" NavigateUrl="~/aspx/MantSimConsolidacionDeDeuda.aspx" 
                                                 ImageUrl="~/images/16.png"></asp:TreeNode>                                        
                                         </asp:TreeNode>
-                                        <asp:TreeNode NavigateUrl="~/aspx/LogEnvioData.aspx" Text="Registro de Errores" 
-                                            Value="Registro de Errores" ImageUrl="~/images/table_edit.ico"></asp:TreeNode>
+                                        <asp:TreeNode ImageUrl="~/images/table_edit.ico" Text="Registro de Errores" Value="Registro de Errores">
+                                            <asp:TreeNode ImageUrl="~/images/table_edit.ico" 
+                                                NavigateUrl="~/aspx/LogEnvioData.aspx" Text="Imágenes" 
+                                                Value="Imagenes"></asp:TreeNode>
+                                                <asp:TreeNode ImageUrl="~/images/table_edit.ico" 
+                                                NavigateUrl="~/aspx/LogActualizacionRipleymatico.aspx" Text="Ripleymático" 
+                                                Value="Ripleymatico"></asp:TreeNode>
+                                        </asp:TreeNode>
                                         <asp:TreeNode Text="Cerrar Sesión" Value="CS" ImageUrl="~/images/cerrar.png"></asp:TreeNode>
                                     </Nodes>
                                     <NodeStyle Font-Names="Verdana" Font-Size="8pt" ForeColor="Black" 

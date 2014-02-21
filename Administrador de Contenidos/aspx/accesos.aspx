@@ -256,6 +256,16 @@
                 <td style="height: 22px">                
                     &nbsp;</td>
             </tr>
+            <tr>
+                <td class="style9" style="width: 24px; height: 22px;">
+                    &nbsp;</td>
+                <td class="style9" style="width: 173px; height: 22px;">
+                    <asp:CheckBox ID="ckActualizacionRipleymatico" runat="server" Text="Actualización Ripleymático" />
+                </td>
+                <td style="height: 22px; width: 222px;"></td>
+                <td style="height: 22px">                
+                    &nbsp;</td>
+            </tr>
             </table>
     </td>    
     </tr>

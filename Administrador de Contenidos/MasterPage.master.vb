@@ -46,7 +46,7 @@ Partial Class MasterPage
                     TViewIndice.Nodes.Item(2).SelectAction = TreeNodeSelectAction.None
                 End If
 
-                If oDT.Rows(0).Item("Usu") = True And oDT.Rows(0).Item("Rol") = True And oDT.Rows(0).Item("Acc") = True Then
+                If oDT.Rows(0).Item("Usu") = True Or oDT.Rows(0).Item("Rol") = True Or oDT.Rows(0).Item("Acc") = True Then
                     TViewIndice.Nodes.Item(3).SelectAction = TreeNodeSelectAction.Select
                     If oDT.Rows(0).Item("Usu") = True Then
                         TViewIndice.Nodes.Item(3).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
@@ -72,7 +72,7 @@ Partial Class MasterPage
 
                 
 
-                If oDT.Rows(0).Item("Ubigeo") = True And oDT.Rows(0).Item("Tiendas") = True And oDT.Rows(0).Item("Kioscos") = True And oDT.Rows(0).Item("Areas") = True Then
+                If oDT.Rows(0).Item("Ubigeo") = True Or oDT.Rows(0).Item("Tiendas") = True Or oDT.Rows(0).Item("Kioscos") = True Or oDT.Rows(0).Item("Areas") = True Then
                     TViewIndice.Nodes.Item(4).SelectAction = TreeNodeSelectAction.Select
                     If oDT.Rows(0).Item("Ubigeo") = True Then
                         TViewIndice.Nodes.Item(4).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
@@ -139,10 +139,23 @@ Partial Class MasterPage
                     TViewIndice.Nodes.Item(8).ChildNodes.Clear()
                 End If
 
-                If oDT.Rows(0).Item("Actualizar") = True Then
+                If oDT.Rows(0).Item("Actualizar") = True Or oDT.Rows(0).Item("ActualizacionRipleymatico") = True Then
                     TViewIndice.Nodes.Item(9).SelectAction = TreeNodeSelectAction.Select
+                    If oDT.Rows(0).Item("Actualizar") = True Then
+                        TViewIndice.Nodes.Item(9).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(9).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.None
+                    End If
+
+                    If oDT.Rows(0).Item("ActualizacionRipleymatico") = True Then
+                        TViewIndice.Nodes.Item(9).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.Select
+                    Else
+                        TViewIndice.Nodes.Item(9).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.None
+                    End If
+
                 Else
                     TViewIndice.Nodes.Item(9).SelectAction = TreeNodeSelectAction.None
+                    TViewIndice.Nodes.Item(9).ChildNodes.Clear()
                 End If
 
                 If oDT.Rows(0).Item("Temporizador") = True Then
@@ -168,9 +181,11 @@ Partial Class MasterPage
                     TViewIndice.Nodes.Item(13).ChildNodes.Clear()
                 End If
                 If oDT.Rows(0).Item("Errores") = True Then
-                    TViewIndice.Nodes.Item(14).SelectAction = TreeNodeSelectAction.Select
+                    TViewIndice.Nodes.Item(14).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
+                    TViewIndice.Nodes.Item(14).ChildNodes.Item(1).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(14).SelectAction = TreeNodeSelectAction.None
+                    TViewIndice.Nodes.Item(14).ChildNodes.Clear()
                 End If
                 'If oDT.Rows(0).Item("Tarifas") = True Then
                 '    TViewIndice.Nodes.Item(15).SelectAction = TreeNodeSelectAction.Select
@@ -180,8 +195,8 @@ Partial Class MasterPage
                 'RemoveChilds(TViewIndice.Nodes)
             End If
 
-                oDT.Clear()
-                oDT = Nothing
+            oDT.Clear()
+            oDT = Nothing
 
         Catch ex As Exception
             sMensajeError = ""
