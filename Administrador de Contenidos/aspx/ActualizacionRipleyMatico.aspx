@@ -346,9 +346,9 @@
             console.log("log");
             if (consultarlog == true) {
             var identificador = $('#loghub').val();
-            var url = "EdicionRipleyMatico.aspx/ObtenerLogPantalla";
+            var url = "ActualizacionRipleyMatico.aspx/ObtenerLogPantalla";
                 var parameters = { identificador: identificador };
-                BI.AjaxJson("POST", url, parameters, false, rpta);
+                BI.AjaxJson("POST", url, parameters, true, rpta);
             }
         }
     </script>

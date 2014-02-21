@@ -10,6 +10,7 @@ Partial Class aspx_ActualizacionRipleyMatico
 
     Public Shared listaKioscos As List(Of ENKiosco)
     Public Shared directorioSeleccionado As String
+    Public Shared ActualizacionFlash As String = "F"
     Public Shared textoLog As String = ""
     Public Shared identificador As String = ""
     Public Shared fechaHora As DateTime = DateTime.Now
@@ -126,10 +127,10 @@ Partial Class aspx_ActualizacionRipleyMatico
             End If
 
 
-            EnvioData.Instancia.EscribirLog(identificador, "- " + DateTime.Now + " - Actualizando Programa RipleyMático")
+            EnvioData.Instancia.EscribirLog(identificador, "- " + DateTime.Now + " - Actualizando Programa RipleyMático", ActualizacionFlash)
             'System.Threading.Thread.Sleep(1000)
-            EnvioData.Instancia.EscribirLog(identificador, "    -Ha seleccionado " + listaARchivos.Count.ToString() + " archivos")
-            EnvioData.Instancia.EscribirLog(identificador, "    -Se copiarán los archivos a " + listaFinalKioscos.Count.ToString() + " Kioskos")
+            EnvioData.Instancia.EscribirLog(identificador, "    -Ha seleccionado " + listaARchivos.Count.ToString() + " archivos", ActualizacionFlash)
+            EnvioData.Instancia.EscribirLog(identificador, "    -Se copiarán los archivos a " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionFlash)
 
             For Each kio As ENKiosco In listaFinalKioscos
                 Try
@@ -142,20 +143,20 @@ Partial Class aspx_ActualizacionRipleyMatico
                     ok = EnvioData.Instancia.EnviarArchivosFlash(kiosko, directorioSeleccionado, PathServer, "ripleymatico", "Saldomatico01", "bancoripley", textoLog, listaARchivos, identificador)
                     If ok = True Then
                         contar = contar + 1
-                        EnvioData.Instancia.EscribirLog(identificador, "    -Terminado " + kio.IpKiosco + " | " + contar.ToString() + " de " + listaFinalKioscos.Count.ToString() + " Kioskos")
+                        EnvioData.Instancia.EscribirLog(identificador, "    -Terminado " + kio.IpKiosco + " | " + contar.ToString() + " de " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionFlash)
                     Else
-                        EnvioData.Instancia.EscribirLog(identificador, "    -No se pudo terminar el kiosko " + kio.IpKiosco)
+                        EnvioData.Instancia.EscribirLog(identificador, "    -No se pudo terminar el kiosko " + kio.IpKiosco, ActualizacionFlash)
                     End If
                 Catch ex As Exception
-                    EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Es posible que no tenga permiso de acceso a un archivo.")
+                    EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Es posible que no tenga permiso de acceso a un archivo.", ActualizacionFlash)
                     Return "Es posible que no tenga permiso de acceso a un archivo"
                 End Try
             Next
-            EnvioData.Instancia.EscribirLog(identificador, "    -Fin Proceso: " + "Se terminó de ejecutar el proceso. ")
+            EnvioData.Instancia.EscribirLog(identificador, "    -Fin Proceso: " + "Se terminó de ejecutar el proceso. ", ActualizacionFlash)
 
             Return "exito|" + listaFinalKioscos.Count.ToString() + "|" + contar.ToString() + "|" + (listaFinalKioscos.Count - contar).ToString()
         Catch ex As Exception
-            EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Intentelo nuevamente más tarde.")
+            EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Intentelo nuevamente más tarde.", ActualizacionFlash)
             Return "Error de Codigo"
         End Try
     End Function
@@ -218,5 +219,12 @@ Partial Class aspx_ActualizacionRipleyMatico
         Return IP
     End Function
 
-    
+    <WebMethod()>
+    Public Shared Function ObtenerLogPantalla(ByVal identificador As String) As List(Of String)
+        Dim lista As New List(Of String)
+        If identificador <> "" Then
+            lista = EnvioData.Instancia.ConsultarLog(identificador, ActualizacionFlash)
+        End If
+        Return lista
+    End Function
 End Class

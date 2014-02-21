@@ -14,11 +14,13 @@ namespace UtilitarioEnvioData.EnvioData
 {
     public class EnvioData : Singleton<EnvioData>
     {
-
+        const string ActualizacionFlash = "F";
+        const string ActualizacionImagenes = "I";
         //criteriosBusqueda[1] = "*.png";
         // Declare the logon types as constants
         //const long LOGON32_LOGON_INTERACTIVE = 2;
         const long LOGON32_LOGON_NETWORK = 3;
+        
 
         // Declare the logon providers as constants
         //const long LOGON32_PROVIDER_DEFAULT = 0;
@@ -153,52 +155,48 @@ namespace UtilitarioEnvioData.EnvioData
         {
             impersonationContext.Undo();
         }
-        
-        public bool EnviarArchivos(ENKiosco kiosco, string Directorio, string DirectorioPrincipal, string usuario, string password, string dominio)
+
+        public bool EnviarArchivos(ENKiosco kiosco, string Directorio, string DirectorioPrincipal, string usuario, string password, string dominio, ref string textoLog, List<string> listaArchivos, string identificador)
         {
-
-            string rutaLog = ConfigurationManager.AppSettings["RutaLogErrores"].ToString();
-
-            string[] todosLosArchivos = Directory.GetFiles(DirectorioPrincipal + Directorio);
-
-            StreamWriter sw = new StreamWriter(rutaLog, true);
-
+            string slog = "";
             bool error = true;
-
-            foreach (string item in todosLosArchivos)
+            if (impersonateValidUser(usuario, dominio, password))
             {
-
-                try
+                foreach (string item in listaArchivos)
                 {
-                    string destino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos + item.Replace(DirectorioPrincipal, "");
-                    if (impersonateValidUser(usuario, dominio, password))
-                    {
-                        File.Copy(item, destino, true);
-                    }
-                    else
-                    {//usuario incorrecto 
-                        sw.WriteLine(DateTime.Now.ToString() + " el usuario " + usuario + " no es valido");
-                        error = false;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //no se pudo copiar
                     try
                     {
 
+                        string archivo = Path.GetFileName(item);
 
-                        sw.WriteLine(DateTime.Now.ToString() + " " + kiosco.IpKiosco + " " + item.Replace(DirectorioPrincipal, " " + ex.Message));
+                        string destino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos + item.Replace(DirectorioPrincipal, "");
+                        //string destino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos + @"\" + archivo;
 
-                        error = false;
+                        File.Copy(item, destino, true);
+
+                        textoLog = "    -Se ha copiado el archivo " + archivo + " a " + kiosco.IpKiosco;
+                        EscribirLog(identificador, textoLog, ActualizacionImagenes);
 
                     }
-                    catch (IOException) { }
-
+                    catch (Exception ex)
+                    {
+                        //no se pudo copiar
+                        try
+                        {
+                            slog = DateTime.Now.ToString() + " " + kiosco.IpKiosco + " " + Path.GetFileName(item) + " " + ex.Message;
+                            EscribirLog(identificador, slog, ActualizacionImagenes);
+                            error = false;
+                        }
+                        catch (IOException) { }
+                    }
                 }
             }
-
-            sw.Close();
+            else
+            {//usuario incorrecto 
+                slog = DateTime.Now.ToString() + " el usuario " + usuario + " no es valido";
+                EscribirLog(identificador, slog, ActualizacionImagenes);
+                error = false;
+            }
 
             if (error == false)
                 return false;
@@ -206,7 +204,6 @@ namespace UtilitarioEnvioData.EnvioData
                 return true;
 
         }
-        
         public bool hacerLinea(string nomLinea)
         {
 
@@ -256,20 +253,8 @@ namespace UtilitarioEnvioData.EnvioData
 
 
         #region FLASH
-        public bool hacerLineaLogPantalla(string nomLinea)
-        {
+       
 
-            try
-            {
-                string rutaLog = ConfigurationManager.AppSettings["RutaLogPantalla"].ToString();
-                StreamWriter sw = new StreamWriter(rutaLog, true);
-                sw.WriteLine(nomLinea);
-                sw.Close();
-            }
-            catch (IOException) { }
-
-            return true;
-        }
         public bool GenerarArchivosFlash(List<ENKiosco> kioscos, List<string> ArchivosEnviar, string Directorio, string DirectorioPrincipal)
         {
             try
@@ -326,7 +311,7 @@ namespace UtilitarioEnvioData.EnvioData
                         File.Copy(item, destino, true);
 
                         textoLog = "    -Se ha copiado el archivo " + archivo + " a " + kiosco.IpKiosco;
-                        EscribirLog(identificador, textoLog);
+                        EscribirLog(identificador, textoLog,ActualizacionFlash);
                         
                     }
                     catch (Exception ex)
@@ -335,7 +320,7 @@ namespace UtilitarioEnvioData.EnvioData
                         try
                         {
                             slog = DateTime.Now.ToString() + " " + kiosco.IpKiosco + " " + Path.GetFileName(item) + " " + ex.Message;                            
-                            EscribirLog(identificador, slog);
+                            EscribirLog(identificador, slog,ActualizacionFlash);
                             error = false;
                         }
                         catch (IOException) { }
@@ -345,7 +330,7 @@ namespace UtilitarioEnvioData.EnvioData
             else
             {//usuario incorrecto 
                 slog = DateTime.Now.ToString() + " el usuario " + usuario + " no es valido";                
-                EscribirLog(identificador, slog);
+                EscribirLog(identificador, slog,ActualizacionFlash);
                 error = false;
             }
 
@@ -355,24 +340,47 @@ namespace UtilitarioEnvioData.EnvioData
                 return true;
 
         }
+        
+        #endregion
 
-        public void EscribirLog(string identificador,string descripcion)
-        {
-            DataAccess.Instancia.Insert_LogRipleymatico(identificador, descripcion);
-            hacerLineaLogPantalla(descripcion);
-        }
-
-        public List<string> ConsultarLog(string identificador, DateTime fecha)
+        public bool hacerLineaLogPantalla(string nomLinea,string tipo)
         {
             try
             {
-                return DataAccess.Instancia.Get_LogRipleymatico(identificador, fecha);
+                string rutaLog = "";
+                if (tipo == "F")
+                {
+                   rutaLog= ConfigurationManager.AppSettings["RutaLogPantalla"].ToString();
+                }
+                else {
+                    rutaLog = ConfigurationManager.AppSettings["RutaLogErrores"].ToString();
+                }
+                StreamWriter sw = new StreamWriter(rutaLog, true);
+                sw.WriteLine(nomLinea);
+                sw.Close();
+            }
+            catch (IOException) { }
+
+            return true;
+        }
+
+        public void EscribirLog(string identificador,string descripcion,string tipo)
+        {
+            DataAccess.Instancia.Insert_LogRipleymatico(identificador, descripcion,tipo);
+            hacerLineaLogPantalla(descripcion,tipo);
+        }
+
+        public List<string> ConsultarLog(string identificador, string tipo)
+        {
+            try
+            {
+                return DataAccess.Instancia.Get_LogRipleymatico(identificador, tipo);
             }
             catch (Exception)
             {
                 return new List<string>();
             }
         }
-        #endregion
+       
     }
 }

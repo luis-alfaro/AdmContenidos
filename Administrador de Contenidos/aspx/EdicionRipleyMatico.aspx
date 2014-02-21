@@ -1,12 +1,11 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="EdicionRipleyMatico.aspx.vb" Inherits="aspx_EdicionRipleyMatico" %>
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="EdicionRipleyMatico.aspx.vb" 
+Inherits="aspx_EdicionRipleyMatico" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
+<head id="Head1" runat="server">
     <title>Página sin título</title>
     <style type="text/css">
-
         .style9
         {
             width: 183px;
@@ -201,14 +200,165 @@
         {
             width: 118px;
         }
-                
+        #logPantallaDiv ul
+        {
+            list-style-type: none;
+        }
         </style>
         <link href="estilos/Estilos.css" rel="stylesheet" type="text/css" />
+    <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+    <script src="../js/jquery-1.10.2.js" type="text/javascript"></script>
+ <%--   <script src="../Scripts/jquery-1.6.4.js" type="text/javascript"></script>--%>
+    <script src="../js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+    <script src="../js/jquery-ui-1.8.24.min.js" type="text/javascript"></script>
+    <script src="../js/jquery.jqGrid.min.js" type="text/javascript"></script>
+    <script src="../js/BI.js" type="text/javascript"></script>
+    <%--<script src="../Scripts/jquery-1.6.4.min.js" type="text/javascript"></script>--%>
+    <!--Reference the SignalR library. -->
+<%--    <script src="../Scripts/jquery.signalR-1.1.4.js" type="text/javascript"></script>
+    <script src='<%: ResolveClientUrl("~/signalr/hubs") %>'></script>--%>
+    <script type="text/javascript" language="javascript">
+        var dialogAlter = 'dialog-alert';
+        var inicializador = "<div id='logPantallaDiv'><ul id='logPantalla'></ul></div>";
+        var consultarlog = true;
+        var imageList = new Array();
+        var radio = "Todos";
+        var cont = 1;
+        var logPantalla = 'logPantalla';
+        var btnCompletar = '<%= btnCompletar.ClientID %>';
+        var LbxImagenes = '<%= LbxImagenes.ClientID %>';
+        var rbUno = '<%= rbUno.ClientID %>';
+        var rbTodos = '<%= rbTodos.ClientID %>';
+        var txtUsuario = '<%= txtUsuario.ClientID %>';
+        var txtPassword = '<%= txtPassword.ClientID %>';
+        var txtDominio = '<%= txtDominio.ClientID %>';
+        var txtSeleccionados = '<%= txtSeleccionados.ClientID %>';
+        var txtActualizados = '<%= txtActualizados.ClientID %>';
+        var txtNoActualizados = '<%= txtNoActualizados.ClientID %>';
+        var loghub = '<%= loghub.ClientID %>';
+
+        $(function () {
+
+
+            //            var logh = $.connection.logHub;
+            //            // Create a function that the hub can call to broadcast messages.
+            //            logh.client.broadcastLog = function (res) {
+            //                if (cont == 1) {
+            //                    BI.ShowAlert('', inicializador);
+            //                    console.log("debio haber levantado el popup");
+            //                    cont = 2;
+            //                }
+            //                console.log("respondio el loghub");
+            //                $.each(res, function (index, campo) {
+            //                    console.log(campo, "campope");
+            //                    $("#" + logPantalla).append("<li>" + campo + "</li>");
+            //                });
+            //            };
+
+            var arrayDialog = [{ name: dialogAlter, height: 250, width: 600, title: 'Log de Edicion Ripleymatico'}];
+            BI.CreateDialogLog(arrayDialog);
+
+
+            $("#" + btnCompletar).click(function (e) {
+                imageList = new Array();
+                $('#' + LbxImagenes + ' option').each(function (i, option) {
+                    imageList.push($(option).text());
+                });
+                if (imageList.length == 0) {
+                    BI.ShowAlert('', "Debe seleccionar archivos a actualizar.");
+                    return false;
+                }
+                var values = $('input:checkbox:checked').map(function () {
+                    return $('label[for="' + $(this).attr("id") + '"]').html();
+                }).get();
+                var usuario = $("#" + txtUsuario).val();
+                var password = $("#" + txtPassword).val();
+                var dominio = $("#" + txtDominio).val();
+                if ($("#" + rbUno).is(":checked")) {
+                    radio = "Uno";
+                    if (values.length == 0) {
+                        BI.ShowAlert('', "Debe seleccionar por lo menos un Ripleymático.");
+                        return false;
+                    }
+                } else if ($("#" + rbTodos).is(":checked")) {
+                    radio = "Todos";
+                }
+
+                if (usuario == "" || password == "" || dominio == "") {
+                    BI.ShowAlert('', "Debe ingresar sus credenciales para poder actualizar.");
+                    return false;
+                }
+                var parameters = { Archivos: imageList, radio: radio, Kioscos: values, usuario: usuario, password: password, dominio: dominio };
+                console.log("start");
+                $.ajax({
+                    //async: true,
+                    type: "POST",
+                    //cache:false,
+                    url: "EdicionRipleyMatico.aspx/Completar",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(parameters),
+                    dataType: 'json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
+                    },
+                    success: function (result) {
+                        var res = result.hasOwnProperty("d") ? result.d : result;
+                        var arr = res.split("|");
+                        $("#" + txtSeleccionados).val(arr[1]);
+                        $("#" + txtActualizados).val(arr[2]);
+                        $("#" + txtNoActualizados).val(arr[3]);
+                        console.log("end");
+                        //$.connection.hub.stop();
+                    }
+                });
+                setInterval(EscribirLog, 500);
+
+
+                //                // Start the connection.
+                //                $.connection.hub.start().done(function () {
+                //                    console.log("hub starteo");
+                //                    setInterval(function () {
+                //                        logh.server.send($('#loghub').val());
+                //                    }, 1000);
+                //                });
+
+                e.preventDefault();
+            });
+
+
+        });
+        function rpta(resultado) {
+            var res = resultado.hasOwnProperty("d") ? resultado.d : resultado;
+            if (!$('#' + dialogAlter).is(":visible")) {
+                if (res.length > 0) {
+                    BI.ShowAlert('', inicializador);
+                }
+            }
+            $.each(res, function (index, campo) {
+                console.log("campo", campo);
+                $("#" + logPantalla).append("<li>" + campo + "</li>");
+                if (campo.indexOf("Fin Proceso") >= 0) {
+                    consultarlog = false;
+                }
+            });
+        }
+        function EscribirLog() {
+            console.log("log");
+            if (consultarlog == true) {
+                var identificador = $('#loghub').val();
+                var url = "EdicionRipleyMatico.aspx/ObtenerLogPantalla";
+                var parameters = { identificador: identificador };
+                BI.AjaxJson("POST", url, parameters, false, rpta);
+            }
+        }
+    </script>
 </head>
 <body>
     <form id="form1" runat="server">
+    <asp:HiddenField ID="loghub" runat="server" />
     <div>
-    
+    <div id='dialog-alert' style="display:none">
+        </div>
   
     <table style="width: 100%; height: 951px;" style="FONT-SIZE: 8pt; FONT-FAMILY: Verdana; width: 747px; height: 110px;"  >
         <tr>

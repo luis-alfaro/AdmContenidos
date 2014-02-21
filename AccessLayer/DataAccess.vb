@@ -139,7 +139,7 @@ Public Class DataAccess
 
     Private cn As SqlConnection
 #Region "Log "
-    Public Function Get_LogRipleymatico(ByVal Identificador As String, ByVal fecha As DateTime) As List(Of String)
+    Public Function Get_LogRipleymatico(ByVal Identificador As String, ByVal tipo As String) As List(Of String)
         Using cn = New SqlConnection(Get_CadenaConexion())
             Dim lista As New List(Of String)
             Dim texto As String
@@ -149,7 +149,7 @@ Public Class DataAccess
                 cmd_consulta.CommandText = LTrim(RTrim("Usp_Get_LogRipleymatico"))
                 cmd_consulta.Connection = cn
                 cmd_consulta.Parameters.AddWithValue("@IDENTIFICADOR", Identificador)
-                cmd_consulta.Parameters.AddWithValue("@FECHA", fecha)
+                cmd_consulta.Parameters.AddWithValue("@TIPO", tipo)
                 Using read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
                     If read_consulta.HasRows Then
                         While read_consulta.Read
@@ -163,12 +163,13 @@ Public Class DataAccess
         End Using
     End Function
 
-    Public Function Insert_LogRipleymatico(ByVal Identificador As String, ByVal Descripcion As String) As Boolean
+    Public Function Insert_LogRipleymatico(ByVal Identificador As String, ByVal Descripcion As String, ByVal tipo As String) As Boolean
         Using cn = New SqlConnection(Get_CadenaConexion())
             Using cmd As New SqlCommand("Usp_Insert_LogRipleymatico", cn)
                 cmd.CommandType = CommandType.StoredProcedure
                 cmd.Parameters.AddWithValue("@IDENTIFICADOR", Identificador)
                 cmd.Parameters.AddWithValue("@DESCRIPCION", Descripcion)
+                cmd.Parameters.AddWithValue("@TIPO", tipo)
 
                 cn.Open()
                 cmd.ExecuteNonQuery()
