@@ -89,9 +89,10 @@ Partial Class aspx_lista_users
             '    strSQL = strSQL & " WHERE Flag_ToDelete=0 "
             'End If
             'SQL_ExecuteDataTable(oConexion, strSQL, oDataTable)
-
+            Dim role As Integer = Session("ROLE_ID")
+            Dim user As Integer = Session("USER_ID")
             Dim objUser As New Usuarios
-            oDataTable = objUser.Get_usuarios()
+            oDataTable = objUser.Get_usuarios(role, user)
 
             'If oDataTable.Rows.Count > 0 Then
             gvListaUsers.DataSource = oDataTable

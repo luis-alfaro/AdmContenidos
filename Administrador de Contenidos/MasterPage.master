@@ -76,9 +76,9 @@
                                         </asp:TreeNode>
                                         <asp:TreeNode Text="Seguridad" Value="SG" ShowCheckBox="False" 
                                             ImageUrl="~/images/seguridad.png">
-                                            <asp:TreeNode Text="Usuarios" Value="S1" ImageUrl="~/images/usuarios.png"></asp:TreeNode>
-                                            <asp:TreeNode Text="Roles" Value="S2" ImageUrl="~/images/roles.png"></asp:TreeNode>
-                                            <asp:TreeNode Text="Accesos" Value="S3" ImageUrl="~/images/acceses.png"></asp:TreeNode>
+                                            <asp:TreeNode Text="Usuarios" Value="S1" ImageUrl="~/images/usuarios.png" NavigateUrl="~/aspx/lista_users.aspx"></asp:TreeNode>
+                                            <asp:TreeNode Text="Roles" Value="S2" ImageUrl="~/images/roles.png" NavigateUrl="~/aspx/lista_roles.aspx"></asp:TreeNode>
+                                            <asp:TreeNode Text="Accesos" Value="S3" ImageUrl="~/images/acceses.png" NavigateUrl="~/aspx/accesos.aspx"></asp:TreeNode>
                                         </asp:TreeNode>
                                         <asp:TreeNode Text="Mantenimientos" Value="Ubigeo" 
                                             ImageUrl="~/images/7.png">

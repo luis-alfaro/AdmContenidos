@@ -326,4 +326,49 @@ Public Class ClsReportes
         End Try
         Return 0
     End Function
+
+    Function listar_EstrucutraPDFs() As DataSet
+        Try
+            Dim dts As New DataSet
+            cn.abrirconexion()
+            dts = cn.consultar("dbo.Usp_Get_ListaEstructuraPDFs")
+            cn.cerrarconexion()
+            Dim nrow As DataRow = dts.Tables(0).NewRow()
+
+            nrow("ID") = "0"
+            nrow("NOMBRE") = "--Seleccionar--"
+
+            dts.Tables(0).Rows.Add(nrow)
+            dts.Tables(0).DefaultView.Sort = "ID"
+            Return dts
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
+        Return New DataSet
+    End Function
+
+    Public Function Usp_Get_Obtener_EstructuraPDF(ByVal idTarjeta As Integer) As List(Of EstructuraPDF)
+        Dim lista As New List(Of EstructuraPDF)
+        cn.abrirconexion()
+        lista = cn.Usp_Get_Obtener_EstructuraPDF("dbo.Usp_Get_Obtener_EstructuraPDF", idTarjeta)
+        cn.cerrarconexion()
+        Return lista
+    End Function
+
+    Public Function Usp_Get_Guardar_EstructuraPDF(ByVal lista As List(Of EstructuraPDF)) As Integer
+        Dim resultado As Integer
+        cn.abrirconexion()
+        resultado = cn.Usp_Get_Guardar_EstructuraPDF("dbo.Usp_Get_Guardar_EstructuraPDF", lista)
+        cn.cerrarconexion()
+        Return resultado
+    End Function
+
+    Function sp_get_Obtener_Log_RipleyMatico(tipo As String, desde As DateTime, hasta As DateTime, filtro As String) As List(Of LogRipleyMatico)
+        Dim lista As New List(Of LogRipleyMatico)
+        cn.abrirconexion()
+        lista = cn.sp_get_Obtener_Log_RipleyMatico("dbo.Usp_Get_Obtener_Log_RipleyMatico", tipo, desde, hasta, filtro)
+        cn.cerrarconexion()
+        Return lista
+    End Function
+
 End Class

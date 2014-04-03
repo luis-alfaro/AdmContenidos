@@ -10,8 +10,8 @@ Partial Class aspx_LogEnvioData
 
     Public Sub leer()
 
-
-        Dim str As New StreamReader("C:\LogEnvioData.txt")
+        Dim rutalog As String = ConfigurationManager.AppSettings("RutaLogErrores").ToString()
+        Dim str As New StreamReader(rutalog)
 
 
         Dim Data As String

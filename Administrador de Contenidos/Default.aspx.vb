@@ -82,6 +82,7 @@ Public Class _Default
                 'Guardar configuracion inicial
                 Session("SESSION_ID") = Session.SessionID.Trim
                 Session("ROLE_ID") = oDataTable.Rows(0).Item("RoleID")
+                Session("USER_ID") = oDataTable.Rows(0).Item("UserID")
                 Call m_guardar_configuracion_con(Get_CadenaConexion(), Session("SESSION_ID"), ReadAppConfig("SERVER"), ReadAppConfig("IPSERVER"), ReadAppConfig("BD"), ReadAppConfig("USER"), ReadAppConfig("PASSWORD"), Get_CadenaConexion(), oDataTable.Rows(0).Item("FullNames"))
                 Response.Redirect("aspx/welcome.aspx") 'Master Page
             Else

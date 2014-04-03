@@ -161,6 +161,10 @@ Partial Class aspx_ReporteAceptacionIncremento
 
             totalRegistros = menus.Usp_get_Count_ConsultaAceptacionIncremento(tipo, f1, f2)
             totalPaginas = totalRegistros / nroRegistros
+            If totalRegistros Mod nroRegistros > 0 Then
+                totalPaginas += 1
+            End If
+
             Me.lblTotal.Text = totalRegistros.ToString()
             Me.txtTotalPaginas.Text = totalPaginas.ToString()
         Catch ex As Exception

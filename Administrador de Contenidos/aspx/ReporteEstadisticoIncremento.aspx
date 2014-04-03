@@ -1,24 +1,42 @@
-﻿<%@ Page Language="VB" MasterPageFile="~/MasterPage.master"  AutoEventWireup="false" CodeFile="ReporteEstadisticoIncremento.aspx.vb"
-    Inherits="aspx_ReporteEstadisticoIncremento" %>
+﻿<%@ Page Language="VB" MasterPageFile="~/MasterPage.master"  AutoEventWireup="false" 
+CodeFile="ReporteEstadisticoIncremento.aspx.vb"  Inherits="aspx_ReporteEstadisticoIncremento" %>
 
 <asp:content id="Content1" contentplaceholderid="CPHContenido" runat="Server">
 
     <head>
         <script type="text/javascript" src="js/styleswitcher.js"></script>
-
-        <link href="estilos/Estilos.css" rel="stylesheet" type="text/css" />   
-        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css"rel="stylesheet" />
-	    <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
-	    <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+        <link href="estilos/Estilos.css" rel="stylesheet" type="text/css" />
+        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+        <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+        <script src="../js/BI.js" type="text/javascript"></script>
 </head>
 <body>
 <script type="text/javascript">
+    var dialogAlter = 'dialog-alert';
     $(document).ready(DocReady);
     function DocReady() {
         $("input[data-entryType = 'Date']").datepicker();
+        var arrayDialog = [{ name: dialogAlter, height: 140, width: 350, title: 'Reporte Estadístico Incremento'}];
+        BI.CreateDialogs(arrayDialog);
+        var BtnBuscar = '<%= BtnBuscar.ClientID %>';
+        var txtfechadesde = '<%= txtfechadesde.ClientID %>';
+        var txtfechahasta = '<%= txtfechahasta.ClientID %>';
+        
+
+        $("#" + BtnBuscar).click(function (e) {
+            if ($("#" + txtfechadesde).val() == "" || $("#" + txtfechahasta).val() == "") {
+                BI.ShowAlert('', "Ingrese un rango de fechas");
+                return false;
+                e.preventDefault();
+            }
+        });
+
+        
     }
 </script>
-
+<div id='dialog-alert' style="display: none">   
+        </div>
 <table style="width:100%;" bgcolor="#FFFFFF">
         <tr>
             <td background="images/topLarge.png">

@@ -18,13 +18,13 @@
 			<TR>
 				<TD width="100%">
 					<TABLE background="images/back.png" border="0" id="table1" 
-                        style="margin-left: 0px; height: 638px; width: 106%;">
+                        style="margin-left: 0px; height: 638px; width: 100%;">
 						<tr>
 				<TD width="100%" style="height: 51px">
 					<br />
                     <br />
 					<TABLE border="0" width="100%" id="tblText" style="FONT-SIZE: 8pt; FONT-FAMILY: Verdana; margin-left: 4px;"
-						cellspacing="0" cellpadding="0">
+						cellspacing="0" cellpadding="0" >
 						<TR>
 							<TD>
                                 </TD>

@@ -16,6 +16,7 @@ Partial Class aspx_ReporteEstadisticoIncremento
 
     Public tienda As New tiendas : Dim menus As New ClsReportes
     Public idtienda As String : Dim feet As Integer = 0
+    Public Shared existenRegistros As Boolean = True
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Try
@@ -56,107 +57,109 @@ Partial Class aspx_ReporteEstadisticoIncremento
 
     End Sub
     Public Sub gvdetalle_RowCreated(sender As Object, e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvdetalle.RowCreated
-        If e.Row.RowType = DataControlRowType.Header Then
-            If gvdetalle.Controls(0).Controls.Count < 2 Then
-                Dim headerCell1 As TableCell = New TableCell()
-                headerCell1.ColumnSpan = 7
-                headerCell1.Text = "ESTADISTICA DE INCREMENTO LINEA POR RIPLEYMATICO"
-                headerCell1.BackColor = Drawing.Color.LightGray
+        If existenRegistros Then
+
+            If e.Row.RowType = DataControlRowType.Header Then
+                If gvdetalle.Controls(0).Controls.Count < 2 Then
+                    Dim headerCell1 As TableCell = New TableCell()
+                    headerCell1.ColumnSpan = 7
+                    headerCell1.Text = "ESTADISTICA DE INCREMENTO LINEA POR RIPLEYMATICO"
+                    headerCell1.BackColor = Drawing.Color.LightGray
 
 
-                Dim rowHeader1 As GridViewRow = New GridViewRow(0, 0, DataControlRowType.Header, DataControlRowState.Normal)
-                rowHeader1.Cells.Add(headerCell1)
-                rowHeader1.ForeColor = Drawing.Color.Black
-                rowHeader1.HorizontalAlign = HorizontalAlign.Center
-                rowHeader1.Font.Bold = True
-                rowHeader1.Visible = True
-                gvdetalle.Controls(0).Controls.AddAt(0, rowHeader1)
+                    Dim rowHeader1 As GridViewRow = New GridViewRow(0, 0, DataControlRowType.Header, DataControlRowState.Normal)
+                    rowHeader1.Cells.Add(headerCell1)
+                    rowHeader1.ForeColor = Drawing.Color.Black
+                    rowHeader1.HorizontalAlign = HorizontalAlign.Center
+                    rowHeader1.Font.Bold = True
+                    rowHeader1.Visible = True
+                    gvdetalle.Controls(0).Controls.AddAt(0, rowHeader1)
 
-                Dim headerCell11 As TableCell = New TableCell()
-                Dim headerCell12 As TableCell = New TableCell()
-                Dim headerCell13 As TableCell = New TableCell()
-                Dim headerCell14 As TableCell = New TableCell()
-                headerCell11.ColumnSpan = 1
-                headerCell11.Text = ""
-                headerCell11.BackColor = Drawing.Color.Maroon
-                headerCell12.ColumnSpan = 2
-                headerCell12.Text = "RSAT"
-                headerCell12.BackColor = Drawing.Color.Maroon
-                headerCell13.ColumnSpan = 2
-                headerCell13.Text = "MC"
-                headerCell13.BackColor = Drawing.Color.Maroon
-                headerCell14.ColumnSpan = 2
-                headerCell14.Text = "TOTAL"
-                headerCell14.BackColor = Drawing.Color.Maroon
+                    Dim headerCell11 As TableCell = New TableCell()
+                    Dim headerCell12 As TableCell = New TableCell()
+                    Dim headerCell13 As TableCell = New TableCell()
+                    Dim headerCell14 As TableCell = New TableCell()
+                    headerCell11.ColumnSpan = 1
+                    headerCell11.Text = ""
+                    headerCell11.BackColor = Drawing.Color.Maroon
+                    headerCell12.ColumnSpan = 2
+                    headerCell12.Text = "RSAT"
+                    headerCell12.BackColor = Drawing.Color.Maroon
+                    headerCell13.ColumnSpan = 2
+                    headerCell13.Text = "MC"
+                    headerCell13.BackColor = Drawing.Color.Maroon
+                    headerCell14.ColumnSpan = 2
+                    headerCell14.Text = "TOTAL"
+                    headerCell14.BackColor = Drawing.Color.Maroon
 
-                Dim rowHeader2 As GridViewRow = New GridViewRow(1, 1, DataControlRowType.Header, DataControlRowState.Normal)
-                rowHeader2.Cells.Add(headerCell11)
-                rowHeader2.Cells.Add(headerCell12)
-                rowHeader2.Cells.Add(headerCell13)
-                rowHeader2.Cells.Add(headerCell14)
-                rowHeader2.ForeColor = Drawing.Color.White
-                rowHeader2.HorizontalAlign = HorizontalAlign.Center
-                rowHeader2.Visible = True
-                rowHeader2.Font.Bold = True
+                    Dim rowHeader2 As GridViewRow = New GridViewRow(1, 1, DataControlRowType.Header, DataControlRowState.Normal)
+                    rowHeader2.Cells.Add(headerCell11)
+                    rowHeader2.Cells.Add(headerCell12)
+                    rowHeader2.Cells.Add(headerCell13)
+                    rowHeader2.Cells.Add(headerCell14)
+                    rowHeader2.ForeColor = Drawing.Color.White
+                    rowHeader2.HorizontalAlign = HorizontalAlign.Center
+                    rowHeader2.Visible = True
+                    rowHeader2.Font.Bold = True
 
-                gvdetalle.Controls(0).Controls.AddAt(1, rowHeader2)
+                    gvdetalle.Controls(0).Controls.AddAt(1, rowHeader2)
+                End If
+
             End If
+            If e.Row.RowType = DataControlRowType.Footer Then
+                Dim rowFooter1 As GridViewRow = New GridViewRow(0, 0, DataControlRowType.Footer, DataControlRowState.Normal)
+                Dim footerCell0 As TableCell = New TableCell()
+                Dim footerCell1 As TableCell = New TableCell()
+                Dim footerCell2 As TableCell = New TableCell()
+                Dim footerCell3 As TableCell = New TableCell()
+                Dim footerCell4 As TableCell = New TableCell()
+                Dim footerCell5 As TableCell = New TableCell()
+                Dim footerCell6 As TableCell = New TableCell()
 
-        End If
-        If e.Row.RowType = DataControlRowType.Footer Then
-            Dim rowFooter1 As GridViewRow = New GridViewRow(0, 0, DataControlRowType.Footer, DataControlRowState.Normal)
-            Dim footerCell0 As TableCell = New TableCell()
-            Dim footerCell1 As TableCell = New TableCell()
-            Dim footerCell2 As TableCell = New TableCell()
-            Dim footerCell3 As TableCell = New TableCell()
-            Dim footerCell4 As TableCell = New TableCell()
-            Dim footerCell5 As TableCell = New TableCell()
-            Dim footerCell6 As TableCell = New TableCell()
+                footerCell0.ColumnSpan = 1
+                footerCell0.Text = "TOTAL"
+                footerCell0.BackColor = Drawing.Color.LightGray
 
-            footerCell0.ColumnSpan = 1
-            footerCell0.Text = "TOTAL"
-            footerCell0.BackColor = Drawing.Color.LightGray
+                Dim suma1 As Integer = 0
+                Dim suma2 As Integer = 0
+                Dim suma3 As Integer = 0
+                Dim suma4 As Integer = 0
+                Dim suma5 As Integer = 0
+                Dim suma6 As Integer = 0
+                For i = 0 To Me.gvdetalle.Rows.Count - 1
+                    suma1 = suma1 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(1).Text = "", 0, Me.gvdetalle.Rows(i).Cells(1).Text))
+                    suma2 = suma2 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(2).Text = "", 0, Me.gvdetalle.Rows(i).Cells(2).Text))
+                    suma3 = suma3 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(3).Text = "", 0, Me.gvdetalle.Rows(i).Cells(3).Text))
+                    suma4 = suma4 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(4).Text = "", 0, Me.gvdetalle.Rows(i).Cells(4).Text))
+                    suma5 = suma5 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(5).Text = "", 0, Me.gvdetalle.Rows(i).Cells(5).Text))
+                    suma6 = suma6 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(6).Text = "", 0, Me.gvdetalle.Rows(i).Cells(6).Text))
+                Next
+                footerCell1.Text = suma1.ToString
+                footerCell1.BackColor = Drawing.Color.LightGray
+                footerCell2.Text = suma2.ToString
+                footerCell2.BackColor = Drawing.Color.LightGray
+                footerCell3.Text = suma3.ToString
+                footerCell3.BackColor = Drawing.Color.LightGray
+                footerCell4.Text = suma4.ToString
+                footerCell4.BackColor = Drawing.Color.LightGray
+                footerCell5.Text = suma5.ToString
+                footerCell5.BackColor = Drawing.Color.LightGray
+                footerCell6.Text = suma6.ToString
+                footerCell6.BackColor = Drawing.Color.LightGray
 
-            Dim suma1 As Integer = 0
-            Dim suma2 As Integer = 0
-            Dim suma3 As Integer = 0
-            Dim suma4 As Integer = 0
-            Dim suma5 As Integer = 0
-            Dim suma6 As Integer = 0
-            For i = 0 To Me.gvdetalle.Rows.Count - 1
-                suma1 = suma1 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(1).Text = "", 0, Me.gvdetalle.Rows(i).Cells(1).Text))
-                suma2 = suma2 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(2).Text = "", 0, Me.gvdetalle.Rows(i).Cells(2).Text))
-                suma3 = suma3 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(3).Text = "", 0, Me.gvdetalle.Rows(i).Cells(3).Text))
-                suma4 = suma4 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(4).Text = "", 0, Me.gvdetalle.Rows(i).Cells(4).Text))
-                suma5 = suma5 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(5).Text = "", 0, Me.gvdetalle.Rows(i).Cells(5).Text))
-                suma6 = suma6 + CInt(IIf(Me.gvdetalle.Rows(i).Cells(6).Text = "", 0, Me.gvdetalle.Rows(i).Cells(6).Text))
-            Next
-            footerCell1.Text = suma1.ToString
-            footerCell1.BackColor = Drawing.Color.LightGray
-            footerCell2.Text = suma2.ToString
-            footerCell2.BackColor = Drawing.Color.LightGray
-            footerCell3.Text = suma3.ToString
-            footerCell3.BackColor = Drawing.Color.LightGray
-            footerCell4.Text = suma4.ToString
-            footerCell4.BackColor = Drawing.Color.LightGray
-            footerCell5.Text = suma5.ToString
-            footerCell5.BackColor = Drawing.Color.LightGray
-            footerCell6.Text = suma6.ToString
-            footerCell6.BackColor = Drawing.Color.LightGray
-
-            rowFooter1.Cells.Add(footerCell0)
-            rowFooter1.Cells.Add(footerCell1)
-            rowFooter1.Cells.Add(footerCell2)
-            rowFooter1.Cells.Add(footerCell3)
-            rowFooter1.Cells.Add(footerCell4)
-            rowFooter1.Cells.Add(footerCell5)
-            rowFooter1.Cells.Add(footerCell6)
-            feet += 1
-            If feet = 2 Then
-                gvdetalle.Controls(0).Controls.Add(rowFooter1)
-                feet = 0
+                rowFooter1.Cells.Add(footerCell0)
+                rowFooter1.Cells.Add(footerCell1)
+                rowFooter1.Cells.Add(footerCell2)
+                rowFooter1.Cells.Add(footerCell3)
+                rowFooter1.Cells.Add(footerCell4)
+                rowFooter1.Cells.Add(footerCell5)
+                rowFooter1.Cells.Add(footerCell6)
+                feet += 1
+                If feet = 2 Then
+                    gvdetalle.Controls(0).Controls.Add(rowFooter1)
+                    feet = 0
+                End If
             End If
-
         End If
     End Sub
     Public Sub gvdetalle_RowDataBound(sender As Object, e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvdetalle.RowDataBound
@@ -171,7 +174,7 @@ Partial Class aspx_ReporteEstadisticoIncremento
         End If
     End Sub
     Protected Sub BtnExporarExcel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnExporarExcel.Click
-        Call MOSTRAR(Me.gvdetalle)
+        Call exportarExcel()
     End Sub
     Protected Sub BtnImprimir_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnImprimir.Click
         If txtfechadesde.Text.Trim() = "" Then
@@ -212,9 +215,13 @@ Partial Class aspx_ReporteEstadisticoIncremento
             dts.Clear()
             dts = menus.sp_get_incrementoPorRypleymatico(Me.ddltiendas.SelectedValue, f1, f2)
             If dts.Tables("consulta").Rows.Count > 0 Then
-                Me.gvdetalle.DataSource = dts : Me.gvdetalle.DataBind()
+                existenRegistros = True
+                Me.gvdetalle.DataSource = dts
+                Me.gvdetalle.DataBind()
             Else
-                Me.gvdetalle.DataSource = menus.MENSAJEGRID : Me.gvdetalle.DataBind()
+                existenRegistros = False
+                Me.gvdetalle.DataSource = menus.MENSAJEGRID
+                Me.gvdetalle.DataBind()
             End If
 
         Catch ex As Exception
@@ -223,43 +230,10 @@ Partial Class aspx_ReporteEstadisticoIncremento
         End Try
     End Sub
 
-    Sub MOSTRAR(ByVal wControl As GridView)
-        If wControl.Rows.Count > 0 Then
-            Response.Clear()
-            Response.Buffer = True
-            Response.ContentType = "application/vnd.ms-excel"
-            Response.AddHeader("Content-Disposition", "attachment;filename=NombreArchivo.xls")
-            Response.Charset = "UTF-8"
-            Response.ContentEncoding = System.Text.Encoding.Default
-            Response.Write(ExportToExcel(wControl))
-            Response.End()
-        End If
-    End Sub
-
-    Public Function ExportToExcel(ByVal wControl As GridView) As String
-        Dim page1 As New Page
-        Dim form1 As New HtmlForm
-        Me.gvdetalle.EnableViewState = False
-        page1.EnableViewState = False
-        page1.Controls.Add(form1)
-        form1.Controls.Add(wControl)
-        Dim builder1 As New System.Text.StringBuilder()
-        Dim writer1 As New System.IO.StringWriter(builder1)
-        Dim writer2 As New HtmlTextWriter(writer1)
-        'writer2.Write("<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">" & vbLf & "<html xmlns=""http://www.w3.org/1999/xhtml"">" & vbLf & "<head>" & vbLf & "<title>Datos</title>" & vbLf & "<meta http-equiv=""Content-Type"" content=""text/html; charset=iso-8859-1"" />" & vbLf & "<style>" & vbLf & "</style>" & vbLf & "</head>" & vbLf & "<body>" & vbLf)
-        'writer2.Write("<img src=http://enlace/a/Imagen.gif>")
-        'writer2.Write("<table><tr><td></td><td></td><td><font face=Arial size=5><center>Título Principal</center></font></td></tr></table><br>")
-        'writer2.Write("<table>" & vbLf & "<tr>" & vbLf & "<td></td><td class=TD width=35%><b>Fecha  :</b></td><td width=65% align=left>" & Me.txtfechadesde.Text.Trim() & "</td>" & vbLf & "</tr>" & vbLf & "<tr>" & vbLf & "<td></td><td class=TD><b>Gerencia:</b></td><td>" & Me.ddltiendas.SelectedItem.ToString().Trim() & "</td>" & vbLf & "</tr>" & vbLf & "</table>" & vbLf & "<br><br>")
-        page1.DesignerInitialize()
-        page1.RenderControl(writer2)
-        'writer2.Write(vbLf & "</body>" & vbLf & "</html>")
-        page1.Dispose()
-        page1 = Nothing
-        Return builder1.ToString()
-    End Function
     Sub HabilitarTodos(ByVal valor As Boolean)
         Me.BtnExporarExcel.Visible = valor
     End Sub
+
     Private Function ObtenerHabilitados(ByVal dt As DataTable) As DataTable
         Dim dtTempTienda As New DataTable
 
@@ -290,4 +264,50 @@ Partial Class aspx_ReporteEstadisticoIncremento
         Next
         Return dtTempTienda
     End Function
+
+    Public Sub exportarExcel()
+        Response.Clear()
+        Response.Buffer = True
+
+        Response.AddHeader("content-disposition", "attachment;filename=ReporteEstadisticoIncremento.xls")
+        Response.Charset = ""
+        Response.ContentType = "application/vnd.ms-excel"
+
+        Dim sw As New StringWriter()
+        Dim hw As New HtmlTextWriter(sw)
+
+        gvdetalle.AllowPaging = False
+        MostrarDatos()
+        'gvdetalle.DataBind()
+
+        'Ponemos toda la fila en blanco y cambiamos el color solo de las celdas de la cabecera.
+        'Cambia el color de fondo de la cabecera a blanco.
+        gvdetalle.HeaderRow.Style.Add("background-color", "#FFFFFF")
+
+        'Ponemos el color de cada celda al color que tenemos en el gridview.
+        For Each hcell As TableCell In gvdetalle.HeaderRow.Cells
+            hcell.Style.Add("background-color", "#6B696B")
+        Next
+
+        For Each row As GridViewRow In gvdetalle.Rows
+            row.BackColor = System.Drawing.Color.White
+            For Each cell As TableCell In row.Cells
+                cell.Attributes.Add("class", "textmode")
+            Next
+        Next
+
+        gvdetalle.RenderControl(hw)
+
+        'cambiamos el formato de las celdas, ya que el numero de tarjeta es largo y en excel se muestra como expotencial
+        ' de igual manera los DNIs pueden empezar con 0(cero) y sin cambiar formato no se mostraría
+        Dim style As String = "<style>.textmode{mso-number-format:\@;}</style>"
+        Response.Write(style)
+        Response.Output.Write(sw.ToString())
+        Response.Flush()
+        Response.End()
+    End Sub
+
+    Public Overloads Overrides Sub VerifyRenderingInServerForm(ByVal control As Control)
+        ' No borrar, esto verifica si el control(gridview) se ha renderizado antes de exportar a excel
+    End Sub
 End Class

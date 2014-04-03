@@ -9,6 +9,12 @@
         <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
         <script src="../js/BI.js" type="text/javascript"></script>
+        <style type="text/css">
+            .Gridlayout
+            {
+                table-layout:inherit !important;
+                }
+        </style>
     </head>
     <body>
         <script type="text/javascript">
@@ -18,7 +24,12 @@
                 $("input[data-entryType = 'Date']").datepicker();
                 var arrayDialog = [{ name: dialogAlter, height: 140, width: 350, title: 'Reporte Aceptación Incremento'}];
                 BI.CreateDialogs(arrayDialog);
+                var gvdetalle = '<%= gvdetalle.ClientID %>';
+                $("#" + gvdetalle).addClass("Gridlayout");
+
+
                 var error = '<%= lblError.ClientID %>';
+
 
                 var txtfechadesde = '<%= txtfechadesde.ClientID %>';
                 var txtfechahasta = '<%= txtfechahasta.ClientID %>';
@@ -30,6 +41,7 @@
                 var btnGo = '<%= btnGo.ClientID %>';
                 
                 $("#" + BtnBuscar).click(function (e) {
+                    $("#" + gvdetalle).addClass("Gridlayout");
                     if ($("#" + txtfechadesde).val() == "" || $("#" + txtfechahasta).val() == "") {
                         BI.ShowAlert('', "Ingrese un rango de fechas");
                         return false;
@@ -199,7 +211,7 @@
                                                 </b>
                                                 <br />
                                                 <asp:GridView ID="gvdetalle" runat="server" BackColor="White" BorderColor="#DEDFDE"
-                                                    BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" Font-Size="Small" OnPageIndexChanging = "OnPaging">
+                                                    BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" Font-Size="Small">
                                                     <RowStyle BackColor="#F7F7DE" />
                                                     <FooterStyle BackColor="#CCCC99" />
                                                     <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />

@@ -1,17 +1,18 @@
 ﻿Imports UtilitarioEnvioData.Entidades
 Imports UtilitarioEnvioData.EnvioData
+Imports AccessLayer
 Imports System.Data
+Imports System.IO
 Imports System.Configuration
 Imports System.Web.Services
 Imports System.Threading
-Imports System.IO
 
-Partial Class aspx_ActualizacionRipleyMatico
+Partial Class aspx_ActualizacionProgramaRipleyMatico
     Inherits System.Web.UI.Page
 
     Public Shared listaKioscos As List(Of ENKiosco)
     Public Shared directorioSeleccionado As String
-    Public Shared ActualizacionFlash As String = "F"
+    Public Shared ActualizacionPrograma As String = "P"
     Public Shared textoLog As String = ""
     Public Shared identificador As String = ""
     Public Shared fechaHora As DateTime = DateTime.Now
@@ -22,9 +23,10 @@ Partial Class aspx_ActualizacionRipleyMatico
             If IsPostBack = False Then
                 Dim fecha As DateTime = DateTime.Now
                 fechaHora = fecha
-                identificador = ConvertirFechaHora(fechaHora)
+                identificador = fecha.Year.ToString() + fecha.Month.ToString() + fecha.Minute.ToString() + fecha.Second.ToString()
                 Me.loghub.Value = identificador
                 Dim pathCliente As String = ConfigurationManager.AppSettings("RutaCarpetaRipleyMaticoClientes").ToString()
+                Dim carpetaPrograma As String = ConfigurationManager.AppSettings("RutaCarpetaRipleyMaticoPrograma").ToString()
 
 
                 listaKioscos = New List(Of ENKiosco)
@@ -34,7 +36,7 @@ Partial Class aspx_ActualizacionRipleyMatico
                 For Each dr As DataRow In dt.Rows
                     Dim kio As New ENKiosco()
                     kio.IpKiosco = dr(0).ToString()
-                    kio.RutaPathArchivos = pathCliente
+                    kio.RutaPathArchivos = pathCliente + carpetaPrograma
 
                     listaKioscos.Add(kio)
                 Next
@@ -51,75 +53,53 @@ Partial Class aspx_ActualizacionRipleyMatico
 
     End Sub
 
-    Protected Sub btnAceptar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAceptar.Click
+    <WebMethod()> _
+    Public Shared Function Aceptar(ByVal ruta As String) As String
 
         Try
-            Dim CarpetaBackup As String = "\backup\"
-            Dim CarpetaFecha As String = identificador
-
-            Dim rutaArchivo As String
-            Dim fileOK As Boolean = False
-
-            If fuBuscar.HasFile Then
-
-                Dim fileExtension As String
-                fileExtension = System.IO.Path.GetExtension(fuBuscar.FileName).ToLower()
-
-                If fileExtension = ".swf" Or fileExtension = ".txt" Then
-                    Label1.Visible = False
-
-                    Dim PathServer As String = ConfigurationManager.AppSettings("RutaCarpetaRipleyMaticoServer").ToString()
-
-                    rutaArchivo = PathServer + directorioSeleccionado + "\" + fuBuscar.FileName
-
-                    Dim carpetaDestino As String = PathServer + CarpetaBackup + CarpetaFecha
-                    If Directory.Exists(carpetaDestino) = False Then
-                        Directory.CreateDirectory(carpetaDestino)
-                    End If
-
-                    If File.Exists(rutaArchivo) Then
-                        If File.Exists(carpetaDestino + "\" + fuBuscar.FileName) = False Then
-                            File.Copy(rutaArchivo, carpetaDestino + "\" + fuBuscar.FileName)
-                        End If
-                    End If
-
-                    fuBuscar.SaveAs(rutaArchivo)
-
-                    LbxFlash.Items.Add(rutaArchivo)
-                Else
-                    Label1.Visible = True
-                    Label1.Text = "Debe seleccionar archivos Flash .swf"
-                End If
+            Dim PathServer As String = ConfigurationManager.AppSettings("RutaCarpetaRipleyMaticoServer").ToString()
+            Dim carpetaPrograma As String = ConfigurationManager.AppSettings("RutaCarpetaRipleyMaticoPrograma").ToString()
+            Dim rutaCarpetaDestino As String = PathServer + carpetaPrograma
+            Dim rutaArchivoDestino As String
+            If Directory.Exists(rutaCarpetaDestino) = False Then
+                Directory.CreateDirectory(rutaCarpetaDestino)
             End If
-            LbxFlash.Focus()
 
+            Dim fileOK As Boolean = False
+            Dim files As String() = Directory.GetFiles(ruta)
+
+            For Each archivo As String In files
+                rutaArchivoDestino = rutaCarpetaDestino + Path.GetFileName(archivo)
+                File.Copy(archivo, rutaArchivoDestino, True)
+            Next
+            Return "Ok"
         Catch ex As Exception
-            Label1.Text = ex.Message
+            Return "Error " + ex.Message
         End Try
-    End Sub
-
+    End Function
 
     <WebMethod()> _
-    Public Shared Function Completar(ByVal Archivos As List(Of String), ByVal radio As String, ByVal Kioscos As List(Of String), ByVal usuario As String, ByVal password As String, ByVal dominio As String) As String
+    Public Shared Function Completar(ByVal ruta As String, ByVal radio As String, ByVal Kioscos As List(Of String), ByVal usuario As String, ByVal password As String, ByVal dominio As String) As String
         Try
 
-            If Archivos.Count < 1 Then
+            If String.IsNullOrEmpty(ruta) Then
+                'Label1.Visible = True
+                'Label1.Text = "No se a seleccionado alguna imagen para enviar"
                 Return "No ha seleccionado ningun archivo!"
             Else
                 'Label1.Visible = False
             End If
 
-            Dim listaARchivos As New List(Of String)
-
-            For Each item As String In Archivos
-                listaARchivos.Add(item)
-            Next
 
             Dim objEnvio As New EnvioData
             Dim PathServer As String = ConfigurationManager.AppSettings("RutaCarpetaRipleyMaticoServer").ToString()
-            EnvioData.Instancia.GenerarArchivosFlash(listaKioscos, listaARchivos, directorioSeleccionado, PathServer)
-            Dim contar As Integer = 0
             Dim pathCliente As String = ConfigurationManager.AppSettings("RutaCarpetaRipleyMaticoClientes").ToString()
+            Dim carpetaPrograma As String = ConfigurationManager.AppSettings("RutaCarpetaRipleyMaticoPrograma").ToString()
+            Dim rutaServidor As String = PathServer + carpetaPrograma
+            Dim cantidad = EnvioData.Instancia.GenerarArchivosPrograma(listaKioscos, ruta, carpetaPrograma, PathServer)
+            Dim contar As Integer = 0
+
+            pathCliente = pathCliente + carpetaPrograma
             Dim listTempKioscos As New List(Of ENKiosco)
             Dim listaFinalKioscos As New List(Of ENKiosco)
 
@@ -139,45 +119,39 @@ Partial Class aspx_ActualizacionRipleyMatico
             End If
 
 
-            EnvioData.Instancia.EscribirLog(identificador, "- " + DateTime.Now + " - Actualizando Programa RipleyMático", ActualizacionFlash)
-            EnvioData.Instancia.EscribirLog(identificador, "    -Ha seleccionado " + listaARchivos.Count.ToString() + " archivos", ActualizacionFlash)
-            EnvioData.Instancia.EscribirLog(identificador, "    -Se copiarán los archivos a " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionFlash)
+            EnvioData.Instancia.EscribirLog(identificador, "- " + DateTime.Now + " - Actualizando Programa RipleyMático", ActualizacionPrograma)
+            'System.Threading.Thread.Sleep(1000)
+            EnvioData.Instancia.EscribirLog(identificador, "    -Ha seleccionado " + cantidad.ToString() + " archivos", ActualizacionPrograma)
+            EnvioData.Instancia.EscribirLog(identificador, "    -Se copiarán los archivos a " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionPrograma)
 
             For Each kio As ENKiosco In listaFinalKioscos
                 Try
                     Dim ok As Boolean
 
                     'kio.IpKiosco = obtenerIP(kio.IpKiosco)
-                    Dim nombreKiosko As String = kio.IpKiosco
                     Dim kiosko As ENKiosco = kio
                     kiosko.IpKiosco = obtenerIP(kiosko.IpKiosco)
-                    ok = EnvioData.Instancia.EnviarArchivosFlash(kiosko, directorioSeleccionado, PathServer, usuario, password, dominio, textoLog, listaARchivos, identificador)
+                    ok = EnvioData.Instancia.EnviarArchivosPrograma(kiosko, carpetaPrograma, PathServer, usuario, password, dominio, textoLog, rutaServidor, identificador)
                     If ok = True Then
                         contar = contar + 1
-                        EnvioData.Instancia.EscribirLog(identificador, "    -Terminado " + nombreKiosko + " | " + contar.ToString() + " de " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionFlash)
+                        EnvioData.Instancia.EscribirLog(identificador, "    -Terminado " + kio.IpKiosco + " | " + contar.ToString() + " de " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionPrograma)
                     Else
-                        EnvioData.Instancia.EscribirLog(identificador, "    -No se pudo terminar el kiosko " + nombreKiosko, ActualizacionFlash)
+                        EnvioData.Instancia.EscribirLog(identificador, "    -No se pudo terminar el kiosko " + kio.IpKiosco, ActualizacionPrograma)
                     End If
                 Catch ex As Exception
-                    EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Es posible que no tenga permiso de acceso a un archivo.", ActualizacionFlash)
+                    EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Es posible que no tenga permiso de acceso a un archivo.", ActualizacionPrograma)
                     Return "Es posible que no tenga permiso de acceso a un archivo"
                 End Try
             Next
-            EnvioData.Instancia.EscribirLog(identificador, "    -Fin Proceso: " + "Se terminó de ejecutar el proceso. ", ActualizacionFlash)
+            EnvioData.Instancia.EscribirLog(identificador, "    -Fin Proceso: " + "Se terminó de ejecutar el proceso. ", ActualizacionPrograma)
 
             Return "exito|" + listaFinalKioscos.Count.ToString() + "|" + contar.ToString() + "|" + (listaFinalKioscos.Count - contar).ToString()
         Catch ex As Exception
-            EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Intentelo nuevamente más tarde.", ActualizacionFlash)
+            EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Intentelo nuevamente más tarde.", ActualizacionPrograma)
             Return "Error de Codigo"
         End Try
     End Function
-    Protected Sub LbxFlash_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles LbxFlash.SelectedIndexChanged
-        Try
-            LbxFlash.Items.RemoveAt(LbxFlash.SelectedIndex)
-        Catch ex As Exception
 
-        End Try
-    End Sub
 
     Protected Sub rbUno_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbUno.CheckedChanged
         Try
@@ -230,38 +204,12 @@ Partial Class aspx_ActualizacionRipleyMatico
         Return IP
     End Function
 
-    <WebMethod()>
+    <WebMethod()> _
     Public Shared Function ObtenerLogPantalla(ByVal identificador As String) As List(Of String)
         Dim lista As New List(Of String)
         If identificador <> "" Then
-            lista = EnvioData.Instancia.ConsultarLog(identificador, ActualizacionFlash)
+            lista = EnvioData.Instancia.ConsultarLog(identificador, ActualizacionPrograma)
         End If
         Return lista
-    End Function
-
-    Public Function ConvertirFechaHora(ByVal fecha As DateTime) As String
-        Dim nuevaFecha, dia, mes, year, hora, minuto As String
-        dia = fecha.Day.ToString()
-        mes = fecha.Month.ToString()
-        year = fecha.Year.ToString()
-        hora = fecha.Hour.ToString()
-        minuto = fecha.Minute.ToString()
-
-        If (dia.Length < 2) Then
-            dia = "0" + dia
-        End If
-        If (mes.Length < 2) Then
-            mes = "0" + mes
-        End If
-        If (hora.Length < 2) Then
-            hora = "0" + hora
-        End If
-
-        If (minuto.Length < 2) Then
-            minuto = "0" + minuto
-        End If
-
-        nuevaFecha = year + mes + dia + hora + minuto
-        Return nuevaFecha
     End Function
 End Class

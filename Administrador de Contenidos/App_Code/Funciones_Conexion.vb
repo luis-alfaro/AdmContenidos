@@ -906,4 +906,132 @@ Public Class Funciones_Conexion
         contarRegistros = count
         cmd_consulta.Dispose()
     End Function
+
+#Region "Estructura PDF"
+    Public Function Usp_Get_Obtener_EstructuraPDF(ByVal procedimiento As String, _
+                              ByVal ParamArray x() As Object) As List(Of EstructuraPDF)
+        Dim cmd_consulta As New SqlCommand
+        Dim lista As New List(Of EstructuraPDF)
+        Dim pdf As New EstructuraPDF
+        cmd_consulta.CommandType = CommandType.StoredProcedure
+        cmd_consulta.CommandText = LTrim(RTrim(procedimiento))
+        cmd_consulta.Connection = cn
+        If transaccion = True Then
+            cmd_consulta.Transaction = tsql
+        End If
+        Dim y As SqlParameter
+        SqlCommandBuilder.DeriveParameters(cmd_consulta)
+        Dim i As Integer = 0
+        For Each y In cmd_consulta.Parameters
+            If y.ParameterName <> "@RETURN_VALUE" Then
+                y.Value = x(i)
+                i = i + 1
+            End If
+        Next
+        Dim read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
+        If read_consulta.HasRows Then
+            While read_consulta.Read
+                pdf = New EstructuraPDF()
+                pdf.ID = read_consulta.GetInt32(read_consulta.GetOrdinal("ID"))
+                pdf.IdEstructura = read_consulta.GetInt32(read_consulta.GetOrdinal("ESTRUCTURA_ID"))
+                pdf.NumeroPagina = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("PAGINA")), 0, read_consulta.GetInt32(read_consulta.GetOrdinal("PAGINA")))
+                pdf.EsTexto = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("ESTEXTO")), True, read_consulta.GetBoolean(read_consulta.GetOrdinal("ESTEXTO")))
+                pdf.Orden = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("ORDEN")), 0, read_consulta.GetInt32(read_consulta.GetOrdinal("ORDEN")))
+
+                pdf.NombreCampo = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("NOMBRECAMPO")), "", read_consulta.GetString(read_consulta.GetOrdinal("NOMBRECAMPO")))
+                pdf.CoordenadaX = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("COORDENADAX")), 0, read_consulta.GetDecimal(read_consulta.GetOrdinal("COORDENADAX")))
+                pdf.DesplazamientoX = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("DESPLAZAMIENTOX")), 0, read_consulta.GetDecimal(read_consulta.GetOrdinal("DESPLAZAMIENTOX")))
+                pdf.CoordenadaY = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("COORDENADAY")), 0, read_consulta.GetDecimal(read_consulta.GetOrdinal("COORDENADAY")))
+                pdf.Rotacion = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("ROTACION")), 0, read_consulta.GetDecimal(read_consulta.GetOrdinal("ROTACION")))
+
+                pdf.RutaImagen = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("RUTAIMAGEN")), "", read_consulta.GetString(read_consulta.GetOrdinal("RUTAIMAGEN")))
+
+                pdf.PorcentajeEscala = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("PORCENTAJEESCALA")), 0, read_consulta.GetDecimal(read_consulta.GetOrdinal("PORCENTAJEESCALA")))
+                pdf.MaximoCaracteres = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("MAXIMOCARACTERES")), 0, read_consulta.GetInt32(read_consulta.GetOrdinal("MAXIMOCARACTERES")))
+                lista.Add(pdf)
+            End While
+        End If
+        Usp_Get_Obtener_EstructuraPDF = lista
+        read_consulta.Close()
+        cmd_consulta = Nothing
+    End Function
+
+    Public Function Usp_Get_Guardar_EstructuraPDF(ByVal procedimiento As String, _
+                              ByVal lista As List(Of EstructuraPDF)) As Integer
+        Dim resultado As Integer = 0
+        Dim trans As SqlTransaction
+        Dim cmd As New SqlCommand
+        Dim fechahora As DateTime = DateTime.Now
+        trans = cn.BeginTransaction()
+        Try
+            For Each detalle As EstructuraPDF In lista
+                cmd = New SqlCommand
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.CommandText = LTrim(RTrim(procedimiento))
+                cmd.Connection = cn
+                cmd.Transaction = trans
+                cmd.Parameters.AddWithValue("@ID", detalle.ID)
+                cmd.Parameters.AddWithValue("@ESTRUCTURA_ID", detalle.IdEstructura)
+                cmd.Parameters.AddWithValue("@PAGINA", detalle.NumeroPagina)
+                cmd.Parameters.AddWithValue("@ESTEXTO", detalle.EsTexto)
+                cmd.Parameters.AddWithValue("@ORDEN", detalle.Orden)
+                cmd.Parameters.AddWithValue("@NOMBRECAMPO", detalle.NombreCampo)
+                cmd.Parameters.AddWithValue("@COORDENADAX", detalle.CoordenadaX)
+                cmd.Parameters.AddWithValue("@DESPLAZAMIENTOX", detalle.DesplazamientoX)
+                cmd.Parameters.AddWithValue("@COORDENADAY", detalle.CoordenadaY)
+                cmd.Parameters.AddWithValue("@ROTACION", detalle.Rotacion)
+                cmd.Parameters.AddWithValue("@RUTAIMAGEN", detalle.RutaImagen)
+                cmd.Parameters.AddWithValue("@PORCENTAJEESCALA", detalle.PorcentajeEscala)
+                cmd.Parameters.AddWithValue("@MAXIMOCARACTERES", detalle.MaximoCaracteres)
+                cmd.ExecuteNonQuery()
+                cmd.Dispose()
+            Next
+            trans.Commit()
+            resultado = 1
+        Catch ex As Exception
+            trans.Rollback()
+            resultado = 0
+        End Try
+        trans.Dispose()
+        cmd.Dispose()
+        Return resultado
+    End Function
+#End Region
+
+    Function sp_get_Obtener_Log_RipleyMatico(Procedimiento As String, ByVal ParamArray x() As Object) As List(Of LogRipleyMatico)
+        Dim cmd_consulta As New SqlCommand
+        Dim lista As New List(Of LogRipleyMatico)
+        Dim log As New LogRipleyMatico
+        cmd_consulta.CommandType = CommandType.StoredProcedure
+        cmd_consulta.CommandText = LTrim(RTrim(Procedimiento))
+        cmd_consulta.Connection = cn
+        If transaccion = True Then
+            cmd_consulta.Transaction = tsql
+        End If
+        Dim y As SqlParameter
+        SqlCommandBuilder.DeriveParameters(cmd_consulta)
+        Dim i As Integer = 0
+        For Each y In cmd_consulta.Parameters
+            If y.ParameterName <> "@RETURN_VALUE" Then
+                y.Value = x(i)
+                i = i + 1
+            End If
+        Next
+        Dim read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
+        If read_consulta.HasRows Then
+            While read_consulta.Read
+                log = New LogRipleyMatico()
+                log.ID = read_consulta.GetInt32(read_consulta.GetOrdinal("ID"))
+                log.Fecha = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("FECHA")), DateTime.Now, read_consulta.GetDateTime(read_consulta.GetOrdinal("FECHA")))
+                log.FechaMostrar = log.Fecha.ToString
+                log.Descripcion = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("DESCRIPCION")), "", read_consulta.GetString(read_consulta.GetOrdinal("DESCRIPCION")))
+
+                lista.Add(log)
+            End While
+        End If
+        sp_get_Obtener_Log_RipleyMatico = lista
+        read_consulta.Close()
+        cmd_consulta = Nothing
+    End Function
+
 End Class

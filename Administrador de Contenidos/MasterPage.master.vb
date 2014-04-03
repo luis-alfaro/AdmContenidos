@@ -194,6 +194,26 @@ Partial Class MasterPage
                 'End If
                 'RemoveChilds(TViewIndice.Nodes)
             End If
+            Dim a As String
+            a = Request.Url.ToString()
+
+            For Each nodo As TreeNode In TViewIndice.Nodes
+                For Each nodito As TreeNode In nodo.ChildNodes
+                    If nodito.NavigateUrl <> "" Then
+                        If a.EndsWith(nodito.NavigateUrl.Substring(1, nodito.NavigateUrl.Length - 1)) Then
+                            nodito.Parent.Expanded = True
+                            Exit For
+                        Else
+                            nodito.Parent.Expanded = False
+                        End If
+                    End If
+
+
+                Next
+            Next
+            If a.EndsWith(TViewIndice.Page.AppRelativeVirtualPath.Substring(1, TViewIndice.Page.AppRelativeVirtualPath.Length - 1)) Then
+                'TViewIndice.Nodes.Item(TViewIndice.Page.ClientID).Expanded = True
+            End If
 
             oDT.Clear()
             oDT = Nothing

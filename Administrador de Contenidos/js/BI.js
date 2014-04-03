@@ -29,6 +29,26 @@
         $('#' + dialog).append("<br/>" + mensaje);
         $('#' + dialog).dialog("open");
     },
+    confirm: function (dialogText, okFunc, cancelFunc, dialogTitle) {
+        $('<div style="padding: 10px; max-width: 500px; min-width: 300px; word-wrap: break-word;">' + dialogText + '</div>').dialog({
+            //draggable: false,
+            modal: true,
+            resizable: false,
+            width: 'auto',
+            title: dialogTitle || 'Confirmación',
+            minHeight: 75,
+            buttons: {
+                OK: function () {
+                    if (typeof (okFunc) == 'function') { setTimeout(okFunc, 50); }
+                    $(this).dialog('destroy');
+                },
+                Cancel: function () {
+                    if (typeof (cancelFunc) == 'function') { setTimeout(cancelFunc, 50); }
+                    $(this).dialog('destroy');
+                }
+            }
+        });
+    },
     CreateDialogs: function (arrayDialog) {
 
         for (var i = 0; i < arrayDialog.length; i++) {
@@ -108,4 +128,8 @@
         });
         return rsp;
     }
+};
+String.prototype.endsWith = function (pattern) {
+    var d = this.length - pattern.length;
+    return d >= 0 && this.lastIndexOf(pattern) === d;
 };

@@ -71,7 +71,6 @@ Partial Class aspx_ReporteConsultaIncremento
         End If
     End Sub
     Protected Sub BtnExporarExcel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnExporarExcel.Click
-        'Call MOSTRAR(Me.gvdetalle)
         Call exportarExcel()
     End Sub
     Protected Sub BtnImprimir_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnImprimir.Click
@@ -134,40 +133,6 @@ Partial Class aspx_ReporteConsultaIncremento
         End Try
     End Sub
 
-    'Sub MOSTRAR(ByVal wControl As GridView)
-    '    If wControl.Rows.Count > 0 Then
-    '        Response.Clear()
-    '        Response.Buffer = True
-    '        Response.ContentType = "application/vnd.ms-excel"
-    '        Response.AddHeader("Content-Disposition", "attachment;filename=NombreArchivo.xls")
-    '        Response.Charset = "UTF-8"
-    '        Response.ContentEncoding = System.Text.Encoding.Default
-    '        Response.Write(ExportToExcel(wControl))
-    '        Response.End()
-    '    End If
-    'End Sub
-
-    'Public Function ExportToExcel(ByVal wControl As GridView) As String
-    '    Dim page1 As New Page
-    '    Dim form1 As New HtmlForm
-    '    Me.gvdetalle.EnableViewState = False
-    '    page1.EnableViewState = False
-    '    page1.Controls.Add(form1)
-    '    form1.Controls.Add(wControl)
-    '    Dim builder1 As New System.Text.StringBuilder()
-    '    Dim writer1 As New System.IO.StringWriter(builder1)
-    '    Dim writer2 As New HtmlTextWriter(writer1)
-    '    'writer2.Write("<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">" & vbLf & "<html xmlns=""http://www.w3.org/1999/xhtml"">" & vbLf & "<head>" & vbLf & "<title>Datos</title>" & vbLf & "<meta http-equiv=""Content-Type"" content=""text/html; charset=iso-8859-1"" />" & vbLf & "<style>" & vbLf & "</style>" & vbLf & "</head>" & vbLf & "<body>" & vbLf)
-    '    'writer2.Write("<img src=http://enlace/a/Imagen.gif>")
-    '    'writer2.Write("<table><tr><td></td><td></td><td><font face=Arial size=5><center>Título Principal</center></font></td></tr></table><br>")
-    '    'writer2.Write("<table>" & vbLf & "<tr>" & vbLf & "<td></td><td class=TD width=35%><b>Fecha  :</b></td><td width=65% align=left>" & Me.txtfechadesde.Text.Trim() & "</td>" & vbLf & "</tr>" & vbLf & "<tr>" & vbLf & "<td></td><td class=TD><b>Gerencia:</b></td><td>" & Me.ddltiendas.SelectedItem.ToString().Trim() & "</td>" & vbLf & "</tr>" & vbLf & "</table>" & vbLf & "<br><br>")
-    '    page1.DesignerInitialize()
-    '    page1.RenderControl(writer2)
-    '    'writer2.Write(vbLf & "</body>" & vbLf & "</html>")
-    '    page1.Dispose()
-    '    page1 = Nothing
-    '    Return builder1.ToString()
-    'End Function
     Sub HabilitarTodos(ByVal valor As Boolean)
         Me.BtnExporarExcel.Visible = valor
     End Sub
@@ -184,7 +149,6 @@ Partial Class aspx_ReporteConsultaIncremento
 
         gvdetalle.AllowPaging = False
         MostrarDatos()
-        'gvdetalle.DataBind()
 
         'Ponemos toda la fila en blanco y cambiamos el color solo de las celdas de la cabecera.
         'Cambia el color de fondo de la cabecera a blanco.
@@ -194,20 +158,6 @@ Partial Class aspx_ReporteConsultaIncremento
         For Each hcell As TableCell In gvdetalle.HeaderRow.Cells
             hcell.Style.Add("background-color", "#6B696B")
         Next
-
-        'gvdetalle.HeaderRow.Cells(0).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(1).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(2).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(3).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(4).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(5).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(6).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(7).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(8).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(9).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(10).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(11).Style.Add("background-color", "#6B696B")
-        'gvdetalle.HeaderRow.Cells(12).Style.Add("background-color", "#6B696B")
 
         For Each row As GridViewRow In gvdetalle.Rows
             row.BackColor = System.Drawing.Color.White

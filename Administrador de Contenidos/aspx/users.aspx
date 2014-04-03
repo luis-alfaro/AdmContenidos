@@ -115,7 +115,8 @@
                 <td class="style9" style="width: 24px; height: 30px;">
                     </td>
                 <td class="style9" style="width: 144px; height: 30px;">
-                    Asignar rol:</td>
+                <span id ="lblAsignarRol" runat="server">Asignar rol:</span>
+                    </td>
                 <td style="height: 30px">
                     <asp:CheckBox ID="Ckhabilitar" runat="server" Text="Cuenta habilitada" />
                 </td>

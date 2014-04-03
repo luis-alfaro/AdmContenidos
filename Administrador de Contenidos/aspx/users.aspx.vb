@@ -165,6 +165,11 @@ Partial Class aspx_users
                 End If
 
                 txtusuario.Focus()
+
+                If Session("ROLE_ID") <> 1 Then ' Solo administrador puede cambiar roles
+                    lblAsignarRol.Visible = False
+                    lbxRol.Visible = False
+                End If
             End If
 
             oDatatable.Clear()

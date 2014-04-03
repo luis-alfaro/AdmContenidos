@@ -84,8 +84,6 @@ Partial Class aspx_EdicionRipleyMatico
         Try
 
             If Archivos.Count < 1 Then
-                'Label1.Visible = True
-                'Label1.Text = "No se a seleccionado alguna imagen para enviar"
                 Return "No ha seleccionado ningun archivo!"
             Else
                 'Label1.Visible = False
@@ -96,8 +94,6 @@ Partial Class aspx_EdicionRipleyMatico
             For Each item As String In Archivos
                 listaARchivos.Add(item)
             Next
-
-            'listaARchivos.Add("C:\RipleyMaticoDS" + directorioSeleccionado + "\data.xml")
 
             Dim objEnvio As New EnvioData
             Dim PathServer As String = ConfigurationManager.AppSettings("RutaCarpetaRipleyMaticoServer").ToString()
@@ -124,7 +120,6 @@ Partial Class aspx_EdicionRipleyMatico
 
 
             EnvioData.Instancia.EscribirLog(identificador, "- " + DateTime.Now + " - Actualizando Imágenes RipleyMático", ActualizacionImagenes)
-            'System.Threading.Thread.Sleep(1000)
             EnvioData.Instancia.EscribirLog(identificador, "    -Ha seleccionado " + listaARchivos.Count.ToString() + " archivos", ActualizacionImagenes)
             EnvioData.Instancia.EscribirLog(identificador, "    -Se copiarán los archivos a " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionImagenes)
 
@@ -133,8 +128,7 @@ Partial Class aspx_EdicionRipleyMatico
                     Dim ok As Boolean
                     Dim kiosko As ENKiosco = kio
                     kiosko.IpKiosco = obtenerIP(kiosko.IpKiosco)
-                    'ok = objEnvio.EnviarArchivos(kiosko, directorioSeleccionado, PathServer, txtUsuario.Text.Trim(), txtPassword.Text.Trim(), txtDominio.Text.Trim())
-                    ok = EnvioData.Instancia.EnviarArchivos(kiosko, directorioSeleccionado, PathServer, "ripleymatico", "Saldomatico01", "bancoripley", textoLog, listaARchivos, identificador)
+                    ok = EnvioData.Instancia.EnviarArchivos(kiosko, directorioSeleccionado, PathServer, usuario, password, dominio, textoLog, listaARchivos, identificador)
                     If ok = True Then
                         contar = contar + 1
                         EnvioData.Instancia.EscribirLog(identificador, "    -Terminado " + kio.IpKiosco + " | " + contar.ToString() + " de " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionImagenes)

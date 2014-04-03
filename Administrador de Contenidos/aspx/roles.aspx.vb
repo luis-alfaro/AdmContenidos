@@ -177,33 +177,17 @@ Partial Class aspx_roles
 
         If lblcodigo.Text.Trim.Length > 0 Then 'Modificar 
             sCadenaSQL = sCadenaSQL & " WHERE RoleID=" & CLng(lblcodigo.Text.Trim)
+            Call m_actualizar(sCadenaSQL)
         Else
             'Insertar Nuevo
             'sCadenaSQL = "INSERT INTO app_Roles (Name,Description,Enabled)"
             'sCadenaSQL = sCadenaSQL & " VALUES ('" & txtnombre.Text.Trim & "','" & txtdes.Text.Trim & "',"
 
-
-
-
-
             Dim objAccesos As New Accesos
             Dim codRole As Integer
 
             codRole = objAccesos.Insert_Role(txtnombre.Text.Trim, txtdes.Text.Trim, Ckhabilitar.Checked)
-
-
-            'objAccesos.Insert_Acceso(codRole, True, True, True, True, True, True, True, True, True, True, True, True, True, True)
-
-
-            If Ckhabilitar.Checked = True Then
-                sCadenaSQL = sCadenaSQL & "1)"
-            Else
-                sCadenaSQL = sCadenaSQL & "0)"
-            End If
-
         End If
-
-        Call m_actualizar(sCadenaSQL)
 
         Response.Redirect("lista_roles.aspx")
 

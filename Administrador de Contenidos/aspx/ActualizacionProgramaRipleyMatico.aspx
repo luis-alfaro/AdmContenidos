@@ -1,5 +1,5 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ActualizacionRipleyMatico.aspx.vb"
-    Inherits="aspx_ActualizacionRipleyMatico" %>
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ActualizacionProgramaRipleyMatico.aspx.vb"
+    Inherits="aspx_ActualizacionProgramaRipleyMatico" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -208,15 +208,10 @@
     <link href="estilos/Estilos.css" rel="stylesheet" type="text/css" />
     <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
     <script src="../js/jquery-1.10.2.js" type="text/javascript"></script>
-    <%--   <script src="../Scripts/jquery-1.6.4.js" type="text/javascript"></script>--%>
     <script src="../js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
     <script src="../js/jquery-ui-1.8.24.min.js" type="text/javascript"></script>
     <script src="../js/jquery.jqGrid.min.js" type="text/javascript"></script>
     <script src="../js/BI.js" type="text/javascript"></script>
-    <%--<script src="../Scripts/jquery-1.6.4.min.js" type="text/javascript"></script>--%>
-    <!--Reference the SignalR library. -->
-    <%--    <script src="../Scripts/jquery.signalR-1.1.4.js" type="text/javascript"></script>
-    <script src='<%: ResolveClientUrl("~/signalr/hubs") %>'></script>--%>
     <script type="text/javascript" language="javascript">
         var dialogAlter = 'dialog-alert';
         var inicializador = "<div id='logPantallaDiv'><ul id='logPantalla'></ul></div>";
@@ -226,127 +221,115 @@
         var cont = 1;
         var logPantalla = 'logPantalla';
         var btnCompletar = '<%= btnCompletar.ClientID %>';
-        var LbxFlash = '<%= LbxFlash.ClientID %>';
+        var btnAceptar = '<%= btnAceptar.ClientID %>';
         var rbUno = '<%= rbUno.ClientID %>';
         var rbTodos = '<%= rbTodos.ClientID %>';
+        var txtRuta = '<%= txtRuta.ClientID %>';
         var txtUsuario = '<%= txtUsuario.ClientID %>';
         var txtPassword = '<%= txtPassword.ClientID %>';
         var txtDominio = '<%= txtDominio.ClientID %>';
         var txtSeleccionados = '<%= txtSeleccionados.ClientID %>';
         var txtActualizados = '<%= txtActualizados.ClientID %>';
         var txtNoActualizados = '<%= txtNoActualizados.ClientID %>';
-        var loghub = '<%= loghub.ClientID %>';
 
         $(function () {
-
-            setInterval(EscribirLog, 500);
-            //            var logh = $.connection.logHub;
-            //            // Create a function that the hub can call to broadcast messages.
-            //            logh.client.broadcastLog = function (res) {
-            //                if (cont == 1) {
-            //                    BI.ShowAlert('', inicializador);
-            //                    console.log("debio haber levantado el popup");
-            //                    cont = 2;
-            //                }
-            //                console.log("respondio el loghub");
-            //                $.each(res, function (index, campo) {
-            //                    console.log(campo, "campope");
-            //                    $("#" + logPantalla).append("<li>" + campo + "</li>");
-            //                });
-            //            };
+            $("#" + txtRuta).val('');
+           
 
             var arrayDialog = [{ name: dialogAlter, height: 250, width: 600, title: 'Log de AutoCopy'}];
             BI.CreateDialogLog(arrayDialog);
 
-
-            $("#" + btnCompletar).click(function (e) {
-                flashList = new Array();
-                var ok = false;
-                $('#' + LbxFlash + ' option').each(function (i, option) {
-                    flashList.push($(option).text());
-                });
-                if (flashList.length == 0) {
-                    BI.ShowAlert('', "Debe seleccionar archivos a actualizar.");
+            $("#" + btnAceptar).click(function (e) {
+                var ruta = $("#" + txtRuta).val();
+                if (ruta == "") {
+                    BI.ShowAlert('', "Debe ingresar la ruta a la carpeta donde se encuentra el programa.");
                     return false;
                 }
-                $(flashList).each(function (i, v) {
-                    if (v.endsWith("ersion.txt")) {
-                        ok = true;
+                var parameters = { ruta: ruta };
+                $.ajax({
+                    //async: true,
+                    type: "POST",
+                    //cache:false,
+                    url: "ActualizacionProgramaRipleyMatico.aspx/Aceptar",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(parameters),
+                    dataType: 'json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
+                    },
+                    success: function (result) {
+                        var res = result.hasOwnProperty("d") ? result.d : result;
+                        if (res != "Ok") {
+                            BI.ShowAlert('', "Ocurrió un error." + res.toString());
+                            return false;
+                        } else {
+                            BI.ShowAlert('', "Se han copiado los archivos al servidor, puede continuar.");
+                        }
                     }
                 });
-                if (!ok) {
-                    BI.ShowAlert('', 'Debe seleccionar el archivo "version.txt", es obligatorio en cada pase.');
-                    return false;
-                }
+                e.preventDefault();
+            });
+            $("#" + btnCompletar).click(function (e) {
+                setInterval(EscribirLog, 500);
                 var values = $('input:checkbox:checked').map(function () {
                     return $('label[for="' + $(this).attr("id") + '"]').html();
                 }).get();
+                var ruta = $("#" + txtRuta).val();
                 var usuario = $("#" + txtUsuario).val();
                 var password = $("#" + txtPassword).val();
                 var dominio = $("#" + txtDominio).val();
-
-                if (usuario == "" || password == "" || dominio == "") {
-                    BI.ShowAlert('', "Debe ingresar sus credenciales para poder actualizar.");
+                if (ruta == "") {
+                    BI.ShowAlert('', "Debe ingresar la ruta a la carpeta donde se encuentra el programa.");
                     return false;
                 }
-
                 if ($("#" + rbUno).is(":checked")) {
                     radio = "Uno";
                     if (values.length == 0) {
                         BI.ShowAlert('', "Debe seleccionar por lo menos un Ripleymático.");
                         return false;
                     }
-                    Ejecutar(flashList, radio, values, usuario, password, dominio);
                 } else if ($("#" + rbTodos).is(":checked")) {
                     radio = "Todos";
-                    BI.confirm("¿Está seguro de querer actualizar todos los kioskos?", function () {
-                        Ejecutar(flashList, radio, values, usuario, password, dominio);
-                    }, function () { }, "");
                 }
 
-                e.preventDefault();
-            });
-        });
-
-        function Ejecutar(flashList, radio, values, usuario, password, dominio) {
-            BI.ShowAlert('', inicializador);
-            $("#" + logPantalla).append("<li>" + "-Espere mientras se procesa la actualización..." + "</li>");
-            var parameters = { Archivos: flashList, radio: radio, Kioscos: values, usuario: usuario, password: password, dominio: dominio };
-            $.ajax({
-                type: "POST",
-                url: "ActualizacionRipleyMatico.aspx/Completar",
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(parameters),
-                dataType: 'json',
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    console.log("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
-                },
-                success: function (result) {
-                    var res = result.hasOwnProperty("d") ? result.d : result;
-                    var arr = res.split("|");
-                    if (arr[0] == "exito") {
+                if (usuario == "" || password == "" || dominio == "") {
+                    BI.ShowAlert('', "Debe ingresar sus credenciales para poder actualizar.");
+                    return false;
+                }
+                var parameters = { ruta: ruta, radio: radio, Kioscos: values, usuario: usuario, password: password, dominio: dominio };
+                $.ajax({
+                    //async: true,
+                    type: "POST",
+                    //cache:false,
+                    url: "ActualizacionProgramaRipleyMatico.aspx/Completar",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(parameters),
+                    dataType: 'json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
+                    },
+                    success: function (result) {
+                        var res = result.hasOwnProperty("d") ? result.d : result;
+                        var arr = res.split("|");
                         $("#" + txtSeleccionados).val(arr[1]);
                         $("#" + txtActualizados).val(arr[2]);
                         $("#" + txtNoActualizados).val(arr[3]);
-                        limpiarCampos();
-                    } else {
-                        BI.ShowAlert('', arr[0]);
-                        return false;
                     }
-                }
+                });
+                e.preventDefault();
             });
-        }
 
+
+        });
         function rpta(resultado) {
             var res = resultado.hasOwnProperty("d") ? resultado.d : resultado;
             if (!$('#' + dialogAlter).is(":visible")) {
                 if (res.length > 0) {
-                    $('#' + dialogAlter).html('');
                     BI.ShowAlert('', inicializador);
                 }
             }
             $.each(res, function (index, campo) {
-                console.log("campo", campo);
+                console.log("campo",campo);
                 $("#" + logPantalla).append("<li>" + campo + "</li>");
                 if (campo.indexOf("Fin Proceso") >= 0) {
                     consultarlog = false;
@@ -355,19 +338,11 @@
         }
         function EscribirLog() {
             if (consultarlog == true) {
-                var identificador = $('#loghub').val();
-                var url = "ActualizacionRipleyMatico.aspx/ObtenerLogPantalla";
+            var identificador = $('#loghub').val();
+            var url = "ActualizacionProgramaRipleyMatico.aspx/ObtenerLogPantalla";
                 var parameters = { identificador: identificador };
                 BI.AjaxJson("POST", url, parameters, true, rpta);
             }
-        }
-        function limpiarCampos() {
-            $("#" + rbTodos).prop("checked", true);
-            $("#" + cblKioscos).hide();
-            $('#' + LbxFlash + ' > option').remove();
-            $('#' + txtUsuario).val('');
-            $('#' + txtPassword).val('');
-            $('#' + txtDominio).val('');
         }
     </script>
 </head>
@@ -419,7 +394,7 @@
                                     &nbsp;
                                 </td>
                                 <td class="style49">
-                                    <b><u>Actualización de RipleyMáticos</u></b>
+                                    <b><u>Actualización del Programa RipleyMático</u></b>
                                 </td>
                                 <td>
                                     &nbsp;
@@ -454,7 +429,8 @@
                 <td class="style37">
                 </td>
                 <td class="style38">
-                    <asp:FileUpload ID="fuBuscar" runat="server" Height="24px" Width="369px" CssClass="button" />
+                    <asp:TextBox ID="txtRuta" runat="server" TextMode="SingleLine" Width="300px"></asp:TextBox>
+                    <asp:Button ID="btnAceptar" runat="server" Text="Aceptar" CssClass="button" />
                 </td>
                 <td class="style38">
                 </td>
@@ -468,50 +444,10 @@
                 </td>
             </tr>
             <tr>
-                <td class="style11">
-                </td>
-                <td class="style12">
-                    <b>PASO 2: </b>Aceptar archivos seleccionados<br />
-                    <asp:Button ID="btnAceptar" runat="server" Text="Aceptar" Style="width: 67px" Height="26px"
-                        Width="105px" CssClass="button" />
-                    &nbsp;
-                </td>
-                <td class="style13">
-                </td>
-            </tr>
-            <tr>
-                <td class="style26" style="width: 52px">
-                </td>
-                <td class="style27" style="width: 368px">
-                    Ruta en el Servidor:
-                </td>
-                <td class="style28">
-                </td>
-            </tr>
-            <tr>
-                <td class="style9" style="width: 52px">
-                </td>
-                <td class="style10" colspan="2">
-                    <asp:ListBox ID="LbxFlash" runat="server" Height="106px" Width="767px" AutoPostBack="True">
-                    </asp:ListBox>
-                </td>
-            </tr>
-            <tr>
-                <td class="style2" style="width: 52px; height: 8px;">
-                    &nbsp;
-                </td>
-                <td class="style1" style="width: 368px; height: 8px;">
-                    &nbsp;
-                </td>
-                <td class="style18" style="height: 8px">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
                 <td class="style29" style="width: 52px">
                 </td>
                 <td class="style30" style="width: 368px">
-                    <b>PASO 3:</b> Seleccionar Kioscos
+                    <b>PASO 2:</b> Seleccionar Kioscos
                 </td>
                 <td class="style31">
                     &nbsp;
@@ -579,7 +515,7 @@
                     &nbsp;
                 </td>
                 <td class="style30" style="width: 368px">
-                    <b>PASO 4:</b> Ingresar Su nombre de usuario, contraseña y Dominio al que esta asignado
+                    <b>PASO 3:</b> Ingresar Su nombre de usuario, contraseña y Dominio al que esta asignado
                 </td>
                 <td class="style31">
                     &nbsp;

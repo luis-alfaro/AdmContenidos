@@ -25,12 +25,14 @@ Public Class Usuarios
 
 
 
-    Public Function Get_usuarios() As DataTable
+    Public Function Get_usuarios(ByVal role As Integer, ByVal user As Integer) As DataTable
 
         Dim cn As New SqlConnection(Get_CadenaConexion())
 
         Dim da As New SqlDataAdapter("Usp_Get_Users", cn)
         da.SelectCommand.CommandType = CommandType.StoredProcedure
+        da.SelectCommand.Parameters.AddWithValue("@role_id", role)
+        da.SelectCommand.Parameters.AddWithValue("@user_id", user)
 
 
 

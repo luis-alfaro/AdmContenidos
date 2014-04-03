@@ -10,8 +10,9 @@ Partial Class aspx_LogActualizacionRipleymatico
 
     Public Sub leer()
 
+        Dim rutalog As String = ConfigurationManager.AppSettings("RutaLogPantalla").ToString()
 
-        Dim str As New StreamReader("C:\RipleymaticoDS\LogActualizacionRipleymatico.txt")
+        Dim str As New StreamReader(rutalog)
 
 
         Dim Data As String

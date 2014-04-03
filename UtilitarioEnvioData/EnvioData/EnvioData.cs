@@ -16,6 +16,7 @@ namespace UtilitarioEnvioData.EnvioData
     {
         const string ActualizacionFlash = "F";
         const string ActualizacionImagenes = "I";
+        const string ActualizacionPrograma = "P";
         //criteriosBusqueda[1] = "*.png";
         // Declare the logon types as constants
         //const long LOGON32_LOGON_INTERACTIVE = 2;
@@ -253,18 +254,18 @@ namespace UtilitarioEnvioData.EnvioData
 
 
         #region FLASH
-       
 
         public bool GenerarArchivosFlash(List<ENKiosco> kioscos, List<string> ArchivosEnviar, string Directorio, string DirectorioPrincipal)
         {
             try
             {
+                
                 string[] archivosGuardados = buscarArchivosFlashEnDirectorio(DirectorioPrincipal + Directorio);
 
                 foreach (string archivoGuardado in archivosGuardados)
                 {
                     if (buscarEnLista(archivoGuardado, ArchivosEnviar, "") == false)
-                    {
+                    {                        
                         File.Delete(archivoGuardado);
                     }
                 }
@@ -348,12 +349,18 @@ namespace UtilitarioEnvioData.EnvioData
             try
             {
                 string rutaLog = "";
-                if (tipo == "F")
+                switch (tipo)
                 {
-                   rutaLog= ConfigurationManager.AppSettings["RutaLogPantalla"].ToString();
-                }
-                else {
-                    rutaLog = ConfigurationManager.AppSettings["RutaLogErrores"].ToString();
+                    case ActualizacionFlash:
+                        rutaLog = ConfigurationManager.AppSettings["RutaLogPantalla"].ToString();
+                        break;
+                    case ActualizacionImagenes:
+                        rutaLog = ConfigurationManager.AppSettings["RutaLogErrores"].ToString();
+                        break;
+                    case "P":
+                        return true;                        
+                    default:
+                        break;
                 }
                 StreamWriter sw = new StreamWriter(rutaLog, true);
                 sw.WriteLine(nomLinea);
@@ -381,6 +388,116 @@ namespace UtilitarioEnvioData.EnvioData
                 return new List<string>();
             }
         }
-       
+
+        #region Programa
+        private bool buscarEnListaPrograma(string cadena, List<string> listaBusqueda, string carpetaXML)
+        {
+            //listaBusqueda.Add(carpetaXML+@"\data.xml");
+
+            foreach (string item in listaBusqueda)
+            {
+                if (Path.GetFileName(item) == Path.GetFileName(cadena))
+                    return true;
+            }
+            return false;
+
+        }
+        private List<string> buscarArchivosProgramaEnDirectorio(string DirectorioBuscar)
+        {
+            string[] archivos = Directory.GetFiles(DirectorioBuscar);
+
+            List<string> ListaArchivos = new List<string>();
+
+            foreach (string item in archivos)
+            {
+                ListaArchivos.Add(item);
+            }
+
+            return ListaArchivos;
+        }
+
+        public Int32 GenerarArchivosPrograma(List<ENKiosco> kioscos, string ruta, string Directorio, string DirectorioPrincipal)
+        {
+            try
+            {
+                List<string> lista = buscarArchivosProgramaEnDirectorio(ruta);
+
+
+                List<string> archivosGuardados = buscarArchivosProgramaEnDirectorio(DirectorioPrincipal + Directorio);
+
+                foreach (string archivoGuardado in archivosGuardados)
+                {
+                    if (buscarEnListaPrograma(archivoGuardado, lista, "") == false)
+                    {
+                        File.Delete(archivoGuardado);
+                    }
+                }
+                return lista.Count;
+            }
+
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
+        public bool EnviarArchivosPrograma(ENKiosco kiosco, string Directorio, string DirectorioPrincipal, string usuario, string password, string dominio, ref string textoLog, string ruta, string identificador)
+        {
+            string slog = "";
+            bool error = true;
+            List<String> listaArchivos = buscarArchivosProgramaEnDirectorio(ruta);
+
+            string carpetaDestino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos;
+            if (!Directory.Exists(carpetaDestino))
+            {
+                Directory.CreateDirectory(carpetaDestino);
+            }
+
+            if (impersonateValidUser(usuario, dominio, password))
+            {
+                foreach (string item in listaArchivos)
+                {
+                    try
+                    {
+                        //string nombreTemp = string.Format("{0}{1}",Path.GetFileNameWithoutExtension(item),".temp");
+                        string archivo = Path.GetFileName(item);
+
+                        //string destino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos + item.Replace(DirectorioPrincipal, "");
+                        string destino = carpetaDestino + @"\" + archivo;
+
+                        File.Copy(item, destino, true);
+
+                        textoLog = "    -Se ha copiado el archivo " + archivo + " a " + kiosco.IpKiosco;
+                        EscribirLog(identificador, textoLog, ActualizacionPrograma);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //no se pudo copiar
+                        try
+                        {
+                            slog = DateTime.Now.ToString() + " " + kiosco.IpKiosco + " " + Path.GetFileName(item) + " " + ex.Message;
+                            EscribirLog(identificador, slog, ActualizacionPrograma);
+                            error = false;
+                        }
+                        catch (IOException) { }
+                    }
+                }
+            }
+            else
+            {//usuario incorrecto 
+                slog = DateTime.Now.ToString() + " el usuario " + usuario + " no es valido";
+                EscribirLog(identificador, slog, ActualizacionPrograma);
+                error = false;
+            }
+
+            if (error == false)
+                return false;
+            else
+                return true;
+
+        }
+        
+        #endregion
     }
 }

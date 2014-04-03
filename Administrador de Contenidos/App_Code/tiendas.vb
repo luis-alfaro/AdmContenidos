@@ -4,13 +4,13 @@ Imports System.Data.SqlClient
 Public Class tiendas
     Dim cn As New Funciones_Conexion
     Public Function grabar(ByVal direccion As String, ByVal idtienda As Integer, ByVal nombre As String, ByVal idubigeo As Integer, _
-                           ByVal estado As String,
-                           ByVal hora1ini As String,
-                           ByVal hora1fin As String,
-                           ByVal hora2ini As String,
-                           ByVal hora2fin As String,
-                           ByVal hini_cli As String,
-                           ByVal hfin_cli As String,
+                           ByVal estado As String, _
+                           ByVal hora1ini As String, _
+                           ByVal hora1fin As String, _
+                           ByVal hora2ini As String, _
+                           ByVal hora2fin As String, _
+                           ByVal hini_cli As String, _
+                           ByVal hfin_cli As String, _
                            ByVal tipo As String, _
                         ByRef rpta As Integer, ByRef mensaje As String) As Integer
         Dim r As Integer = 0
