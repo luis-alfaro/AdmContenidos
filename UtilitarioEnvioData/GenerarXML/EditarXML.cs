@@ -9,69 +9,51 @@ namespace UtilitarioEnvioData.GenerarXML
     public class EditarXML
     {
 
-        public bool editarXml(List<string> listaArchivos, string Carpeta, string CarpetaPrincipal)
+        public bool editarXml(ref List<string> listaArchivos, string Carpeta, string CarpetaPrincipal)
         {
-
-
-
             try
             {
+                XmlDocument doc = new XmlDocument();
 
- 
-            XmlDocument doc = new XmlDocument();
-            
-            doc.Load(CarpetaPrincipal+Carpeta + @"\data.xml");
-             
-            
+                string archivoData = CarpetaPrincipal + Carpeta + @"\data.xml";
+                doc.Load(archivoData);
 
-            XmlNode raiz = doc.GetElementsByTagName("item")[0];
-            raiz.RemoveAll();
-            //XmlNodeList listaNodos = raiz.ChildNodes;
+                XmlNode raiz = doc.GetElementsByTagName("item")[0];
+                raiz.RemoveAll();
+                //XmlNodeList listaNodos = raiz.ChildNodes;
 
-            foreach (string archivo in listaArchivos)
-            {
+                foreach (string archivo in listaArchivos)
+                {
+                    XmlNode nodoList = doc.CreateNode(XmlNodeType.Element, "list", "");
 
+                    XmlNode nodoMainImage = doc.CreateNode(XmlNodeType.Element, "mainimage", "");
 
-                XmlNode nodoList = doc.CreateNode(XmlNodeType.Element, "list", "");
+                    string valorNodo = archivo.Replace(CarpetaPrincipal, ".");
+                    valorNodo = valorNodo.Replace(@"\", "/");
 
+                    nodoMainImage.InnerText = valorNodo;
 
-                XmlNode nodoMainImage = doc.CreateNode(XmlNodeType.Element, "mainimage", "");
+                    //a mainimage
+                    nodoList.AppendChild(nodoMainImage);
 
-                string valorNodo = archivo.Replace(CarpetaPrincipal, ".");
-                valorNodo = valorNodo.Replace(@"\", "/");
+                    //a list
+                    raiz.AppendChild(nodoList);
 
-                nodoMainImage.InnerText = valorNodo;
-
-
-                //a mainimage
-                nodoList.AppendChild(nodoMainImage);
-
-                //a list
-                raiz.AppendChild(nodoList);
-
-
-
-
-            }
-
-
-            //foreach (XmlNode nodo in listaNodos) 
-            //{
-
-            doc.Save(CarpetaPrincipal + Carpeta + @"\data.xml");
-            //}
+                }
+                doc.Save(archivoData);
+                listaArchivos.Add(archivoData);
 
             }
             catch (Exception ex)
             {
                 string error = ex.Message;
-               
+
             }
 
             return true;
         }
-        
-        
+
+
 
     }
 }

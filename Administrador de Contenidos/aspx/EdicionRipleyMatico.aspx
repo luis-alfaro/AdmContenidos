@@ -208,15 +208,10 @@ Inherits="aspx_EdicionRipleyMatico" %>
         <link href="estilos/Estilos.css" rel="stylesheet" type="text/css" />
     <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
     <script src="../js/jquery-1.10.2.js" type="text/javascript"></script>
- <%--   <script src="../Scripts/jquery-1.6.4.js" type="text/javascript"></script>--%>
     <script src="../js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
     <script src="../js/jquery-ui-1.8.24.min.js" type="text/javascript"></script>
     <script src="../js/jquery.jqGrid.min.js" type="text/javascript"></script>
     <script src="../js/BI.js" type="text/javascript"></script>
-    <%--<script src="../Scripts/jquery-1.6.4.min.js" type="text/javascript"></script>--%>
-    <!--Reference the SignalR library. -->
-<%--    <script src="../Scripts/jquery.signalR-1.1.4.js" type="text/javascript"></script>
-    <script src='<%: ResolveClientUrl("~/signalr/hubs") %>'></script>--%>
     <script type="text/javascript" language="javascript">
         var dialogAlter = 'dialog-alert';
         var inicializador = "<div id='logPantallaDiv'><ul id='logPantalla'></ul></div>";
@@ -238,23 +233,6 @@ Inherits="aspx_EdicionRipleyMatico" %>
         var loghub = '<%= loghub.ClientID %>';
 
         $(function () {
-
-
-            //            var logh = $.connection.logHub;
-            //            // Create a function that the hub can call to broadcast messages.
-            //            logh.client.broadcastLog = function (res) {
-            //                if (cont == 1) {
-            //                    BI.ShowAlert('', inicializador);
-            //                    console.log("debio haber levantado el popup");
-            //                    cont = 2;
-            //                }
-            //                console.log("respondio el loghub");
-            //                $.each(res, function (index, campo) {
-            //                    console.log(campo, "campope");
-            //                    $("#" + logPantalla).append("<li>" + campo + "</li>");
-            //                });
-            //            };
-
             var arrayDialog = [{ name: dialogAlter, height: 250, width: 600, title: 'Log de Edicion Ripleymatico'}];
             BI.CreateDialogLog(arrayDialog);
 
@@ -274,59 +252,58 @@ Inherits="aspx_EdicionRipleyMatico" %>
                 var usuario = $("#" + txtUsuario).val();
                 var password = $("#" + txtPassword).val();
                 var dominio = $("#" + txtDominio).val();
+
+
+                if (usuario == "" || password == "" || dominio == "") {
+                    BI.ShowAlert('', "Debe ingresar sus credenciales para poder actualizar.");
+                    return false;
+                }
+
                 if ($("#" + rbUno).is(":checked")) {
                     radio = "Uno";
                     if (values.length == 0) {
                         BI.ShowAlert('', "Debe seleccionar por lo menos un Ripleymático.");
                         return false;
                     }
+                    Ejecutar(imageList, radio, values, usuario, password, dominio);
                 } else if ($("#" + rbTodos).is(":checked")) {
                     radio = "Todos";
+                    BI.confirm("¿Está seguro de querer actualizar todos los kioskos?", function () {
+                        Ejecutar(imageList, radio, values, usuario, password, dominio);
+                    }, function () { }, "");
                 }
-
-                if (usuario == "" || password == "" || dominio == "") {
-                    BI.ShowAlert('', "Debe ingresar sus credenciales para poder actualizar.");
-                    return false;
-                }
-                var parameters = { Archivos: imageList, radio: radio, Kioscos: values, usuario: usuario, password: password, dominio: dominio };
-                console.log("start");
-                $.ajax({
-                    //async: true,
-                    type: "POST",
-                    //cache:false,
-                    url: "EdicionRipleyMatico.aspx/Completar",
-                    contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(parameters),
-                    dataType: 'json',
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        console.log("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
-                    },
-                    success: function (result) {
-                        var res = result.hasOwnProperty("d") ? result.d : result;
-                        var arr = res.split("|");
-                        $("#" + txtSeleccionados).val(arr[1]);
-                        $("#" + txtActualizados).val(arr[2]);
-                        $("#" + txtNoActualizados).val(arr[3]);
-                        console.log("end");
-                        //$.connection.hub.stop();
-                    }
-                });
-                setInterval(EscribirLog, 500);
-
-
-                //                // Start the connection.
-                //                $.connection.hub.start().done(function () {
-                //                    console.log("hub starteo");
-                //                    setInterval(function () {
-                //                        logh.server.send($('#loghub').val());
-                //                    }, 1000);
-                //                });
-
+                
                 e.preventDefault();
             });
 
 
         });
+        function Ejecutar(imageList, radio, values, usuario, password, dominio) {
+            BI.ShowAlert('', inicializador);
+            $("#" + logPantalla).append("<li>" + "-Espere mientras se procesa la actualización..." + "</li>");
+            var parameters = { Archivos: imageList, radio: radio, Kioscos: values, usuario: usuario, password: password, dominio: dominio };
+            $.ajax({
+                type: "POST",
+                url: "EdicionRipleyMatico.aspx/Completar",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(parameters),
+                dataType: 'json',
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
+                },
+                success: function (result) {
+                    var res = result.hasOwnProperty("d") ? result.d : result;
+                    var arr = res.split("|");
+                    $("#" + txtSeleccionados).val(arr[1]);
+                    $("#" + txtActualizados).val(arr[2]);
+                    $("#" + txtNoActualizados).val(arr[3]);
+                }
+            });
+            setInterval(EscribirLog, 500);
+        }
+
+
+
         function rpta(resultado) {
             var res = resultado.hasOwnProperty("d") ? resultado.d : resultado;
             if (!$('#' + dialogAlter).is(":visible")) {
@@ -335,7 +312,6 @@ Inherits="aspx_EdicionRipleyMatico" %>
                 }
             }
             $.each(res, function (index, campo) {
-                console.log("campo", campo);
                 $("#" + logPantalla).append("<li>" + campo + "</li>");
                 if (campo.indexOf("Fin Proceso") >= 0) {
                     consultarlog = false;
@@ -343,11 +319,10 @@ Inherits="aspx_EdicionRipleyMatico" %>
             });
         }
         function EscribirLog() {
-            console.log("log");
             if (consultarlog == true) {
-                var identificador = $('#loghub').val();
+                var identificadorx = $('#loghub').val();
                 var url = "EdicionRipleyMatico.aspx/ObtenerLogPantalla";
-                var parameters = { identificador: identificador };
+                var parameters = { identificadorx: identificadorx };
                 BI.AjaxJson("POST", url, parameters, false, rpta);
             }
         }

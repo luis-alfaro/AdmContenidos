@@ -16,13 +16,29 @@ CodeFile="ReporteEstadisticoIncremento.aspx.vb"  Inherits="aspx_ReporteEstadisti
     var dialogAlter = 'dialog-alert';
     $(document).ready(DocReady);
     function DocReady() {
-        $("input[data-entryType = 'Date']").datepicker();
+//        $("input[data-entryType = 'Date']").datepicker();
         var arrayDialog = [{ name: dialogAlter, height: 140, width: 350, title: 'Reporte Estadístico Incremento'}];
         BI.CreateDialogs(arrayDialog);
         var BtnBuscar = '<%= BtnBuscar.ClientID %>';
         var txtfechadesde = '<%= txtfechadesde.ClientID %>';
         var txtfechahasta = '<%= txtfechahasta.ClientID %>';
-        
+        var ddltiendas = '<%= ddltiendas.ClientID %>';
+        var BtnLimpiar = '<%= BtnLimpiar.ClientID %>';
+
+        $("#" + txtfechadesde).prop("readonly", true);
+        $("#" + txtfechahasta).prop("readonly", true);
+
+        $("#" + txtfechadesde).datepicker({
+            onClose: function (selectedDate) {
+                $("#" + txtfechahasta).datepicker("option", "minDate", selectedDate);
+            }
+        });
+
+        $("#" + txtfechahasta).datepicker({
+            onClose: function (selectedDate) {
+                $("#" + txtfechadesde).datepicker("option", "maxDate", selectedDate);
+            }
+        });
 
         $("#" + BtnBuscar).click(function (e) {
             if ($("#" + txtfechadesde).val() == "" || $("#" + txtfechahasta).val() == "") {
@@ -32,7 +48,12 @@ CodeFile="ReporteEstadisticoIncremento.aspx.vb"  Inherits="aspx_ReporteEstadisti
             }
         });
 
-        
+        $("#" + BtnLimpiar).click(function (e) {
+            $("#" + txtfechadesde).val('');
+            $("#" + txtfechahasta).val('');
+            $("#" + ddltiendas).val('0');
+            e.preventDefault();
+        });        
     }
 </script>
 <div id='dialog-alert' style="display: none">   
@@ -77,7 +98,9 @@ CodeFile="ReporteEstadisticoIncremento.aspx.vb"  Inherits="aspx_ReporteEstadisti
                     </tr>
                     <tr>
                         <th colspan="8"><center>
-                        <asp:Button ID="BtnBuscar" runat="server" Text="Mostrar Datos" 
+                            <asp:Button ID="BtnBuscar" runat="server" Text="Mostrar Datos" 
+                                    style="text-align:center" CssClass="button" />
+                            <asp:Button ID="BtnLimpiar" runat="server" Text="Limpiar Campos" 
                                     style="text-align:center" CssClass="button" />
                             <asp:Button ID="BtnImprimir" runat="server" Text="Imprimir" Width="122px" 
                                     CssClass="button" />

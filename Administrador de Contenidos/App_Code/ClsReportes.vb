@@ -363,7 +363,7 @@ Public Class ClsReportes
         Return resultado
     End Function
 
-    Function sp_get_Obtener_Log_RipleyMatico(tipo As String, desde As DateTime, hasta As DateTime, filtro As String) As List(Of LogRipleyMatico)
+    Function sp_get_Obtener_Log_RipleyMatico(tipo As String, desde As String, hasta As String, filtro As String) As List(Of LogRipleyMatico)
         Dim lista As New List(Of LogRipleyMatico)
         cn.abrirconexion()
         lista = cn.sp_get_Obtener_Log_RipleyMatico("dbo.Usp_Get_Obtener_Log_RipleyMatico", tipo, desde, hasta, filtro)

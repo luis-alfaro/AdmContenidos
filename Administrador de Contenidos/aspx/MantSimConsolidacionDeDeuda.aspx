@@ -7,7 +7,8 @@
         <title>Administrador de Contenidos(Consolidación De Deuda) </title>
         <script src="../js/BI.js" type="text/javascript"></script>
         <link rel="stylesheet" href="estilos/estilos.css" type="text/css" />
-        <link href="../estilos/redmond/jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css" />
+        <%--<link href="../estilos/redmond/jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css" />--%>
+        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
         <link href="../estilos/redmond/ui.jqgrid.css" rel="stylesheet" type="text/css" />
         <script src="../js/jquery-1.10.2.js" type="text/javascript"></script>
         <script src="../js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>

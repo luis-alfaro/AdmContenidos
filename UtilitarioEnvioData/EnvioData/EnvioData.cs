@@ -33,7 +33,7 @@ namespace UtilitarioEnvioData.EnvioData
         [DllImport("advapi32.dll", EntryPoint = "LogonUser")]
         private static extern int LogonUser(string lpszUsername, string lpszDomain, string lpszPassword, int dwLogonType, int dwLogonProvider, ref IntPtr phToken);
 
-        public bool GenerarArchivos(List<ENKiosco> kioscos, List<string> ArchivosEnviar, string Directorio, string DirectorioPrincipal)
+        public bool GenerarArchivos(List<ENKiosco> kioscos,ref  List<string> ArchivosEnviar, string Directorio, string DirectorioPrincipal)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace UtilitarioEnvioData.EnvioData
                     }
                 }
                 EditarXML objXml = new EditarXML();
-                objXml.editarXml(ArchivosEnviar, Directorio, DirectorioPrincipal);
+                objXml.editarXml(ref ArchivosEnviar, Directorio, DirectorioPrincipal);
                 return true;
             }
             catch (Exception)

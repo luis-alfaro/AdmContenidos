@@ -126,14 +126,15 @@ Partial Class aspx_EdicionRipleyMatico
             For Each kio As ENKiosco In listaFinalKioscos
                 Try
                     Dim ok As Boolean
+                    Dim nombreKiosko As String = kio.IpKiosco
                     Dim kiosko As ENKiosco = kio
                     kiosko.IpKiosco = obtenerIP(kiosko.IpKiosco)
                     ok = EnvioData.Instancia.EnviarArchivos(kiosko, directorioSeleccionado, PathServer, usuario, password, dominio, textoLog, listaARchivos, identificador)
                     If ok = True Then
                         contar = contar + 1
-                        EnvioData.Instancia.EscribirLog(identificador, "    -Terminado " + kio.IpKiosco + " | " + contar.ToString() + " de " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionImagenes)
+                        EnvioData.Instancia.EscribirLog(identificador, "    -Terminado " + nombreKiosko + " | " + contar.ToString() + " de " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionImagenes)
                     Else
-                        EnvioData.Instancia.EscribirLog(identificador, "    -No se pudo terminar el kiosko " + kio.IpKiosco, ActualizacionImagenes)
+                        EnvioData.Instancia.EscribirLog(identificador, "    -No se pudo terminar el kiosko " + nombreKiosko, ActualizacionImagenes)
                     End If
                 Catch ex As Exception
                     EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Es posible que no tenga permiso de acceso a un archivo.", ActualizacionImagenes)
@@ -228,7 +229,7 @@ Partial Class aspx_EdicionRipleyMatico
     End Function
 
     <WebMethod()>
-    Public Shared Function ObtenerLogPantalla(ByVal identificador As String) As List(Of String)
+    Public Shared Function ObtenerLogPantalla(ByVal identificadorx As String) As List(Of String)
         Dim lista As New List(Of String)
         If identificador <> "" Then
             lista = EnvioData.Instancia.ConsultarLog(identificador, ActualizacionImagenes)

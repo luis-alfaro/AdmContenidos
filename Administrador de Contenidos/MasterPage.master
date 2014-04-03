@@ -154,10 +154,10 @@
                                         </asp:TreeNode>
                                         <asp:TreeNode ImageUrl="~/images/table_edit.ico" Text="Registro de Errores" Value="Registro de Errores">
                                             <asp:TreeNode ImageUrl="~/images/table_edit.ico" 
-                                                NavigateUrl="~/aspx/LogEnvioData.aspx" Text="Imágenes" 
+                                                NavigateUrl="~/aspx/LogDeEnvioData.aspx" Text="Imágenes" 
                                                 Value="Imagenes"></asp:TreeNode>
                                                 <asp:TreeNode ImageUrl="~/images/table_edit.ico" 
-                                                NavigateUrl="~/aspx/LogActualizacionRipleymatico.aspx" Text="Ripleymático" 
+                                                NavigateUrl="~/aspx/LogDeActualizacionRipleymatico.aspx" Text="Ripleymático" 
                                                 Value="Ripleymatico"></asp:TreeNode>
                                         </asp:TreeNode>
                                         <asp:TreeNode Text="Cerrar Sesión" Value="CS" ImageUrl="~/images/cerrar.png"></asp:TreeNode>

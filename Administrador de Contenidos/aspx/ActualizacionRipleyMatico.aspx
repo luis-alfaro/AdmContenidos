@@ -208,15 +208,10 @@
     <link href="estilos/Estilos.css" rel="stylesheet" type="text/css" />
     <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
     <script src="../js/jquery-1.10.2.js" type="text/javascript"></script>
-    <%--   <script src="../Scripts/jquery-1.6.4.js" type="text/javascript"></script>--%>
     <script src="../js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
     <script src="../js/jquery-ui-1.8.24.min.js" type="text/javascript"></script>
     <script src="../js/jquery.jqGrid.min.js" type="text/javascript"></script>
     <script src="../js/BI.js" type="text/javascript"></script>
-    <%--<script src="../Scripts/jquery-1.6.4.min.js" type="text/javascript"></script>--%>
-    <!--Reference the SignalR library. -->
-    <%--    <script src="../Scripts/jquery.signalR-1.1.4.js" type="text/javascript"></script>
-    <script src='<%: ResolveClientUrl("~/signalr/hubs") %>'></script>--%>
     <script type="text/javascript" language="javascript">
         var dialogAlter = 'dialog-alert';
         var inicializador = "<div id='logPantallaDiv'><ul id='logPantalla'></ul></div>";
@@ -240,20 +235,6 @@
         $(function () {
 
             setInterval(EscribirLog, 500);
-            //            var logh = $.connection.logHub;
-            //            // Create a function that the hub can call to broadcast messages.
-            //            logh.client.broadcastLog = function (res) {
-            //                if (cont == 1) {
-            //                    BI.ShowAlert('', inicializador);
-            //                    console.log("debio haber levantado el popup");
-            //                    cont = 2;
-            //                }
-            //                console.log("respondio el loghub");
-            //                $.each(res, function (index, campo) {
-            //                    console.log(campo, "campope");
-            //                    $("#" + logPantalla).append("<li>" + campo + "</li>");
-            //                });
-            //            };
 
             var arrayDialog = [{ name: dialogAlter, height: 250, width: 600, title: 'Log de AutoCopy'}];
             BI.CreateDialogLog(arrayDialog);
@@ -355,9 +336,9 @@
         }
         function EscribirLog() {
             if (consultarlog == true) {
-                var identificador = $('#loghub').val();
+                var identificadorx = $('#loghub').val();
                 var url = "ActualizacionRipleyMatico.aspx/ObtenerLogPantalla";
-                var parameters = { identificador: identificador };
+                var parameters = { identificadorx: identificadorx };
                 BI.AjaxJson("POST", url, parameters, true, rpta);
             }
         }

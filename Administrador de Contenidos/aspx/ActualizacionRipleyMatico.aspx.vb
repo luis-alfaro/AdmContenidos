@@ -231,9 +231,10 @@ Partial Class aspx_ActualizacionRipleyMatico
     End Function
 
     <WebMethod()>
-    Public Shared Function ObtenerLogPantalla(ByVal identificador As String) As List(Of String)
+    Public Shared Function ObtenerLogPantalla(ByVal identificadorx As String) As List(Of String)
         Dim lista As New List(Of String)
         If identificador <> "" Then
+            'Dim thread As Thread = New ThreadStart()
             lista = EnvioData.Instancia.ConsultarLog(identificador, ActualizacionFlash)
         End If
         Return lista

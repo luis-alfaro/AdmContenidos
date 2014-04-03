@@ -15,7 +15,7 @@
             var dialogAlter = 'dialog-alert';
             $(document).ready(DocReady);
             function DocReady() {
-                $("input[data-entryType = 'Date']").datepicker();
+//                $("input[data-entryType = 'Date']").datepicker();
                 var arrayDialog = [{ name: dialogAlter, height: 140, width: 350, title: 'Reporte Consulta Incremento'}];
                 BI.CreateDialogs(arrayDialog);
                 var BtnBuscar = '<%= BtnBuscar.ClientID %>';
@@ -23,6 +23,22 @@
                 var txtfechahasta = '<%= txtfechahasta.ClientID %>';
                 var txtnro_dni = '<%= txtnro_dni.ClientID %>';
                 var txtnro_tarjeta = '<%= txtnro_tarjeta.ClientID %>';
+                var BtnLimpiar = '<%= BtnLimpiar.ClientID %>';
+
+                $("#" + txtfechadesde).prop("readonly", true);
+                $("#" + txtfechahasta).prop("readonly", true);
+
+                $("#" + txtfechadesde).datepicker({
+                    onClose: function (selectedDate) {
+                        $("#" + txtfechahasta).datepicker("option", "minDate", selectedDate);
+                    }
+                });
+
+                $("#" + txtfechahasta).datepicker({
+                    onClose: function (selectedDate) {
+                        $("#" + txtfechadesde).datepicker("option", "maxDate", selectedDate);
+                    }
+                });
 
                 $("#" + BtnBuscar).click(function (e) {
                     if ($("#" + txtfechadesde).val() == "" || $("#" + txtfechahasta).val() == "") {
@@ -36,6 +52,13 @@
                         e.preventDefault();
                     }
                 });
+                $("#" + BtnLimpiar).click(function (e) {
+                    $("#" + txtfechadesde).val('');
+                    $("#" + txtfechahasta).val('');
+                    $("#" + txtnro_dni).val('');
+                    $("#" + txtnro_tarjeta).val('');
+                    e.preventDefault();
+                }); 
             }
         </script>
         <div id='dialog-alert' style="display: none">   
@@ -137,6 +160,8 @@
                                 <center>
                                     <asp:Button ID="BtnBuscar" runat="server" Text="Mostrar Datos" Style="text-align: center"
                                         CssClass="button" />
+                                    <asp:Button ID="BtnLimpiar" runat="server" Text="Limpiar Campos" 
+                                        style="text-align:center" CssClass="button" />
                                     <asp:Button ID="BtnImprimir" runat="server" Text="Imprimir" Width="122px" CssClass="button" />
                                     <asp:Button ID="Button7" runat="server" Text="Salir" Width="122px" CssClass="button" />
                                     &nbsp;<asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
