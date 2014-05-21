@@ -35,14 +35,12 @@
                 BI.CreateDialogs(arrayDialog);
 
                 identificadorddlTarjetas = '<%= ddlTarjeta.ClientID %>';
-                console.log(identificadorddlTarjetas);
                 $("#guardar").bind("click", function () {
                     GuardarSimulador();
                 });
 
                 $("#" + identificadorddlTarjetas).change(function () {
                     var id = $(this).val();
-                    console.log(id);
                     $("#" + tablaMantenimiento).jqGrid("GridUnload");
                     CrearTabla("#" + tablaMantenimiento);
                     dibujarTabla(id);

@@ -23,6 +23,7 @@
             $("#txtHor2Fin").mask("99:99");
             $("#txthini_cli").mask("99:99");
             $("#txthfin_cli").mask("99:99");
+            $("#txtcod_suc_banco").mask("999");
 
 
         });
@@ -121,6 +122,13 @@
             <td style="width: 17px">Dirección</td>
             <td style="width: 323px">
                 <asp:TextBox ID="txtdireccion" runat="server" Width="342px"></asp:TextBox>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 17px">&nbsp;</td>
+            <td style="width: 17px">Cod Suc. Banco</td>
+            <td style="width: 323px">
+                <asp:TextBox ID="txtcod_suc_banco" runat="server" Width="80px"></asp:TextBox>
             </td>
         </tr>
         <tr>

@@ -165,7 +165,7 @@ Partial Class aspx_ListadoKioskos
         'gvTemp.Columns.Add(wControl.Columns(1))
         'gvTemp.Columns.Add(wControl.Columns(2))
         'gvTemp.Columns.Add(wControl.Columns(3))
-        wControl.Columns(5).Visible = False
+        wControl.Columns(6).Visible = False
 
         page1.EnableViewState = False
         page1.Controls.Add(form1)

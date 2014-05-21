@@ -948,6 +948,7 @@ Public Class Funciones_Conexion
 
                 pdf.PorcentajeEscala = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("PORCENTAJEESCALA")), 0, read_consulta.GetDecimal(read_consulta.GetOrdinal("PORCENTAJEESCALA")))
                 pdf.MaximoCaracteres = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("MAXIMOCARACTERES")), 0, read_consulta.GetInt32(read_consulta.GetOrdinal("MAXIMOCARACTERES")))
+                pdf.Funcion = If(read_consulta.IsDBNull(read_consulta.GetOrdinal("FUNCION")), "", read_consulta.GetString(read_consulta.GetOrdinal("FUNCION")))
                 lista.Add(pdf)
             End While
         End If
@@ -983,6 +984,7 @@ Public Class Funciones_Conexion
                 cmd.Parameters.AddWithValue("@RUTAIMAGEN", detalle.RutaImagen)
                 cmd.Parameters.AddWithValue("@PORCENTAJEESCALA", detalle.PorcentajeEscala)
                 cmd.Parameters.AddWithValue("@MAXIMOCARACTERES", detalle.MaximoCaracteres)
+                cmd.Parameters.AddWithValue("@FUNCION", detalle.Funcion)
                 cmd.ExecuteNonQuery()
                 cmd.Dispose()
             Next
@@ -1034,4 +1036,42 @@ Public Class Funciones_Conexion
         cmd_consulta = Nothing
     End Function
 
+    Function usp_get_Obtener_Log_AceptacionSEF(Procedimiento As String, ByVal ParamArray x() As Object) As List(Of LogAceptacionSEF)
+        Dim cmd_consulta As New SqlCommand
+        Dim lista As New List(Of LogAceptacionSEF)
+        Dim log As New LogAceptacionSEF
+        cmd_consulta.CommandType = CommandType.StoredProcedure
+        cmd_consulta.CommandText = LTrim(RTrim(Procedimiento))
+        cmd_consulta.Connection = cn
+        If transaccion = True Then
+            cmd_consulta.Transaction = tsql
+        End If
+        Dim y As SqlParameter
+        SqlCommandBuilder.DeriveParameters(cmd_consulta)
+        Dim i As Integer = 0
+        For Each y In cmd_consulta.Parameters
+            If y.ParameterName <> "@RETURN_VALUE" Then
+                y.Value = x(i)
+                i = i + 1
+            End If
+        Next
+        Dim read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
+        If read_consulta.HasRows Then
+            While read_consulta.Read
+                log = New LogAceptacionSEF()
+                log.ID = read_consulta.GetInt32(read_consulta.GetOrdinal("ID"))
+                log.IP = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("IP")), "", read_consulta.GetString(read_consulta.GetOrdinal("IP")))
+                log.NombreKiosko = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("NOMBREKIOSKO")), "", read_consulta.GetString(read_consulta.GetOrdinal("NOMBREKIOSKO")))
+                log.Fecha = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("FECHA")), DateTime.Now, read_consulta.GetDateTime(read_consulta.GetOrdinal("FECHA")))
+                log.Sufijo = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("SUFIJO")), "", read_consulta.GetString(read_consulta.GetOrdinal("SUFIJO")))
+                log.DNI = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("DNI")), "", read_consulta.GetString(read_consulta.GetOrdinal("DNI")))
+                log.Cliente = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("CLIENTE")), "", read_consulta.GetString(read_consulta.GetOrdinal("CLIENTE")))
+
+                lista.Add(log)
+            End While
+        End If
+        usp_get_Obtener_Log_AceptacionSEF = lista
+        read_consulta.Close()
+        cmd_consulta = Nothing
+    End Function
 End Class

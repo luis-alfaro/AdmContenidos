@@ -363,7 +363,7 @@ Public Class ClsReportes
         Return resultado
     End Function
 
-    Function sp_get_Obtener_Log_RipleyMatico(tipo As String, desde As String, hasta As String, filtro As String) As List(Of LogRipleyMatico)
+    Function sp_get_Obtener_Log_RipleyMatico(ByVal tipo As String, ByVal desde As String, ByVal hasta As String, ByVal filtro As String) As List(Of LogRipleyMatico)
         Dim lista As New List(Of LogRipleyMatico)
         cn.abrirconexion()
         lista = cn.sp_get_Obtener_Log_RipleyMatico("dbo.Usp_Get_Obtener_Log_RipleyMatico", tipo, desde, hasta, filtro)
@@ -371,4 +371,23 @@ Public Class ClsReportes
         Return lista
     End Function
 
+
+    Function usp_get_Obtener_Log_AceptacionSEF(ByVal desde As String, ByVal hasta As String, ByVal dni As String) As List(Of LogAceptacionSEF)
+        Dim lista As New List(Of LogAceptacionSEF)
+        cn.abrirconexion()
+        lista = cn.usp_get_Obtener_Log_AceptacionSEF("dbo.USP_GET_ACEPTACION_SEF", desde, hasta, dni)
+        cn.cerrarconexion()
+        Return lista
+    End Function
+
+
+    Public Function sp_get_ObtenerConsolidadoConsultasRipleymatico(ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime, _
+                                        ByVal ids As String) As DataSet
+        Dim dts As New DataSet
+        cn.abrirconexion()
+        dts = cn.consultar("dbo.Usp_get_ObtenerConsolidadoConsultasRipleymatico", f1, f2, ids)
+        cn.cerrarconexion()
+        Return dts
+    End Function
 End Class

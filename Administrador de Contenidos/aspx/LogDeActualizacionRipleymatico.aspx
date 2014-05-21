@@ -5,12 +5,15 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="CPHContenido" runat="Server">
     <body topmargin="0" leftmargin="0" rightmargin="0" marginwidth="0" marginheight="0">
         <title>Administrador de Contenidos(Log de Actualización RipleyMatico) </title>
-        <script src="../js/BI.js" type="text/javascript"></script>
         <link href="estilos/Estilos.css" rel="stylesheet" type="text/css" />   
         <%--<link href="../estilos/redmond/jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css" />--%>
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
         <link href="../estilos/redmond/ui.jqgrid.css" rel="stylesheet" type="text/css" />
+        <link href="../estilos/BlockUI.css" rel="stylesheet" type="text/css" />
         <script src="../js/jquery-1.10.2.js" type="text/javascript"></script>
+        <script src="../js/BI.js" type="text/javascript"></script>
+        <script src="../js/jquery.blockUI.js" type="text/javascript"></script>
+
         <script src="../js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
         <script src="../js/jquery-ui-1.8.24.min.js" type="text/javascript"></script>
         <script src="../js/jquery.jqGrid.min.js" type="text/javascript"></script>
@@ -41,13 +44,18 @@
                 txtFiltro = '<%= txtFiltro.ClientID %>';
                 var BtnBuscar = '<%= BtnBuscar.ClientID %>';
 
+                $("#" + txtfechadesde).prop("readonly", true);
+                $("#" + txtfechahasta).prop("readonly", true);
+
                 $("#" + txtfechadesde).datepicker({
+                    dateFormat: 'dd/mm/yy',
                     onClose: function (selectedDate) {
                         $("#" + txtfechahasta).datepicker("option", "minDate", selectedDate);
                     }
                 });
 
                 $("#" + txtfechahasta).datepicker({
+                    dateFormat: 'dd/mm/yy',
                     onClose: function (selectedDate) {
                         $("#" + txtfechadesde).datepicker("option", "maxDate", selectedDate);
                     }
@@ -59,6 +67,7 @@
                     var hasta = $("#" + txtfechahasta).val();
                     var filtro = $("#" + txtFiltro).val();
 
+                    BI.MostrarLoading();
                     $("#" + tablaMantenimiento).jqGrid("GridUnload");
                     CrearTabla("#" + tablaMantenimiento);
                     dibujarTabla(desde, hasta, filtro);
@@ -115,10 +124,18 @@
                     },
                     success: function (result) {
                         var res = result.hasOwnProperty("d") ? result.d : result;
-                        $.each(res, function (index, campo) {
-                            jQuery("#" + tablaMantenimiento).jqGrid('addRowData', index, campo);
-                        });
-
+                        BI.OcultarLoading();
+                        if (res.length > 0) {
+                            $("#" + dialogAlter).dialog("close");
+                            $.each(res, function (index, campo) {
+                                jQuery("#" + tablaMantenimiento).jqGrid('addRowData', index, campo);
+                            });
+                        }
+                        else {
+                            $("#" + dialogAlter).dialog("close");
+                            BI.ShowAlert('', "No se encontraron datos con los filtros de búsqueda especificados.");
+                        }
+                        
                     }
                 });
                 $("#" + tablaMantenimiento).trigger('reloadGrid');

@@ -43,12 +43,14 @@
                 $("#" + txtfechahasta).prop("readonly", true);
 
                 $("#" + txtfechadesde).datepicker({
+                    dateFormat: 'dd/mm/yy',
                     onClose: function (selectedDate) {
                         $("#" + txtfechahasta).datepicker("option", "minDate", selectedDate);
                     }
                 });
 
                 $("#" + txtfechahasta).datepicker({
+                    dateFormat: 'dd/mm/yy',
                     onClose: function (selectedDate) {
                         $("#" + txtfechadesde).datepicker("option", "maxDate", selectedDate);
                     }
@@ -121,17 +123,19 @@
                 <td>
                     <table border="0" bgcolor="#FFFFFF" style="font-size: 8pt; font-family: Verdana;
                         width: 747px; height: 110px;">
-                        <tr>
-                            <td>
-                                &nbsp;
-                            </td>
-                            <td colspan="7">
-                                <b>Consultar Aceptación Incremento de Línea</b>
-                            </td>
-                            <td style="width: 133px">
-                                &nbsp;
-                            </td>
-                        </tr>
+                    <tr>                    
+                        <td colspan="9" style="height:10px;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td colspan="7" style="text-align:center"><h2><b>CONSULTAR ACEPTACIÓN DE INCREMENTO DE LÍNEA</b></h2></td>
+                        <td style="width: 133px">&nbsp;</td>
+                    </tr>
+                    <tr>                    
+                        <td colspan="9" style="height:10px;">
+                        </td>
+                    </tr>
                         <tr>
                             <td>
                                 Tipo:
@@ -244,7 +248,7 @@
                                                 </asp:GridView>
                                                 <table style="width:100%;" id="tblPaginacion" runat="server">
                                                     <tr>
-                                                        <td style="width:30%;"></td>
+                                                        <td style="width:25%;"></td>
                                                         <td style="width:20px;"><asp:Button ID="btnPrev" runat="server" Text="<<" Style="text-align: center"
                                                             CssClass="button" />
                                                         </td>

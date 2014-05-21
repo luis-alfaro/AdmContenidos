@@ -114,6 +114,7 @@ Partial Class MasterPage
                     TViewIndice.Nodes.Item(6).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.Select
                 Else
                     TViewIndice.Nodes.Item(6).ChildNodes.Item(0).SelectAction = TreeNodeSelectAction.None
+                    TViewIndice.Nodes.Item(6).ChildNodes.Clear()
                 End If
 
                 If oDT.Rows(0).Item("Estadisticas") = True Then
@@ -310,7 +311,7 @@ Partial Class MasterPage
                     Response.Redirect("logout.aspx")
                     dtConfig.Clear()
                 Else
-                    lbllogin.Text = Cryptor(dtConfig.Rows(0).Item("LOGUEADO"))
+                    lbllogin.Text = Cryptor(dtConfig.Rows(0).Item("LOGUEADO")).ToUpper()
                 End If
 
             Else

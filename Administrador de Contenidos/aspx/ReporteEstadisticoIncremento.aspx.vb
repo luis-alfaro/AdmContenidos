@@ -52,7 +52,7 @@ Partial Class aspx_ReporteEstadisticoIncremento
         Else
             lblhasta.Visible = False
         End If
-
+        feet = 0
         Call MostrarDatos()
 
     End Sub
@@ -154,10 +154,10 @@ Partial Class aspx_ReporteEstadisticoIncremento
                 rowFooter1.Cells.Add(footerCell4)
                 rowFooter1.Cells.Add(footerCell5)
                 rowFooter1.Cells.Add(footerCell6)
-                feet += 1
-                If feet = 2 Then
+                'feet += 1
+                If feet = 0 Then
                     gvdetalle.Controls(0).Controls.Add(rowFooter1)
-                    feet = 0
+                    feet = 1
                 End If
             End If
         End If
@@ -309,5 +309,13 @@ Partial Class aspx_ReporteEstadisticoIncremento
 
     Public Overloads Overrides Sub VerifyRenderingInServerForm(ByVal control As Control)
         ' No borrar, esto verifica si el control(gridview) se ha renderizado antes de exportar a excel
+    End Sub
+
+    Protected Sub btnSalir_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSalir.Click
+        Try
+            Response.Redirect("welcome.aspx")
+        Catch ex As Exception
+
+        End Try
     End Sub
 End Class

@@ -329,7 +329,6 @@
                 }
             }
             $.each(res, function (index, campo) {
-                console.log("campo",campo);
                 $("#" + logPantalla).append("<li>" + campo + "</li>");
                 if (campo.indexOf("Fin Proceso") >= 0) {
                     consultarlog = false;

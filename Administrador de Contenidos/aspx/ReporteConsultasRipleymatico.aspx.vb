@@ -11,7 +11,7 @@ Imports System.Data.SqlClient
 Imports System.Data
 Imports System.String
 
-Partial Class aspx_ReporteConsultaIncremento
+Partial Class aspx_ReporteConsultasRipleymatico
     Inherits System.Web.UI.Page
 
     Dim menus As New ClsReportes
@@ -22,35 +22,46 @@ Partial Class aspx_ReporteConsultaIncremento
             If Not IsPostBack Then
                 Dim ds As New DataSet
                 gvdetalle.Attributes.Add("style", "table-layout:fixed")
+                Dim menus As New ClsReportes
+                Dim tipos As New DataSet
+
+
+                Dim dt As DataTable = Sql_Get_OpcionesMenu()
+
+
+                cblopciones.Items.Clear()
+                cblopciones.DataSource = Nothing
+                cblopciones.DataSource = dt
+                cblopciones.DataTextField = "CAMPO"
+                cblopciones.DataValueField = "ID"
+                cblopciones.DataBind()
+                
                 Call HabilitarTodos(False)
             End If
         Catch ex As Exception
             MsgBox(ex.ToString)
         End Try
-    End Sub
-    Protected Sub BtnBuscar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnBuscar.Click
-        If txtnro_dni.Text.Trim() = "" And txtnro_tarjeta.Text.Trim() = "" Then
-            lblNroDocumento.Visible = True
-            lblNroDocumento.Text = "Ingrese un número de DNI o número de Tarjeta"
-            Me.gvdetalle.DataSource = menus.MENSAJEGRID : Me.gvdetalle.DataBind()
-            Exit Sub
-        Else
-            lblNroDocumento.Visible = False
-        End If
 
+    End Sub
+
+    Protected Sub BtnBuscar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnBuscar.Click
         If txtfechadesde.Text.Trim() = "" Then
-            lbldesde.Visible = True
-            lbldesde.Text = "ingrese una fecha"
+            'lbldesde.Visible = True
+            'lbldesde.Text = "ingrese una fecha"
+            lblError.Text = "ingrese un rango de fechas"
             Me.gvdetalle.DataSource = menus.MENSAJEGRID : Me.gvdetalle.DataBind()
+            HabilitarTodos(False)
             Exit Sub
         Else
             lbldesde.Visible = False
         End If
 
         If txtfechahasta.Text.Trim() = "" Then
-            lblhasta.Visible = True
-            lblhasta.Text = "ingrese una fecha"
+            'lblhasta.Visible = True
+            'lblhasta.Text = "ingrese una fecha"
+            lblError.Text = "ingrese un rango de fechas"
             Me.gvdetalle.DataSource = menus.MENSAJEGRID : Me.gvdetalle.DataBind()
+            HabilitarTodos(False)
             Exit Sub
         Else
             lblhasta.Visible = False
@@ -59,76 +70,53 @@ Partial Class aspx_ReporteConsultaIncremento
         Call MostrarDatos()
 
     End Sub
+
     Public Sub gvdetalle_RowDataBound(sender As Object, e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvdetalle.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
             For index = 0 To e.Row.Cells.Count - 1
-                If gvdetalle.HeaderRow.Cells(index).Text = "Fecha" Or gvdetalle.HeaderRow.Cells(index).Text = "Inicio Vigencia" Or gvdetalle.HeaderRow.Cells(index).Text = "Fin Vigencia" Then
-                    If e.Row.Cells(index).Text.Contains("/") Then
-                        e.Row.Cells(index).Text = String.Format("{0:d}", CType(e.Row.Cells(index).Text, Date))
-                    End If
+                'If gvdetalle.HeaderRow.Cells(index).Text = "Fecha" Or gvdetalle.HeaderRow.Cells(index).Text = "Inicio Vigencia" Or gvdetalle.HeaderRow.Cells(index).Text = "Fin Vigencia" Then
+                '    If e.Row.Cells(index).Text.Contains("/") Then
+                '        e.Row.Cells(index).Text = String.Format("{0:d}", CType(e.Row.Cells(index).Text, Date))
+                '    End If
+                'End If
+                If gvdetalle.HeaderRow.Cells(index).Text = "ID_KIOSKO" Then
+                    gvdetalle.HeaderRow.Cells(index).Visible = False
+                    e.Row.Cells(index).Visible = False
                 End If
             Next
         End If
     End Sub
-    Protected Sub BtnExporarExcel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnExporarExcel.Click
-        Call exportarExcel()
-    End Sub
-    Protected Sub BtnImprimir_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnImprimir.Click
-        If txtnro_dni.Text.Trim() = "" And txtnro_tarjeta.Text.Trim() = "" Then
-            lblNroDocumento.Visible = True
-            lblNroDocumento.Text = "Ingrese un número de DNI o número de Tarjeta"
-            Exit Sub
-        Else
-            lblNroDocumento.Visible = False
-        End If
 
-        If txtfechadesde.Text.Trim() = "" Then
-            lbldesde.Visible = True
-            lbldesde.Text = "Ingrese una fecha"
-            Exit Sub
-        Else
-            lbldesde.Visible = False
-        End If
-
-        If txtfechahasta.Text.Trim() = "" Then
-            lblhasta.Visible = True
-            lblhasta.Text = "Ingrese una fecha"
-            Exit Sub
-        Else
-            lblhasta.Visible = False
-        End If
-
-        Dim cadena As String = ""
-        cadena = "VistaImpresionConsultaIncremento.aspx?&fechainicio=" & Me.txtfechadesde.Text & "&fechafin=" & Me.txtfechahasta.Text & "&nro_dni=" & Me.txtnro_dni.Text & "&nro_tarjeta=" & Me.txtnro_tarjeta.Text
-        Response.Redirect("VistaImpresionConsultaIncremento.aspx?&fechainicio=" & Me.txtfechadesde.Text & "&fechafin=" & Me.txtfechahasta.Text & "&nro_dni=" & Me.txtnro_dni.Text & "&nro_tarjeta=" & Me.txtnro_tarjeta.Text)
-
-    End Sub
 
     Sub MostrarDatos()
-
         Dim dts As New DataSet
         Try
             Dim f1 As DateTime : Dim f2 As DateTime
-            Dim nro_dni As String : Dim nro_tarjeta As String
+            Dim ids As String = ""
             f1 = New Date(txtfechadesde.Text.Substring(6, 4), txtfechadesde.Text.Substring(3, 2), txtfechadesde.Text.Substring(0, 2))
             f2 = New Date(txtfechahasta.Text.Substring(6, 4), txtfechahasta.Text.Substring(3, 2), txtfechahasta.Text.Substring(0, 2))
-            nro_dni = txtnro_dni.Text.Trim()
-            nro_tarjeta = txtnro_tarjeta.Text.Trim()
+
+            For Each itm As ListItem In cblopciones.Items
+                If (itm.Selected) Then
+                    ids = ids + "," + itm.Value
+                End If
+            Next
+            ids = ids.Substring(1, ids.Length - 1)
 
             Me.gvdetalle.Visible = True
 
             dts.Clear()
-            dts = menus.sp_get_ConsultaIncrementoPorRypleymatico(nro_dni, nro_tarjeta, f1, f2)
+            dts = menus.sp_get_ObtenerConsolidadoConsultasRipleymatico(f1, f2, ids)
             If dts.Tables("consulta").Rows.Count > 0 Then
-                Call HabilitarTodos(True)
                 Me.gvdetalle.DataSource = dts : Me.gvdetalle.DataBind()
+                Call HabilitarTodos(True)
             Else
-                Call HabilitarTodos(False)
                 Me.gvdetalle.DataSource = menus.MENSAJEGRID : Me.gvdetalle.DataBind()
+                Call HabilitarTodos(False)
             End If
 
         Catch ex As Exception
-            lblError.Text += ex.Message + "//" + ex.StackTrace + "/" + txtnro_dni.Text + "/" + txtnro_tarjeta.Text
+            lblError.Text += ex.Message + "//" + ex.StackTrace
 
         End Try
     End Sub
@@ -136,11 +124,18 @@ Partial Class aspx_ReporteConsultaIncremento
     Sub HabilitarTodos(ByVal valor As Boolean)
         Me.BtnExporarExcel.Visible = valor
     End Sub
+
+
+    Protected Sub BtnExporarExcel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnExporarExcel.Click
+        exportarExcel()
+    End Sub
+
+
     Public Sub exportarExcel()
         Response.Clear()
         Response.Buffer = True
 
-        Response.AddHeader("content-disposition", "attachment;filename=ReporteConsultaIncremento.xls")
+        Response.AddHeader("content-disposition", "attachment;filename=ReporteConsultasRipleymatico.xls")
         Response.Charset = ""
         Response.ContentType = "application/vnd.ms-excel"
 
@@ -149,6 +144,7 @@ Partial Class aspx_ReporteConsultaIncremento
 
         gvdetalle.AllowPaging = False
         MostrarDatos()
+        'gvdetalle.DataBind()
 
         'Ponemos toda la fila en blanco y cambiamos el color solo de las celdas de la cabecera.
         'Cambia el color de fondo de la cabecera a blanco.
@@ -179,6 +175,11 @@ Partial Class aspx_ReporteConsultaIncremento
 
     Public Overloads Overrides Sub VerifyRenderingInServerForm(ByVal control As Control)
         ' No borrar, esto verifica si el control(gridview) se ha renderizado antes de exportar a excel
+    End Sub
+
+    Protected Sub OnPaging(ByVal sender As Object, ByVal e As GridViewPageEventArgs)
+        gvdetalle.PageIndex = e.NewPageIndex
+        gvdetalle.DataBind()
     End Sub
 
     Protected Sub btnSalir_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSalir.Click

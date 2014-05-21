@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="VB" MasterPageFile="~/MasterPage.master" AutoEventWireup="false"
-    CodeFile="ReporteConsultaIncremento.aspx.vb" Inherits="aspx_ReporteConsultaIncremento" %>
+    CodeFile="ReporteConsultasRipleymatico.aspx.vb" Inherits="aspx_ReporteConsultasRipleymatico" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="CPHContenido" runat="Server">
     <head>
@@ -8,7 +8,13 @@
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
         <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
-         <script src="../js/BI.js" type="text/javascript"></script>
+        <script src="../js/BI.js" type="text/javascript"></script>
+        <style type="text/css">
+            .Gridlayout
+            {
+                table-layout:inherit !important;
+                }
+        </style>
     </head>
     <body>
         <script type="text/javascript">
@@ -16,49 +22,77 @@
             $(document).ready(DocReady);
             function DocReady() {
 //                $("input[data-entryType = 'Date']").datepicker();
-                var arrayDialog = [{ name: dialogAlter, height: 140, width: 350, title: 'Reporte Consulta Incremento'}];
+                var arrayDialog = [{ name: dialogAlter, height: 140, width: 350, title: 'Reporte de Consultas en Ripleymatico'}];
                 BI.CreateDialogs(arrayDialog);
-                var BtnBuscar = '<%= BtnBuscar.ClientID %>';
+                var gvdetalle = '<%= gvdetalle.ClientID %>';
+                $("#" + gvdetalle).addClass("Gridlayout");
+
+                var error = '<%= lblError.ClientID %>';
                 var txtfechadesde = '<%= txtfechadesde.ClientID %>';
                 var txtfechahasta = '<%= txtfechahasta.ClientID %>';
-                var txtnro_dni = '<%= txtnro_dni.ClientID %>';
-                var txtnro_tarjeta = '<%= txtnro_tarjeta.ClientID %>';
+                var BtnBuscar = '<%= BtnBuscar.ClientID %>';
                 var BtnLimpiar = '<%= BtnLimpiar.ClientID %>';
+
+                var cblopciones = '<%= cblopciones.ClientID %>';
 
                 $("#" + txtfechadesde).prop("readonly", true);
                 $("#" + txtfechahasta).prop("readonly", true);
 
                 $("#" + txtfechadesde).datepicker({
+                    dateFormat: 'dd/mm/yy',
                     onClose: function (selectedDate) {
                         $("#" + txtfechahasta).datepicker("option", "minDate", selectedDate);
                     }
                 });
 
                 $("#" + txtfechahasta).datepicker({
+                    dateFormat: 'dd/mm/yy',
                     onClose: function (selectedDate) {
                         $("#" + txtfechadesde).datepicker("option", "maxDate", selectedDate);
                     }
                 });
 
                 $("#" + BtnBuscar).click(function (e) {
+                    var values = $('input:checkbox:checked').map(function () {
+                        return $('label[for="' + $(this).attr("id") + '"]').html();
+                    }).get();
+                    if (values.length == 0) {
+                        BI.ShowAlert('', "Debe seleccionar por lo menos una opción.");
+                        return false;
+                        e.preventDefault();
+                    }
+                    $("#" + gvdetalle).addClass("Gridlayout");
                     if ($("#" + txtfechadesde).val() == "" || $("#" + txtfechahasta).val() == "") {
                         BI.ShowAlert('', "Ingrese un rango de fechas");
                         return false;
-                        e.preventDefault();
-                    }
-                    if ($("#" + txtnro_dni).val() == "" && $("#" + txtnro_tarjeta).val() == "") {
-                        BI.ShowAlert('', "Ingrese un número de DNI o un número de Tarjeta.");
-                        return false;
-                        e.preventDefault();
+                    e.preventDefault();
                     }
                 });
+            
                 $("#" + BtnLimpiar).click(function (e) {
                     $("#" + txtfechadesde).val('');
                     $("#" + txtfechahasta).val('');
-                    $("#" + txtnro_dni).val('');
-                    $("#" + txtnro_tarjeta).val('');
+                    $("#" + cblopciones).val('');
                     e.preventDefault();
                 }); 
+
+
+                if ($("#" + error).text() != "") {
+                    BI.ShowAlert('', $("#" + error).text());
+                }
+            }
+            function validarSiNumero(numero){
+                if (!/^([0-9])*$/.test(numero)) {
+                    alert("El valor " + numero + " no es un número");
+                    return "";
+                }
+            }
+            function isNumberKey(evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode
+                if (charCode > 31 && (charCode < 48 || charCode > 57))
+                    return false;
+
+                return true;
             }
         </script>
         <div id='dialog-alert' style="display: none">   
@@ -76,14 +110,15 @@
             </tr>
             <tr>
                 <td>
-                    <table border="0" bgcolor="#FFFFFF" style="font-size: 8pt; font-family: Verdana; width: 747px; height: 110px;">
+                    <table border="0" bgcolor="#FFFFFF" style="font-size: 8pt; font-family: Verdana;
+                        width: 747px; height: 110px;">
                     <tr>                    
                         <td colspan="9" style="height:10px;">
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 50px">&nbsp;</td>
-                        <td colspan="7" style="text-align:center"><h2><b>CONSULTAR INCREMENTOS DE LÍNEA</b></h2></td>
+                        <td>&nbsp;</td>
+                        <td colspan="7" style="text-align:center"><h2><b>CONSULTAS EN RIPLEYMATICO</b></h2></td>
                         <td style="width: 133px">&nbsp;</td>
                     </tr>
                     <tr>                    
@@ -91,24 +126,27 @@
                         </td>
                     </tr>
                         <tr>
-                            <td style="width: 50px">&nbsp;</td>
                             <td>
-                                Nro DNI:
+                                Opciones:
                             </td>
                             <td colspan="2">
-                                &nbsp;<asp:TextBox ID="txtnro_dni" runat="server"></asp:TextBox>
+                                <asp:CheckBoxList ID="cblopciones" runat="server" Height="198px" Width="822px" Visible="True"
+                                    AppendDataBoundItems="True">
+                                </asp:CheckBoxList>
                             </td>
                             <td>
-                                Nro Tarjeta:
                             </td>
                             <td colspan="2">
-                                <asp:TextBox ID="txtnro_tarjeta" runat="server"></asp:TextBox>
                             </td>
-                            <td></td>
-                            <td style="width: 133px">&nbsp;</td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td style="width: 133px">
+                                &nbsp;
+                            </td>
                         </tr>
                         <tr>
-                            <td style="width: 50px;height:10px;">&nbsp;</td>
                             <td>
                                 Desde:
                             </td>
@@ -121,39 +159,46 @@
                             <td colspan="2">
                                 <asp:TextBox ID="txtfechahasta" runat="server" data-entryType="Date"></asp:TextBox>
                             </td>
-                            <td></td>
-                            <td style="width: 133px">&nbsp;</td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td style="width: 133px">
+                                &nbsp;
+                            </td>
                         </tr>
                         <tr>
                             <td>
                             </td>
-                            <td colspan="2">
+                            <td>
                                 <asp:Label ID="lbldesde" runat="server" ForeColor="#FF3300" Text="Label" Visible="False"></asp:Label>
                             </td>
                             <td>
                             </td>
-                            <td colspan="2">
+                            <td>
                                 <asp:Label ID="lblhasta" runat="server" ForeColor="Red" Text="Label" Visible="False"></asp:Label>
                             </td>
                             <td>
                             </td>
-                            <td colspan="2">
-                                <asp:Label ID="lblNroDocumento" runat="server" ForeColor="#FF3300" Text="Label" Visible="False"></asp:Label>
+                            <td>                                
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td style="width: 133px">
+                                &nbsp;
                             </td>
                         </tr>
                         <tr>
-                        <th style="width: 50px">
-                                &nbsp;
-                            </th>
-                            <th colspan="7">
+                            <th colspan="8">
                                 <center>
                                     <asp:Button ID="BtnBuscar" runat="server" Text="Mostrar Datos" Style="text-align: center"
                                         CssClass="button" />
                                     <asp:Button ID="BtnLimpiar" runat="server" Text="Limpiar Campos" 
                                         style="text-align:center" CssClass="button" />
-                                    <asp:Button ID="BtnImprimir" runat="server" Text="Imprimir" Width="122px" CssClass="button" />
                                     <asp:Button ID="btnSalir" runat="server" Text="Salir" Width="122px" CssClass="button" />
-                                    &nbsp;<asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
+                                    &nbsp;<div style="display:none;"><asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label></div>
                                 </center>
                             </th>
                             <th style="width: 133px">
@@ -162,13 +207,13 @@
                         </tr>
                         <tr>
                             <th colspan="8">
-                                <table border="0">
+                                <table border="0" style="width:100%">
                                     <tr>
-                                        <td>
+                                        <td style="width:20%;">
                                         </td>
-                                        <td>
+                                        <td style="width:60%;">
                                         </td>
-                                        <td>
+                                        <td style="width:20%;">
                                         </td>
                                     </tr>
                                     <tr>

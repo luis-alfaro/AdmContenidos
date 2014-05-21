@@ -71,10 +71,18 @@ CodeFile="ReporteEstadisticoIncremento.aspx.vb"  Inherits="aspx_ReporteEstadisti
         <tr>
             <td>
                 <table border="0" bgcolor="#FFFFFF" style="FONT-SIZE: 8pt; FONT-FAMILY: Verdana; width: 747px; height: 110px;"  >
+                    <tr>                    
+                        <td colspan="9" style="height:10px;">
+                        </td>
+                    </tr>
                     <tr>
-                    <td>&nbsp;</td>
-                    <td colspan="7"><b>Generar Reporte Estadístico de Incremento de Linea</b></td>
-                    <td style="width: 133px">&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td colspan="7" style="text-align:center"><h2><b>GENERAR REPORTE ESTADÍSTICO DE INCREMENTO DE LÍNEA</b></h2></td>
+                        <td style="width: 133px">&nbsp;</td>
+                    </tr>
+                    <tr>                    
+                        <td colspan="9" style="height:10px;">
+                        </td>
                     </tr>
                     <tr>
                         <td>Desde:</td>
@@ -97,14 +105,15 @@ CodeFile="ReporteEstadisticoIncremento.aspx.vb"  Inherits="aspx_ReporteEstadisti
                         <td style="width: 133px">&nbsp;</td>
                     </tr>
                     <tr>
-                        <th colspan="8"><center>
+                    <th >&nbsp;</th>
+                        <th colspan="7"><center>
                             <asp:Button ID="BtnBuscar" runat="server" Text="Mostrar Datos" 
                                     style="text-align:center" CssClass="button" />
                             <asp:Button ID="BtnLimpiar" runat="server" Text="Limpiar Campos" 
                                     style="text-align:center" CssClass="button" />
                             <asp:Button ID="BtnImprimir" runat="server" Text="Imprimir" Width="122px" 
                                     CssClass="button" />
-                            <asp:Button ID="Button7" runat="server" Text="Salir" Width="122px" 
+                            <asp:Button ID="btnSalir" runat="server" Text="Salir" Width="122px" 
                                     CssClass="button" />
                             &nbsp;<asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
                             </center>

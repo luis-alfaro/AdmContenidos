@@ -98,8 +98,11 @@
                         </asp:BoundField>
                         <asp:BoundField DataField="piso" HeaderText="Piso" />
                         <asp:BoundField DataField="ip" HeaderText="IP" />
-                        <asp:BoundField DataField="Ubigeo" HeaderText="Ubicación" >
+                        <asp:BoundField DataField="Ubigeo" HeaderText="Ubicación" >                        
                             <ItemStyle Wrap="False" />
+                        </asp:BoundField>
+                        <asp:BoundField DataField="Configuracion" HeaderText="Configuración" >
+                        <ItemStyle Wrap="False" />
                         </asp:BoundField>
                         <asp:TemplateField HeaderText="Acciones">
                             <ItemTemplate>

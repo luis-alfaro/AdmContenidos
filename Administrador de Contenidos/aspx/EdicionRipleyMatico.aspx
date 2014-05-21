@@ -204,6 +204,12 @@ Inherits="aspx_EdicionRipleyMatico" %>
         {
             list-style-type: none;
         }
+        #Continuar-botton
+        {
+            margin:100px;
+            padding:100px;
+            text-align:center;
+         }
         </style>
         <link href="estilos/Estilos.css" rel="stylesheet" type="text/css" />
     <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
@@ -224,15 +230,18 @@ Inherits="aspx_EdicionRipleyMatico" %>
         var LbxImagenes = '<%= LbxImagenes.ClientID %>';
         var rbUno = '<%= rbUno.ClientID %>';
         var rbTodos = '<%= rbTodos.ClientID %>';
+        var cblKioscos = '<%= cblKioscos.ClientID %>';
         var txtUsuario = '<%= txtUsuario.ClientID %>';
         var txtPassword = '<%= txtPassword.ClientID %>';
         var txtDominio = '<%= txtDominio.ClientID %>';
-        var txtSeleccionados = '<%= txtSeleccionados.ClientID %>';
-        var txtActualizados = '<%= txtActualizados.ClientID %>';
-        var txtNoActualizados = '<%= txtNoActualizados.ClientID %>';
+        var txtEmail = '<%= txtEmail.ClientID %>';
+        var txtDescripcion = '<%= txtDescripcion.ClientID %>';
         var loghub = '<%= loghub.ClientID %>';
+        var btnContinuar = '<%= btnContinuar.ClientID %>';
 
         $(function () {
+            $("#Continuar").hide();
+
             var arrayDialog = [{ name: dialogAlter, height: 250, width: 600, title: 'Log de Edicion Ripleymatico'}];
             BI.CreateDialogLog(arrayDialog);
 
@@ -252,10 +261,17 @@ Inherits="aspx_EdicionRipleyMatico" %>
                 var usuario = $("#" + txtUsuario).val();
                 var password = $("#" + txtPassword).val();
                 var dominio = $("#" + txtDominio).val();
+                var email = $("#" + txtEmail).val();
+                var descripcion = $("#" + txtDescripcion).val();
 
 
                 if (usuario == "" || password == "" || dominio == "") {
                     BI.ShowAlert('', "Debe ingresar sus credenciales para poder actualizar.");
+                    return false;
+                }
+
+                if (descripcion == "" || descripcion.length < 20 ) {
+                    BI.ShowAlert('', "Debe ingresar una descripción de la actualización de 20 caracteres como mínimo.");
                     return false;
                 }
 
@@ -265,11 +281,11 @@ Inherits="aspx_EdicionRipleyMatico" %>
                         BI.ShowAlert('', "Debe seleccionar por lo menos un Ripleymático.");
                         return false;
                     }
-                    Ejecutar(imageList, radio, values, usuario, password, dominio);
+                    Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion);
                 } else if ($("#" + rbTodos).is(":checked")) {
                     radio = "Todos";
                     BI.confirm("¿Está seguro de querer actualizar todos los kioskos?", function () {
-                        Ejecutar(imageList, radio, values, usuario, password, dominio);
+                        Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion);
                     }, function () { }, "");
                 }
                 
@@ -278,10 +294,10 @@ Inherits="aspx_EdicionRipleyMatico" %>
 
 
         });
-        function Ejecutar(imageList, radio, values, usuario, password, dominio) {
+        function Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion) {
             BI.ShowAlert('', inicializador);
             $("#" + logPantalla).append("<li>" + "-Espere mientras se procesa la actualización..." + "</li>");
-            var parameters = { Archivos: imageList, radio: radio, Kioscos: values, usuario: usuario, password: password, dominio: dominio };
+            var parameters = { Archivos: imageList, radio: radio, Kioscos: values, usuario: usuario, password: password, dominio: dominio, email: email, descripcion: descripcion };
             $.ajax({
                 type: "POST",
                 url: "EdicionRipleyMatico.aspx/Completar",
@@ -293,10 +309,10 @@ Inherits="aspx_EdicionRipleyMatico" %>
                 },
                 success: function (result) {
                     var res = result.hasOwnProperty("d") ? result.d : result;
-                    var arr = res.split("|");
-                    $("#" + txtSeleccionados).val(arr[1]);
-                    $("#" + txtActualizados).val(arr[2]);
-                    $("#" + txtNoActualizados).val(arr[3]);
+//                    var arr = res.split("|");
+//                    $("#" + txtSeleccionados).val(arr[1]);
+//                    $("#" + txtActualizados).val(arr[2]);
+//                    $("#" + txtNoActualizados).val(arr[3]);
                 }
             });
             setInterval(EscribirLog, 500);
@@ -315,6 +331,7 @@ Inherits="aspx_EdicionRipleyMatico" %>
                 $("#" + logPantalla).append("<li>" + campo + "</li>");
                 if (campo.indexOf("Fin Proceso") >= 0) {
                     consultarlog = false;
+                    limpiarCampos();
                 }
             });
         }
@@ -326,6 +343,19 @@ Inherits="aspx_EdicionRipleyMatico" %>
                 BI.AjaxJson("POST", url, parameters, false, rpta);
             }
         }
+
+        function limpiarCampos() {
+            $('#' + txtUsuario).val('');
+            $('#' + txtPassword).val('');
+            $('#' + txtDominio).val('');
+            $('#' + txtDescripcion).val('');
+            $('#' + txtEmail).val('');
+            $('#' + LbxImagenes + ' > option').remove();
+            $("#" + rbTodos).attr("checked", "checked");
+            $("#" + cblKioscos).hide();
+            $("#Continuar").show();
+            $("#controles").hide();
+        }
     </script>
 </head>
 <body>
@@ -334,7 +364,7 @@ Inherits="aspx_EdicionRipleyMatico" %>
     <div>
     <div id='dialog-alert' style="display:none">
         </div>
-  
+  <div id = "controles">
     <table style="width: 100%; height: 951px;" style="FONT-SIZE: 8pt; FONT-FAMILY: Verdana; width: 747px; height: 110px;"  >
         <tr>
             <td class="style34" style="height: 51px;" colspan="3" background = "images/toplarge.png">
@@ -660,7 +690,42 @@ Inherits="aspx_EdicionRipleyMatico" %>
             <td class="style29" style="width: 52px">
                 &nbsp;</td>
             <td class="style30" style="width: 368px">
-                <asp:Button ID="btnCompletar" runat="server" Text="Actualizar" CssClass="button"/>
+                <table style="width: 106%;">
+                    <tr>
+                        <td class="style58">
+                            Descripción del pase:</td>
+                        <td class="style56">
+                            <textarea id="txtDescripcion" rows="3" cols="80" runat="server"></textarea>
+                        </td>
+                        <td class="style35">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="style58">
+                            Email(s):</td>
+                        <td class="style56">
+                            <asp:TextBox ID="txtEmail" runat="server" Width="300px"></asp:TextBox>
+                            <asp:Label ID="lblEmail" runat="server" Text="@bancoripley.com.pe"></asp:Label> 
+                        </td>
+                        <td class="style35">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="style58" colspan="3">
+                           <i><asp:Label ID="lblMsgEmail" runat="server" Text="Ingrese el correo o los correos separados por ';'(punto y coma), y sin el dominio. Si no desea confirmación, dejar vacío."></asp:Label></i>
+                        </td>                        
+                    </tr>
+                </table>                            
+                                
+            </td>
+            <td class="style31">&nbsp;
+                </td>
+        </tr>
+        <tr>
+            <td class="style29" style="width: 52px">
+                &nbsp;</td>
+            <td class="style30" style="width: 368px">
+                               
             </td>
             <td class="style31">
                 &nbsp;</td>
@@ -669,6 +734,7 @@ Inherits="aspx_EdicionRipleyMatico" %>
             <td class="style37">
                 </td>
             <td class="style38">
+            
                 </td>
             <td class="style39">
                 </td>
@@ -677,55 +743,8 @@ Inherits="aspx_EdicionRipleyMatico" %>
             <td class="style29" style="width: 52px">
                 &nbsp;</td>
             <td class="style30" style="width: 368px">
-                Resultado:</td>
-            <td class="style31">
-                &nbsp;</td>
-        </tr>
-        <tr>
-            <td class="style43">
-                </td>
-            <td class="style44">
-                &nbsp;<table style="width: 115%;">
-                    <tr>
-                        <td class="style46">
-                            &nbsp;</td>
-                        <td class="style47">
-                            <asp:Label ID="Label2" runat="server" Text="Kioscos Seleccionados:"></asp:Label>
-                        </td>
-                        <td>
-                            <asp:TextBox ID="txtSeleccionados" runat="server" Width="53px"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="style46">
-                            &nbsp;</td>
-                        <td class="style47">
-                            <asp:Label ID="Label3" runat="server" Text="Kioscos Actualizados:"></asp:Label>
-                        </td>
-                        <td>
-                            <asp:TextBox ID="txtActualizados" runat="server" Enabled="False" Width="52px"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="style46">
-                            &nbsp;</td>
-                        <td class="style47">
-                            <asp:Label ID="Label4" runat="server" Text="Kioscos no Actualizados:"></asp:Label>
-                        </td>
-                        <td>
-                            <asp:TextBox ID="txtNoActualizados" runat="server" Width="51px"></asp:TextBox>
-                        </td>
-                    </tr>
-                </table>
-                    </td>
-            <td class="style45">
-                    </td>
-        </tr>
-        <tr>
-            <td class="style29" style="width: 52px">
-                &nbsp;</td>
-            <td class="style30" style="width: 368px">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                <asp:Button ID="btnCompletar" runat="server" Text="Actualizar" CssClass="button"/>
+            </td>
             <td class="style31">
                 &nbsp;</td>
         </tr>
@@ -738,6 +757,24 @@ Inherits="aspx_EdicionRipleyMatico" %>
                 &nbsp;</td>
         </tr>
     </table>
+    </div>
+    <div id="Continuar">
+        <table style="width: 100%; height: 140px;" style="font-size: 8pt; font-family: Verdana; width: 747px; height: 110px;">
+            <tr>
+                <td class="style34" style="height: 51px;" colspan="3" background="images/toplarge.png">
+                    <asp:Image ID="Image1" runat="server" ImageUrl="~/aspx/images/BannerTop.png" Width="816px"
+                        Height="100px" ImageAlign="RIGHT" />
+                </td>
+            </tr>
+            <tr>
+                <td class="style34" style="height: 51px;" colspan="3" bgcolor="#000000">
+                </td>
+            </tr>
+            </table>
+        <div id ="Continuar-botton">
+            <asp:Button ID="btnContinuar" runat="server" Text="Continuar" Width="77px" CssClass="button" />
+        </div>
+        </div>
 
     </div>
     </form>

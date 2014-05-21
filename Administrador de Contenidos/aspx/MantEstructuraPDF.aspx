@@ -49,7 +49,7 @@
 
             function CrearTabla(tabla) {
                 var c = ['ID', 'IdEstructura', 'Número Pagina','Orden', 'Es Texto?',  'NombreCampo', 'CoordenadaX'
-                        , 'DesplazamientoX', 'CoordenadaY', 'Rotación', 'Ruta Imagen', 'Porcentaje Escala', 'Máximo Caracteres'];
+                        , 'DesplazamientoX', 'CoordenadaY', 'Rotación', 'Ruta Imagen', 'Porcentaje Escala', 'Máximo Caracteres', 'Función'];
                 var cm = [
             { name: 'ID', index: 'ID', width: 12, align: 'center', hidden: true },
             { name: 'IdEstructura', index: 'IdEstructura', width: 3, align: 'center', hidden: true },
@@ -63,7 +63,8 @@
             { name: 'Rotacion', index: 'Rotacion', width: 75, align: 'center', editable: true, formatter: 'integer', formatoptions: { defaultValue: '0'} },
             { name: 'RutaImagen', index: 'RutaImagen', width: 150, align: 'left', editable: true },
             { name: 'PorcentajeEscala', index: 'PorcentajeEscala', width: 90, align: 'center', editable: true, formatter: 'integer', formatoptions: { defaultValue: '0'} },
-            { name: 'MaximoCaracteres', index: 'MaximoCaracteres', width: 95, align: 'center', editable: true, formatter: 'integer', formatoptions: { defaultValue: '0'} }
+            { name: 'MaximoCaracteres', index: 'MaximoCaracteres', width: 95, align: 'center', editable: true, formatter: 'integer', formatoptions: { defaultValue: '0'} },
+            { name: 'Funcion', index: 'Funcion', width: 140, align: 'left', editable: true }
         ];
                 tableToGrid(tabla, {
                     colNames: c,
@@ -83,7 +84,7 @@
                         valorPrevio = value;
                     },
                     afterSaveCell: function (rowid, cellname, value, iRow, iCol) {
-                        if (cellname != "NombreCampo" && cellname != "RutaImagen" && cellname != "EsTexto") {
+                        if (cellname != "NombreCampo" && cellname != "RutaImagen" && cellname != "EsTexto" && cellname != "Funcion") {
                             var row = jQuery("#" + tablaMantenimiento).getRowData(rowid);
                             if (!BI.ValidarDecimal(value)) {
                                 row[cellname] = valorPrevio;
@@ -97,7 +98,7 @@
                 });
 
                 jQuery("#" + tablaMantenimiento).jqGrid('navGrid', '#barraMantenimiento',
-            { edit: false, add: false, del: false, search: false, refresh: true },
+            { edit: false, add: false, del: false, search: false, refresh: false },
             {}, // edit options
             {}, // add options
             {}, //del options

@@ -9,6 +9,13 @@
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css"rel="stylesheet" />
 	    <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 	    <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(DocReady);
+    function DocReady()
+    {
+        $("input[data-entryType = 'Date']").datepicker();
+    }
+    </script>
 </head>
 <body>
 
@@ -26,40 +33,27 @@
         <tr>
             <td>
 <table border="0" bgcolor="#FFFFFF" style="FONT-SIZE: 8pt; FONT-FAMILY: Verdana; width: 747px; height: 110px;"  >
-<tr>
-<td>&nbsp;</td>
-<td colspan="3">
-    
-<script type="text/javascript">
-    $(document).ready(DocReady);
-    function DocReady()
-    {
-        $("input[data-entryType = 'Date']").datepicker();
-    }
-    </script>
-    
-    
-    
-    <b>Generar Reportes Estadísticos</b></td>
-<td>&nbsp;</td>
-<td>
-    &nbsp;</td>
-<td>&nbsp;</td>
-<td>
-        &nbsp;</td>
-<td style="width: 133px">
-        &nbsp;</td>
-</tr>
+    <tr>                    
+        <td colspan="9" style="height:10px;">
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td colspan="7" style="text-align:center"><h2><b>GENERAR REPORTES ESTADÍSTICOS</b></h2></td>
+        <td style="width: 133px">&nbsp;</td>
+    </tr>
+    <tr>                    
+        <td colspan="9" style="height:10px;">
+        </td>
+    </tr>
 <tr>
 <td>Desde:</td>
 <td>
-    
-    &nbsp;<asp:TextBox  ID="txtfechadesde" runat="server" data-entryType="Date"></asp:TextBox>
+    <asp:TextBox  ID="txtfechadesde" runat="server" data-entryType="Date"></asp:TextBox>
                                     </td>
 <td>Hasta:</td>
 <td>
-    <asp:TextBox 
-        ID="txtfechahasta" runat="server" data-entryType="Date"></asp:TextBox>
+    <asp:TextBox ID="txtfechahasta" runat="server" data-entryType="Date"></asp:TextBox>
                                     </td>
 <td>Tipo Reporte:</td>
 <td>

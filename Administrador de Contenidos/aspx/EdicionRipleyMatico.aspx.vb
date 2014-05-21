@@ -3,6 +3,7 @@ Imports UtilitarioEnvioData.EnvioData
 Imports System.Data
 Imports System.Configuration
 Imports System.Web.Services
+Imports System.Threading
 
 Partial Class aspx_EdicionRipleyMatico
     Inherits System.Web.UI.Page
@@ -10,21 +11,26 @@ Partial Class aspx_EdicionRipleyMatico
     Public Shared listaKioscos As List(Of ENKiosco)
     Public Shared directorioSeleccionado As String
     Public Shared ActualizacionImagenes As String = "I"
+    Public Shared modulo As String = "Actualización de Imágenes"
     Public Shared textoLog As String = ""
     Public Shared identificador As String = ""
     Public Shared fechaHora As DateTime = DateTime.Now
+    Public Shared rptaCompletar As String = ""
+    Public Shared session_id As String = ""
+    Public Shared rutaTemplate As String = ""
+
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Try
 
             If IsPostBack = False Then
-                Dim fecha As DateTime = DateTime.Now
-                fechaHora = fecha
-                identificador = fecha.Year.ToString() + fecha.Month.ToString() + fecha.Minute.ToString() + fecha.Second.ToString()
-                Me.loghub.Value = identificador
+                'Dim fecha As DateTime = DateTime.Now
+                'fechaHora = fecha
+                'identificador = fecha.Year.ToString() + fecha.Month.ToString() + fecha.Minute.ToString() + fecha.Second.ToString()
+                'Me.loghub.Value = identificador
                 Dim pathCliente As String = ConfigurationManager.AppSettings("RutaCarpetaRipleyMaticoClientes").ToString()
 
-
+                InicarIdentificador()
                 listaKioscos = New List(Of ENKiosco)
 
                 Dim dt As DataTable = Sql_Get_KioscosIP()
@@ -42,11 +48,34 @@ Partial Class aspx_EdicionRipleyMatico
                 cblKioscos.DataSource = listaKioscos
                 cblKioscos.DataTextField = "IpKiosco"
                 cblKioscos.DataBind()
+
+                rutaTemplate = Server.MapPath("~\Templates\")
+                session_id = Session("SESSION_ID")
+                'Dim kioscs As List(Of String) = New List(Of String)
+                'kioscs.Add("a")
+                'kioscs.Add("a")
+                'kioscs.Add("a")
+                'kioscs.Add("a")
+                'kioscs.Add("a")
+                'kioscs.Add("a")
+                'kioscs.Add("a")
+                'kioscs.Add("a")
+                'Dim arch As List(Of String) = New List(Of String)
+                'arch.Add("a")
+                'arch.Add("a")
+                'arch.Add("a")
+                'Call EnviarEmailConfirmacion("rparra;rvillanueva@ripley.com.pe", kioscs, arch, "Esta es la descripcion que se escribira en el log y en el correo a enviar.")
             End If
         Catch ex As Exception
 
         End Try
 
+    End Sub
+
+    Public Shared Sub InicarIdentificador()
+        Dim fecha As DateTime = DateTime.Now
+        fechaHora = fecha
+        identificador = ConvertirFechaHora(fechaHora)
     End Sub
 
     Protected Sub btnAceptar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAceptar.Click
@@ -75,16 +104,13 @@ Partial Class aspx_EdicionRipleyMatico
         End Try
     End Sub
 
-
-
-    'Protected Sub btnCompletar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCompletar.Click
-    'end sub
     <WebMethod()> _
-    Public Shared Function Completar(ByVal Archivos As List(Of String), ByVal radio As String, ByVal Kioscos As List(Of String), ByVal usuario As String, ByVal password As String, ByVal dominio As String) As String
+    Public Shared Sub GuardarArchivosEnKioscos(ByVal Archivos As List(Of String), ByVal radio As String, ByVal Kioscos As List(Of String), ByVal usuario As String, ByVal password As String, ByVal dominio As String, ByVal email As String, ByVal descripcion As String)
         Try
-
+            rptaCompletar = ""
             If Archivos.Count < 1 Then
-                Return "No ha seleccionado ningun archivo!"
+                rptaCompletar = "No ha seleccionado ningun archivo!"
+                Return
             Else
                 'Label1.Visible = False
             End If
@@ -120,8 +146,9 @@ Partial Class aspx_EdicionRipleyMatico
 
 
             EnvioData.Instancia.EscribirLog(identificador, "- " + DateTime.Now + " - Actualizando Imágenes RipleyMático", ActualizacionImagenes)
-            EnvioData.Instancia.EscribirLog(identificador, "    -Ha seleccionado " + listaARchivos.Count.ToString() + " archivos", ActualizacionImagenes)
-            EnvioData.Instancia.EscribirLog(identificador, "    -Se copiarán los archivos a " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionImagenes)
+            EnvioData.Instancia.EscribirLog(identificador, "Descripción: " + descripcion, ActualizacionImagenes)
+            EnvioData.Instancia.EscribirLog(identificador, "-Ha seleccionado " + listaARchivos.Count.ToString() + " archivos", ActualizacionImagenes)
+            EnvioData.Instancia.EscribirLog(identificador, "-Se copiarán los archivos a " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionImagenes)
 
             For Each kio As ENKiosco In listaFinalKioscos
                 Try
@@ -132,44 +159,80 @@ Partial Class aspx_EdicionRipleyMatico
                     ok = EnvioData.Instancia.EnviarArchivos(kiosko, directorioSeleccionado, PathServer, usuario, password, dominio, textoLog, listaARchivos, identificador)
                     If ok = True Then
                         contar = contar + 1
-                        EnvioData.Instancia.EscribirLog(identificador, "    -Terminado " + nombreKiosko + " | " + contar.ToString() + " de " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionImagenes)
+                        EnvioData.Instancia.EscribirLog(identificador, "-Terminado " + nombreKiosko + " | " + contar.ToString() + " de " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionImagenes)
                     Else
-                        EnvioData.Instancia.EscribirLog(identificador, "    -No se pudo terminar el kiosko " + nombreKiosko, ActualizacionImagenes)
+                        EnvioData.Instancia.EscribirLog(identificador, "-No se pudo terminar el kiosko " + nombreKiosko, ActualizacionImagenes)
                     End If
                 Catch ex As Exception
-                    EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Es posible que no tenga permiso de acceso a un archivo.", ActualizacionImagenes)
-                    Return "Es posible que no tenga permiso de acceso a un archivo"
+                    EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Es posible que no tenga permiso de acceso a un archivo, o haya sido borrado durante la ejecución.", ActualizacionImagenes)
+                    rptaCompletar = "Es posible que no tenga permiso de acceso a un archivo, o haya sido borrado durante la ejecución"
+                    EnviarEmailConfirmacion(email, Archivos, Kioscos, descripcion)
+                    Return
                 End Try
             Next
-            EnvioData.Instancia.EscribirLog(identificador, "    -Fin Proceso: " + "Se terminó de ejecutar el proceso. ", ActualizacionImagenes)
+            EnvioData.Instancia.EscribirLog(identificador, "-Fin Proceso: " + "Se terminó de ejecutar el proceso. ", ActualizacionImagenes)
 
-            Return "exito|" + listaFinalKioscos.Count.ToString() + "|" + contar.ToString() + "|" + (listaFinalKioscos.Count - contar).ToString()
+            rptaCompletar = "exito|" + listaFinalKioscos.Count.ToString() + "|" + contar.ToString() + "|" + (listaFinalKioscos.Count - contar).ToString()
+            EnviarEmailConfirmacion(email, Archivos, Kioscos, descripcion)
+            InicarIdentificador()
+            Return
         Catch ex As Exception
             EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Intentelo nuevamente más tarde.", ActualizacionImagenes)
-            Return "Error de Codigo"
+            rptaCompletar = "Ha ocurrido un error en el código, revise las fuentes." + ex.Message
+            EnviarEmailConfirmacion(email, Archivos, Kioscos, descripcion)
+            Return
         End Try
-    End Function
+    End Sub
+
+    <WebMethod()> _
+    Public Shared Sub Completar(ByVal Archivos As List(Of String), ByVal radio As String, ByVal Kioscos As List(Of String), ByVal usuario As String, ByVal password As String, ByVal dominio As String, ByVal email As String, ByVal descripcion As String)
+        Dim t As New Thread(New ThreadStart(Sub() GuardarArchivosEnKioscos(Archivos, radio, Kioscos, usuario, password, dominio, email, descripcion)))
+        t.Start()
+    End Sub
+
+    Public Shared Sub EnviarEmailConfirmacion(ByVal email As String, ByVal Archivos As List(Of String), ByVal Kioscos As List(Of String), ByVal descripcion As String)
+        If String.IsNullOrEmpty(email) = False Then
+            Dim body As String = System.IO.File.ReadAllText(rutaTemplate + "EdicionTemplate.htm")
+            body = body.Replace("#Nombre#", GetNombreUsuario())
+            body = body.Replace("#Contenido#", String.Format("Se ha enviado {0} nuevos archivos para actualizar a {1} Ripleymatico(s) desde el modulo de {2}.", Archivos.Count, Kioscos.Count, modulo))
+            body = body.Replace("#Descripcion#", descripcion)
+            body = body.Replace("#Fecha#", DateTime.Now.ToShortDateString())
+            body = body.Replace("#Hora#", DateTime.Now.ToShortTimeString())
+
+            Dim array As List(Of EmailMessage) = New List(Of EmailMessage)
+            Dim eMessage As EmailMessage
+            Dim cantidadCorreos As String() = Split(email, ";", , CompareMethod.Binary)
+            For y As Integer = 0 To cantidadCorreos.Length - 1 Step +1
+                eMessage = New EmailMessage
+                If cantidadCorreos(y).Contains("@") Then
+                    eMessage.To = cantidadCorreos(y)
+                Else
+                    eMessage.To = cantidadCorreos(y) + "@bancoripley.com.pe"
+                End If
+
+                array.Add(eMessage)
+            Next
+            EnvioEmail.Instancia.SendEmailMasivoDefaultFrom(array, "Actualización de Imágenes", body, Nothing)
+        End If
+
+    End Sub
 
     Protected Sub LbxImagenes_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles LbxImagenes.SelectedIndexChanged
         Try
             LbxImagenes.Items.RemoveAt(LbxImagenes.SelectedIndex)
-
         Catch ex As Exception
 
         End Try
     End Sub
 
+
     Protected Sub tvDirectorios_SelectedNodeChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles tvDirectorios.SelectedNodeChanged
 
         Try
-
-
             directorioSeleccionado = tvDirectorios.SelectedValue
             'tvDirectorios.Enabled = False
-
             For Each nodo As TreeNode In tvDirectorios.Nodes
                 nodo.SelectAction = TreeNodeSelectAction.None
-
             Next
         Catch ex As Exception
 
@@ -235,5 +298,48 @@ Partial Class aspx_EdicionRipleyMatico
             lista = EnvioData.Instancia.ConsultarLog(identificador, ActualizacionImagenes)
         End If
         Return lista
+    End Function
+
+    Public Shared Function ConvertirFechaHora(ByVal fecha As DateTime) As String
+        Dim nuevaFecha, dia, mes, year, hora, minuto As String
+        dia = fecha.Day.ToString()
+        mes = fecha.Month.ToString()
+        year = fecha.Year.ToString()
+        hora = fecha.Hour.ToString()
+        minuto = fecha.Minute.ToString()
+
+        If (dia.Length < 2) Then
+            dia = "0" + dia
+        End If
+        If (mes.Length < 2) Then
+            mes = "0" + mes
+        End If
+        If (hora.Length < 2) Then
+            hora = "0" + hora
+        End If
+
+        If (minuto.Length < 2) Then
+            minuto = "0" + minuto
+        End If
+
+        nuevaFecha = year + mes + dia + hora + minuto
+        Return nuevaFecha
+    End Function
+
+    Public Shared Function GetNombreUsuario() As String
+        Dim username As String = "Anónimo"
+        If Not (session_id Is Nothing) Then
+            Dim dtConfig As New DataTable
+            Dim sMensajeError As String = ""
+            dtConfig = fun_devolverDatosConfiguracion(session_id.ToString.Trim, sMensajeError) 'el Session.SessionID cambia de numero al que se guardo revisar.
+
+
+            If dtConfig.Rows.Count <= 0 Then 'Su session ha expirado
+                username = "Anónimo"
+            Else
+                username = Cryptor(dtConfig.Rows(0).Item("LOGUEADO")).ToUpper()
+            End If
+        End If
+        Return username
     End Function
 End Class

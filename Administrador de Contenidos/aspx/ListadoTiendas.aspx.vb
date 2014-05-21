@@ -101,7 +101,7 @@ Partial Class aspx_ListadoTiendas
             Else 'solo habilitados
 
                 For Each item As GridViewRow In dgvtiendas.Rows
-                    If item.Cells(4).Text = "Deshabilitada" Then
+                    If item.Cells(5).Text = "Deshabilitada" Then
                         item.Visible = False
                     End If
                 Next
@@ -114,7 +114,6 @@ Partial Class aspx_ListadoTiendas
             MsgBox(ex.ToString)
         End Try
     End Sub
-
 
     Private Function limpiarDT(ByVal dt As DataTable) As DataTable
 
@@ -175,8 +174,6 @@ Partial Class aspx_ListadoTiendas
         End Try
     End Sub
 
-
-
     Public Function ExportToExcel(ByVal wControl As GridView) As String
         Dim page1 As New Page
         Dim form1 As New HtmlForm
@@ -186,7 +183,7 @@ Partial Class aspx_ListadoTiendas
         'gvTemp.Columns.Add(wControl.Columns(1))
         'gvTemp.Columns.Add(wControl.Columns(2))
         'gvTemp.Columns.Add(wControl.Columns(3))
-        wControl.Columns(5).Visible = False
+        wControl.Columns(6).Visible = False
 
         page1.EnableViewState = False
         page1.Controls.Add(form1)

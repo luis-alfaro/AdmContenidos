@@ -1,4 +1,4 @@
-﻿BI = {  
+﻿BI = {
     ValidarDecimal: function (numero) {
         var patron = /^([0-9])*[.]?[0-9]*$/;
         if (patron.test(numero))
@@ -55,7 +55,7 @@
             $("#" + arrayDialog[i].name).dialog({
                 autoOpen: false,
                 resizable: false,
-                closeOnEscape:true,
+                closeOnEscape: true,
                 height: arrayDialog[i].height,
                 width: arrayDialog[i].width,
                 title: arrayDialog[i].title,
@@ -127,6 +127,26 @@
             }
         });
         return rsp;
+    },
+    MostrarLoading: function () {
+        $.blockUI({
+            message: 'Por favor espere un momento...',
+            theme: false,
+            baseZ: 2000,
+            css: {
+                border: 'none',
+                padding: '20px',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .6,
+                color: '#000',
+                'font-size': '12pt',
+                'font-weight': 'bold'
+            }
+        });
+    },
+    OcultarLoading: function () {
+        $.unblockUI();
     }
 };
 String.prototype.endsWith = function (pattern) {

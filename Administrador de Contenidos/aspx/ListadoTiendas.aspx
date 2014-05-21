@@ -78,6 +78,9 @@
                 <asp:BoundField DataField="Ubicacion" HeaderText="Ubicacion" >
                     <ItemStyle Wrap="False" />
                 </asp:BoundField>
+                <asp:BoundField DataField="cod_sucursal_banco" HeaderText="Cod Banco" >
+                    <ItemStyle Wrap="False" />
+                </asp:BoundField>
                 <asp:BoundField DataField="Estado" HeaderText="Estado" />
                 <asp:TemplateField HeaderText="Acciones">
                     <ItemTemplate>

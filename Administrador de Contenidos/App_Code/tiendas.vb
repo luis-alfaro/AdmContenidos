@@ -5,6 +5,7 @@ Public Class tiendas
     Dim cn As New Funciones_Conexion
     Public Function grabar(ByVal direccion As String, ByVal idtienda As Integer, ByVal nombre As String, ByVal idubigeo As Integer, _
                            ByVal estado As String, _
+                           ByVal cod_suc_banco As String, _
                            ByVal hora1ini As String, _
                            ByVal hora1fin As String, _
                            ByVal hora2ini As String, _
@@ -17,7 +18,7 @@ Public Class tiendas
         Try
             cn.abrirconexion()
             cn.ejecutar("dbo.sp_mantenimiento_tienda", True, rpta, mensaje, _
-                        direccion, idtienda, nombre, idubigeo, estado, tipo, 0, hora1ini, hora1fin, hora2ini, hora2fin, hini_cli, hfin_cli, "")
+                        direccion, idtienda, nombre, idubigeo, estado, cod_suc_banco, tipo, 0, hora1ini, hora1fin, hora2ini, hora2fin, hini_cli, hfin_cli, "")
             cn.cerrarconexion()
             r = 1
         Catch ex As Exception

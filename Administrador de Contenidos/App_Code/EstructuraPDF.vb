@@ -131,4 +131,15 @@ Public Class EstructuraPDF
             _maximoCaracteres = value
         End Set
     End Property
+
+    Private _funcion As String
+    Public Property Funcion() As String
+        Get
+            Return _funcion
+        End Get
+        Set(ByVal value As String)
+            _funcion = value
+        End Set
+    End Property
+
 End Class

@@ -169,7 +169,7 @@ Partial Class ReporteEstadisticos
             End If
             '/*----------------------------------------------------------------------*/
                 '/*GridView3--------------------------------------------------------------*/
-                lblError.Text = "1-2-3-" + Me.ddltiendas.SelectedValue + " - " + f1 + " - " + f2
+                'lblError.Text = "1-2-3-" + Me.ddltiendas.SelectedValue + " - " + f1 + " - " + f2
             dts.Clear()
             dts = menus.sp_contar_consultas("1", "2", "3", Me.ddltiendas.SelectedValue, f1, f2)
             If dts.Tables("consulta").Rows.Count > 0 Then

@@ -1,10 +1,11 @@
 ﻿<%@ Page Language="VB" MasterPageFile="~/MasterPage.master" AutoEventWireup="false"
-    CodeFile="LogDeEnvioData.aspx.vb" Inherits="aspx_LogDeEnvioData"
-    Title="Log de Envío de Data" %>
+    CodeFile="LogDeAceptacionSEF.aspx.vb" Inherits="aspx_LogDeAceptacionSEF"
+    Title="Log de Aceptación Super Efectivo" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="CPHContenido" runat="Server">
     <body topmargin="0" leftmargin="0" rightmargin="0" marginwidth="0" marginheight="0">
-        <title>Administrador de Contenidos(Log de Envío de Data) </title>
+        <title>Administrador de Contenidos(Log de Aceptación Super Efectivo) </title>
+        
         <link href="estilos/Estilos.css" rel="stylesheet" type="text/css" />   
         <%--<link href="../estilos/redmond/jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css" />--%>
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
@@ -13,7 +14,7 @@
         <script src="../js/jquery-1.10.2.js" type="text/javascript"></script>
         <script src="../js/BI.js" type="text/javascript"></script>
         <script src="../js/jquery.blockUI.js" type="text/javascript"></script>
-
+        
         <script src="../js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
         <script src="../js/jquery-ui-1.8.24.min.js" type="text/javascript"></script>
         <script src="../js/jquery.jqGrid.min.js" type="text/javascript"></script>
@@ -26,14 +27,14 @@
         <script src="../js/jquery.validate.realTime.js" type="text/javascript"></script>
         <script src="../js/jquery.multiselect.js" type="text/javascript"></script>
         <script src="../js/jquery.multiselect.filter.js" type="text/javascript"></script>
-
+        
         <script type="text/javascript">
             var tablaMantenimiento = "tablaMantenimiento";
             var dialogAlter = 'dialog-alert';
             var lista = new Array();
             var txtfechadesde = "";
             var txtfechahasta = "";
-            var txtFiltro = "";
+            var txtdni = "";
             var IDRow = 0, IDCol = 0, valorPrevio = 0;
             $(function () {
                 var arrayDialog = [{ name: dialogAlter, height: 140, width: 350, title: 'Administrador de Contenidos'}];
@@ -41,7 +42,7 @@
 
                 txtfechadesde = '<%= txtfechadesde.ClientID %>';
                 txtfechahasta = '<%= txtfechahasta.ClientID %>';
-                txtFiltro = '<%= txtFiltro.ClientID %>';
+                txtdni = '<%= txtdni.ClientID %>';
                 var BtnBuscar = '<%= BtnBuscar.ClientID %>';
 
                 $("#" + txtfechadesde).prop("readonly", true);
@@ -63,14 +64,21 @@
 
 
                 $("#" + BtnBuscar).click(function (e) {
+                   
                     var desde = $("#" + txtfechadesde).val();
                     var hasta = $("#" + txtfechahasta).val();
-                    var filtro = $("#" + txtFiltro).val();
+                    var dni = $("#" + txtdni).val();
 
+                    if (desde == "" || hasta == "") {                        
+                        BI.ShowAlert('', "Ingrese un rango de fechas");
+                        return false;
+                        e.preventDefault();
+                    }
                     BI.MostrarLoading();
                     $("#" + tablaMantenimiento).jqGrid("GridUnload");
                     CrearTabla("#" + tablaMantenimiento);
-                    dibujarTabla(desde, hasta, filtro);
+                    dibujarTabla(desde, hasta, dni);
+
                     e.preventDefault();
                 });
 
@@ -78,11 +86,15 @@
             });
 
             function CrearTabla(tabla) {
-                var c = ['ID', 'FECHA', 'DESCRIPCION'];
+                var c = ['ID', 'IP', 'Nombre Kiosko', 'Fecha','Sufijo','DNI', 'Cliente'];
                 var cm = [
                         { name: 'ID', index: 'ID', width: 12, align: 'center', hidden: true },
-                        { name: 'FechaMostrar', index: 'FechaMostrar', width: 100, align: 'center', hidden: false },
-                        { name: 'Descripcion', index: 'Descripcion', width: 500, align: 'left', hidden: false }
+                        { name: 'IP', index: 'IP', width: 120, align: 'center', hidden: false },
+                        { name: 'NombreKiosko', index: 'NombreKiosko', width: 100, align: 'center', hidden: false },
+                        { name: 'Fecha', index: 'Fecha', width: 90, align: 'center', hidden: false,formatter: 'date',format:'dd/MM/yy' },
+                        { name: 'Sufijo', index: 'Sufijo', width: 90, align: 'left', hidden: false },
+                        { name: 'DNI', index: 'DNI', width: 90, align: 'left', hidden: false },
+                        { name: 'Cliente', index: 'Cliente', width: 200, align: 'left', hidden: false }
                         ];
                 tableToGrid(tabla, {
                     colNames: c,
@@ -99,7 +111,7 @@
                 });
 
                 jQuery("#" + tablaMantenimiento).jqGrid('navGrid', '#barraMantenimiento',
-            { edit: false, add: false, del: false, search: false, refresh: false },
+            { edit: false, add: false, del: false, search: false, refresh: false ,loadui:true},
             {}, // edit options
             {}, // add options
             {}, //del options
@@ -110,12 +122,12 @@
             }
 
 
-            function dibujarTabla(desde, hasta, filtro) {
-                var data = { desde: desde, hasta: hasta, filtro: filtro };
+            function dibujarTabla(desde, hasta, dni) {
+                var data = { desde: desde, hasta: hasta, dni: dni };
                 var dataVal = JSON.stringify(data);
                 $.ajax({
                     type: "POST",
-                    url: "LogDeEnvioData.aspx/ObtenerLog",
+                    url: "LogDeAceptacionSEF.aspx/GetLogAceptacionSEF",
                     data: dataVal,
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -126,19 +138,18 @@
                         var res = result.hasOwnProperty("d") ? result.d : result;
                         BI.OcultarLoading();
                         if (res.length > 0) {
-                            $("#" + dialogAlter).dialog("close");
                             $.each(res, function (index, campo) {
                                 jQuery("#" + tablaMantenimiento).jqGrid('addRowData', index, campo);
                             });
                         }
                         else {
-                            $("#" + dialogAlter).dialog("close");
                             BI.ShowAlert('', "No se encontraron datos con los filtros de búsqueda especificados.");
                         }
+                        
                     }
                 });
                 $("#" + tablaMantenimiento).trigger('reloadGrid');
-            }           
+            }             
         </script>
         <div id='dialog-alert' style="display: none">   
         </div>
@@ -147,7 +158,7 @@
                 <tr>
                     <td colspan="6">
                         <h3>
-                            Log de Envío de Data:</h3>
+                            Log de Aceptación SEF:</h3>
                     </td>
                 </tr>
                 <tr>
@@ -155,7 +166,7 @@
                         Desde:
                     </td>
                     <td colspan="2">
-                        &nbsp;<asp:TextBox ID="txtfechadesde" runat="server" data-entryType="Date"></asp:TextBox>
+                        <asp:TextBox ID="txtfechadesde" runat="server" data-entryType="Date"></asp:TextBox>
                     </td>
                     <td>
                         Hasta:
@@ -166,10 +177,10 @@
                 </tr>
                 <tr>
                     <td>
-                        Filtrar por:
+                        DNI(opcional):
                     </td>
                     <td colspan="5">
-                        &nbsp;<asp:TextBox ID="txtFiltro" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtdni" runat="server"></asp:TextBox>
                     </td>
                 </tr>
                 <tr>

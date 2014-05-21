@@ -161,6 +161,7 @@ namespace UtilitarioEnvioData.EnvioData
         {
             string slog = "";
             bool error = true;
+            List<string> listaReintento = new List<string>();
             if (impersonateValidUser(usuario, dominio, password))
             {
                 foreach (string item in listaArchivos)
@@ -184,6 +185,7 @@ namespace UtilitarioEnvioData.EnvioData
                         //no se pudo copiar
                         try
                         {
+                            listaReintento.Add(item);
                             slog = DateTime.Now.ToString() + " " + kiosco.IpKiosco + " " + Path.GetFileName(item) + " " + ex.Message;
                             EscribirLog(identificador, slog, ActualizacionImagenes);
                             error = false;
@@ -200,11 +202,62 @@ namespace UtilitarioEnvioData.EnvioData
             }
 
             if (error == false)
-                return false;
+            {
+                error = ReintentarEnvio(kiosco, Directorio, DirectorioPrincipal, usuario, password, dominio, textoLog, listaReintento, identificador, ActualizacionImagenes);                
+                return error;
+            }
             else
                 return true;
 
         }
+
+        public bool ReintentarEnvio(ENKiosco kiosco, string Directorio, string DirectorioPrincipal, string usuario, string password, string dominio, string textoLog, List<string> listaReintento, string identificador,string actualizacion)
+        {
+            string slog = "";
+            int count = listaReintento.Count;
+            if (impersonateValidUser(usuario, dominio, password))
+            {
+                if (listaReintento.Count > 0)
+                {
+                    foreach (string item in listaReintento)
+                    {
+                        try
+                        {
+
+                            string archivo = Path.GetFileName(item);
+
+                            string destino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos + item.Replace(DirectorioPrincipal, "");
+                            //string destino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos + @"\" + archivo;
+
+                            File.Copy(item, destino, true);
+
+                            textoLog = "    -Reintento exitoso - se ha copiado el archivo " + archivo + " a " + kiosco.IpKiosco;
+                            EscribirLog(identificador, textoLog, actualizacion);
+                            count--;
+                        }
+                        catch (Exception ex)
+                        {
+                            //no se pudo copiar
+                            try
+                            {
+                                listaReintento.Add(item);
+                                slog = DateTime.Now.ToString() + " Reintento fallido - " + kiosco.IpKiosco + " " + Path.GetFileName(item) + " " + ex.Message;
+                                EscribirLog(identificador, slog, actualizacion);
+                            }
+                            catch (IOException) { }
+                        }
+                    }
+                }
+            }
+            else {
+                return false;
+            }
+            if (count == 0)
+                return true;
+            else
+                return false;
+        }
+
         public bool hacerLinea(string nomLinea)
         {
 
@@ -297,6 +350,8 @@ namespace UtilitarioEnvioData.EnvioData
         {             
             string slog = "";
             bool error = true;
+
+            List<string> listaReintento = new List<string>();
             if (impersonateValidUser(usuario, dominio, password))
             {
                 foreach (string item in listaArchivos)
@@ -311,7 +366,7 @@ namespace UtilitarioEnvioData.EnvioData
 
                         File.Copy(item, destino, true);
 
-                        textoLog = "    -Se ha copiado el archivo " + archivo + " a " + kiosco.IpKiosco;
+                        textoLog = "    -Se ha copiado el archivo " + archivo + " a " + kiosco.IpKiosco;                        
                         EscribirLog(identificador, textoLog,ActualizacionFlash);
                         
                     }
@@ -320,6 +375,7 @@ namespace UtilitarioEnvioData.EnvioData
                         //no se pudo copiar
                         try
                         {
+                            listaReintento.Add(item);
                             slog = DateTime.Now.ToString() + " " + kiosco.IpKiosco + " " + Path.GetFileName(item) + " " + ex.Message;                            
                             EscribirLog(identificador, slog,ActualizacionFlash);
                             error = false;
@@ -336,7 +392,10 @@ namespace UtilitarioEnvioData.EnvioData
             }
 
             if (error == false)
-                return false;
+            {
+                error = ReintentarEnvio(kiosco, Directorio, DirectorioPrincipal, usuario, password, dominio, textoLog, listaReintento, identificador, ActualizacionFlash);
+                return error;
+            }
             else
                 return true;
 
@@ -446,7 +505,7 @@ namespace UtilitarioEnvioData.EnvioData
             string slog = "";
             bool error = true;
             List<String> listaArchivos = buscarArchivosProgramaEnDirectorio(ruta);
-
+            List<String> listaReintento = new List<String>();
             string carpetaDestino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos;
             if (!Directory.Exists(carpetaDestino))
             {
@@ -476,6 +535,7 @@ namespace UtilitarioEnvioData.EnvioData
                         //no se pudo copiar
                         try
                         {
+                            listaReintento.Add(item);
                             slog = DateTime.Now.ToString() + " " + kiosco.IpKiosco + " " + Path.GetFileName(item) + " " + ex.Message;
                             EscribirLog(identificador, slog, ActualizacionPrograma);
                             error = false;
@@ -492,7 +552,10 @@ namespace UtilitarioEnvioData.EnvioData
             }
 
             if (error == false)
-                return false;
+            {
+                error = ReintentarEnvio(kiosco, Directorio, DirectorioPrincipal, usuario, password, dominio, textoLog, listaReintento, identificador, ActualizacionPrograma);
+                return error;
+            }
             else
                 return true;
 

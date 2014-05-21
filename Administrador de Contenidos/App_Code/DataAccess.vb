@@ -531,4 +531,18 @@ Public Module DataAccess
             Return False
         End If
     End Function
+
+    Public Function Sql_Get_OpcionesMenu() As DataTable
+        Dim SQLCon As New SqlConnection(Get_CadenaConexion())
+
+        Dim da As New SqlDataAdapter("Usp_Get_OpcionesMenu", SQLCon)
+        da.SelectCommand.CommandType = CommandType.StoredProcedure
+
+        Dim dt As New DataTable
+
+        da.Fill(dt)
+
+        Return dt
+
+    End Function
 End Module
