@@ -145,4 +145,42 @@ Public Class Simulador_DepositoPlazo
         End Set
     End Property
 
+    Private _FLAG As String
+    Public Property FLAG() As String
+        Get
+            Return _FLAG
+        End Get
+        Set(ByVal value As String)
+            _FLAG = value
+        End Set
+    End Property
+
+    Private _ACTUAL_VALUE As String
+    Public Property ACTUAL_VALUE() As String
+        Get
+            Return _ACTUAL_VALUE
+        End Get
+        Set(ByVal value As String)
+            _ACTUAL_VALUE = value
+        End Set
+    End Property
+
+    Public Function ObtenerValorRegistro() As String
+        Dim valor As String = ""
+        valor = valor + Me.IDDPF.ToString() + " | "
+        valor = valor + Me.MONEDA + " | "
+        valor = valor + Me.DESCRIPCION + " | "
+        valor = valor + Me.PLAZO_MIN.ToString() + " | "
+        valor = valor + Me.PLAZO_MAX.ToString() + " | "
+        valor = valor + Me.MONTO_MIN.ToString() + " | "
+        valor = valor + Me.MONTO_LIM.ToString() + " | "
+        valor = valor + Me.TEA.ToString() + " | "
+        valor = valor + Me.TREA.ToString() + " | "
+        valor = valor + Me.TEA2.ToString() + " | "
+        valor = valor + Me.TREA2.ToString() + " | "
+        valor = valor + Me.COMISION.ToString() + " | "
+        valor = valor + Me.MONTO_MAX.ToString() 
+        Return valor
+    End Function
+
 End Class

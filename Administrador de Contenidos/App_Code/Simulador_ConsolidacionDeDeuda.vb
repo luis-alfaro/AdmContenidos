@@ -61,5 +61,33 @@ Public Class Simulador_ConsolidacionDeDeuda
             _MONTO_MAX = value
         End Set
     End Property
+    Private _FLAG As String
+    Public Property FLAG() As String
+        Get
+            Return _FLAG
+        End Get
+        Set(ByVal value As String)
+            _FLAG = value
+        End Set
+    End Property
+    Private _ACTUAL_VALUE As String
+    Public Property ACTUAL_VALUE() As String
+        Get
+            Return _ACTUAL_VALUE
+        End Get
+        Set(ByVal value As String)
+            _ACTUAL_VALUE = value
+        End Set
+    End Property
 
+    Public Function ObtenerValorRegistro() As String
+        Dim valor As String = ""
+        valor = valor + Me.IDCDD.ToString() + " | "
+        valor = valor + Me.PLAZO_MIN.ToString() + " | "
+        valor = valor + Me.PLAZO_MAX.ToString() + " | "
+        valor = valor + Me.TEA.ToString() + " | "
+        valor = valor + Me.MONTO_MIN.ToString() + " | "
+        valor = valor + Me.MONTO_MAX.ToString()
+        Return valor
+    End Function
 End Class

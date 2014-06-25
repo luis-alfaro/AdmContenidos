@@ -180,11 +180,11 @@ Public Class Funciones_Conexion
 
 #Region "Mantenedor_Simuladores"
 
-    Public Function consultarReprogramaciones(ByVal procedimiento As String, _
-                              ByVal ParamArray x() As Object) As List(Of Simulador_Reprogramacion)
+    Public Function consultar_SIM_Compras(ByVal procedimiento As String, _
+                              ByVal ParamArray x() As Object) As List(Of Simulador_Compras)
         Dim cmd_consulta As New SqlCommand
-        Dim lista As New List(Of Simulador_Reprogramacion)
-        Dim sim As New Simulador_Reprogramacion
+        Dim lista As New List(Of Simulador_Compras)
+        Dim sim As New Simulador_Compras
         cmd_consulta.CommandType = CommandType.StoredProcedure
         cmd_consulta.CommandText = LTrim(RTrim(procedimiento))
         cmd_consulta.Connection = cn
@@ -203,16 +203,19 @@ Public Class Funciones_Conexion
         Dim read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
         If read_consulta.HasRows Then
             While read_consulta.Read
-                sim = New Simulador_Reprogramacion()
-                sim.IDDREP = read_consulta.GetInt32(read_consulta.GetOrdinal("IDDREP"))
-                sim.IDPREP = read_consulta.GetInt32(read_consulta.GetOrdinal("IDPREP"))
+                sim = New Simulador_Compras()
+                sim.IDDCOM = read_consulta.GetInt32(read_consulta.GetOrdinal("IDDCOM"))
+                sim.IDPCOM = read_consulta.GetInt32(read_consulta.GetOrdinal("IDPCOM"))
                 sim.TIPO_TARJETA = read_consulta.GetInt32(read_consulta.GetOrdinal("TIPO_TARJETA"))
+                sim.FECHA_HORA = read_consulta.GetDateTime(read_consulta.GetOrdinal("FECHA_HORA"))
                 If read_consulta.IsDBNull(read_consulta.GetOrdinal("PRODUCTO")) Then
                     sim.PRODUCTO = ""
                 Else
                     sim.PRODUCTO = read_consulta.GetString(read_consulta.GetOrdinal("PRODUCTO"))
                 End If
                 'sim.PRODUCTO = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("PRODUCTO")), "", read_consulta.GetString(read_consulta.GetOrdinal("PRODUCTO")))
+                sim.FECHA_HORA = read_consulta.GetDateTime(read_consulta.GetOrdinal("FECHA_HORA"))
+                sim.REVOLVENTE = read_consulta.GetBoolean(read_consulta.GetOrdinal("REVOLVENTE"))
                 sim.PLAZO_MIN = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MIN"))
                 sim.PLAZO_MAX = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MAX"))
                 sim.ENVIO_EECC = read_consulta.GetDecimal(read_consulta.GetOrdinal("ENVIO_EECC"))
@@ -223,53 +226,194 @@ Public Class Funciones_Conexion
                 sim.COM_ATM = read_consulta.GetDecimal(read_consulta.GetOrdinal("COM_ATM"))
                 sim.MONTO_MIN = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MIN"))
                 sim.MONTO_MAX = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MAX"))
+                sim.FLAG = "0"
+                sim.ACTUAL_VALUE = sim.ObtenerValorRegistro()
                 lista.Add(sim)
             End While
         End If
-        consultarReprogramaciones = lista
+        consultar_SIM_Compras = lista
         read_consulta.Close()
         cmd_consulta = Nothing
     End Function
 
-    Public Function guardarReprogramaciones(ByVal procedimiento As String, _
-                              ByVal lista As List(Of Simulador_Reprogramacion)) As Integer
+    Public Function guardar_SIM_Compras(ByVal procedimiento As String, _
+                              ByVal sim As Simulador_Compras) As Integer
         Dim resultado As Integer = 0
-        Dim trans As SqlTransaction
         Dim cmd As New SqlCommand
-        Dim fechahora As DateTime = DateTime.Now
-        trans = cn.BeginTransaction()
         Try
-            For Each a As Simulador_Reprogramacion In lista
-                cmd = New SqlCommand
-                cmd.CommandType = CommandType.StoredProcedure
-                cmd.CommandText = LTrim(RTrim(procedimiento))
-                cmd.Connection = cn
-                cmd.Transaction = trans
-                cmd.Parameters.AddWithValue("@IDDREP", a.IDDREP)
-                cmd.Parameters.AddWithValue("@IDPREP", a.IDPREP)
-                cmd.Parameters.AddWithValue("@TIPO_TARJETA", a.TIPO_TARJETA)
-                cmd.Parameters.AddWithValue("@PRODUCTO", a.PRODUCTO)
-                cmd.Parameters.AddWithValue("@FECHA_HORA", fechahora)
-                cmd.Parameters.AddWithValue("@PLAZO_MIN", a.PLAZO_MIN)
-                cmd.Parameters.AddWithValue("@PLAZO_MAX", a.PLAZO_MAX)
-                cmd.Parameters.AddWithValue("@ENVIO_EECC", a.ENVIO_EECC)
-                cmd.Parameters.AddWithValue("@SEG_DESG", a.SEG_DESG)
-                cmd.Parameters.AddWithValue("@TEM", a.TEM)
-                cmd.Parameters.AddWithValue("@TEA", a.TEA)
-                cmd.Parameters.AddWithValue("@MEMBRECIA", a.MEMBRECIA)
-                cmd.Parameters.AddWithValue("@COM_ATM", a.COM_ATM)
-                cmd.Parameters.AddWithValue("@MONTO_MIN", a.MONTO_MIN)
-                cmd.Parameters.AddWithValue("@MONTO_MAX", a.MONTO_MAX)
-                cmd.ExecuteNonQuery()
-                cmd.Dispose()
-            Next
-            trans.Commit()
+            cmd = New SqlCommand
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.CommandText = LTrim(RTrim(procedimiento))
+            cmd.Connection = cn
+            cmd.Parameters.AddWithValue("@IDDCOM", sim.IDDCOM)
+            cmd.Parameters.AddWithValue("@IDPCOM", sim.IDPCOM)
+            cmd.Parameters.AddWithValue("@TIPO_TARJETA", sim.TIPO_TARJETA)
+            cmd.Parameters.AddWithValue("@PRODUCTO", sim.PRODUCTO)
+            cmd.Parameters.AddWithValue("@FECHA_HORA", sim.FECHA_HORA)
+            cmd.Parameters.AddWithValue("@PLAZO_MIN", sim.PLAZO_MIN)
+            cmd.Parameters.AddWithValue("@PLAZO_MAX", sim.PLAZO_MAX)
+            cmd.Parameters.AddWithValue("@ENVIO_EECC", sim.ENVIO_EECC)
+            cmd.Parameters.AddWithValue("@SEG_DESG", sim.SEG_DESG)
+            cmd.Parameters.AddWithValue("@TEM", sim.TEM)
+            cmd.Parameters.AddWithValue("@TEA", sim.TEA)
+            cmd.Parameters.AddWithValue("@MEMBRECIA", sim.MEMBRECIA)
+            cmd.Parameters.AddWithValue("@COM_ATM", sim.COM_ATM)
+            cmd.Parameters.AddWithValue("@MONTO_MIN", sim.MONTO_MIN)
+            cmd.Parameters.AddWithValue("@MONTO_MAX", sim.MONTO_MAX)
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
             resultado = 1
         Catch ex As Exception
-            trans.Rollback()
             resultado = 0
         End Try
-        trans.Dispose()
+        cmd.Dispose()
+        Return resultado
+    End Function
+
+    Public Function consultar_SIM_ConsolidacionDeDeuda(ByVal procedimiento As String, _
+                              ByVal ParamArray x() As Object) As List(Of Simulador_ConsolidacionDeDeuda)
+        Dim cmd_consulta As New SqlCommand
+        Dim lista As New List(Of Simulador_ConsolidacionDeDeuda)
+        Dim sim As New Simulador_ConsolidacionDeDeuda
+        cmd_consulta.CommandType = CommandType.StoredProcedure
+        cmd_consulta.CommandText = LTrim(RTrim(procedimiento))
+        cmd_consulta.Connection = cn
+        If transaccion = True Then
+            cmd_consulta.Transaction = tsql
+        End If
+        Dim y As SqlParameter
+        SqlCommandBuilder.DeriveParameters(cmd_consulta)
+        Dim i As Integer = 0
+        For Each y In cmd_consulta.Parameters
+            If y.ParameterName <> "@RETURN_VALUE" Then
+                y.Value = x(i)
+                i = i + 1
+            End If
+        Next
+        Dim read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
+        If read_consulta.HasRows Then
+            While read_consulta.Read
+                sim = New Simulador_ConsolidacionDeDeuda()
+                sim.IDCDD = read_consulta.GetInt32(read_consulta.GetOrdinal("IDCDD"))
+                sim.PLAZO_MIN = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MIN"))
+                sim.PLAZO_MAX = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MAX"))
+                sim.TEA = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEA"))
+                sim.MONTO_MIN = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MIN"))
+                sim.MONTO_MAX = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MAX"))
+                sim.FLAG = "0"
+                sim.ACTUAL_VALUE = sim.ObtenerValorRegistro()
+                lista.Add(sim)
+            End While
+        End If
+        consultar_SIM_ConsolidacionDeDeuda = lista
+        read_consulta.Close()
+        cmd_consulta = Nothing
+    End Function
+
+    Public Function guardar_SIM_ConsolidacionDeDeuda(ByVal procedimiento As String, _
+                              ByVal sim As Simulador_ConsolidacionDeDeuda) As Integer
+        Dim resultado As Integer = 0
+        Dim cmd As New SqlCommand
+        Try
+            cmd = New SqlCommand
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.CommandText = LTrim(RTrim(procedimiento))
+            cmd.Connection = cn
+            cmd.Parameters.AddWithValue("@IDCDD", sim.IDCDD)
+            cmd.Parameters.AddWithValue("@PLAZO_MIN", sim.PLAZO_MIN)
+            cmd.Parameters.AddWithValue("@PLAZO_MAX", sim.PLAZO_MAX)
+            cmd.Parameters.AddWithValue("@TEA", sim.TEA)
+            cmd.Parameters.AddWithValue("@MONTO_MIN", sim.MONTO_MIN)
+            cmd.Parameters.AddWithValue("@MONTO_MAX", sim.MONTO_MAX)
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
+            resultado = 1
+        Catch ex As Exception
+            resultado = 0
+        End Try
+        cmd.Dispose()
+        Return resultado
+    End Function
+
+    Public Function consultar_SIM_DepositoPlazo(ByVal procedimiento As String, _
+                              ByVal ParamArray x() As Object) As List(Of Simulador_DepositoPlazo)
+        Dim cmd_consulta As New SqlCommand
+        Dim lista As New List(Of Simulador_DepositoPlazo)
+        Dim sim As New Simulador_DepositoPlazo
+        cmd_consulta.CommandType = CommandType.StoredProcedure
+        cmd_consulta.CommandText = LTrim(RTrim(procedimiento))
+        cmd_consulta.Connection = cn
+        If transaccion = True Then
+            cmd_consulta.Transaction = tsql
+        End If
+        Dim y As SqlParameter
+        SqlCommandBuilder.DeriveParameters(cmd_consulta)
+        Dim i As Integer = 0
+        For Each y In cmd_consulta.Parameters
+            If y.ParameterName <> "@RETURN_VALUE" Then
+                y.Value = x(i)
+                i = i + 1
+            End If
+        Next
+        Dim read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
+        If read_consulta.HasRows Then
+            While read_consulta.Read
+                sim = New Simulador_DepositoPlazo()
+                sim.IDDPF = read_consulta.GetInt32(read_consulta.GetOrdinal("IDDPF"))
+                sim.MONEDA = read_consulta.GetString(read_consulta.GetOrdinal("MONEDA"))
+                If read_consulta.IsDBNull(read_consulta.GetOrdinal("DESCRIPCION")) Then
+                    sim.DESCRIPCION = ""
+                Else
+                    sim.DESCRIPCION = read_consulta.GetString(read_consulta.GetOrdinal("DESCRIPCION"))
+                End If
+                sim.PLAZO_MIN = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MIN"))
+                sim.PLAZO_MAX = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MAX"))
+                sim.TEA = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEA"))
+                sim.TREA = read_consulta.GetDecimal(read_consulta.GetOrdinal("TREA"))
+                sim.TEA2 = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEA2"))
+                sim.TREA2 = read_consulta.GetDecimal(read_consulta.GetOrdinal("TREA2"))
+                sim.COMISION = read_consulta.GetDecimal(read_consulta.GetOrdinal("COMISION"))
+                sim.MONTO_LIM = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_LIM"))
+                sim.MONTO_MIN = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MIN"))
+                sim.MONTO_MAX = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MAX"))
+                sim.FLAG = "0"
+                sim.ACTUAL_VALUE = sim.ObtenerValorRegistro()
+                lista.Add(sim)
+            End While
+        End If
+        consultar_SIM_DepositoPlazo = lista
+        read_consulta.Close()
+        cmd_consulta = Nothing
+    End Function
+
+    Public Function guardar_SIM_DepositoPlazo(ByVal procedimiento As String, _
+                              ByVal sim As Simulador_DepositoPlazo) As Integer
+        Dim resultado As Integer = 0
+        Dim cmd As New SqlCommand
+        Try
+            cmd = New SqlCommand
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.CommandText = LTrim(RTrim(procedimiento))
+            cmd.Connection = cn
+            cmd.Parameters.AddWithValue("@IDDPF", sim.IDDPF)
+            'cmd.Parameters.AddWithValue("@MONEDA", sim.MONEDA)
+            cmd.Parameters.AddWithValue("@DESCRIPCION", sim.DESCRIPCION)
+            cmd.Parameters.AddWithValue("@PLAZO_MIN", sim.PLAZO_MIN)
+            cmd.Parameters.AddWithValue("@PLAZO_MAX", sim.PLAZO_MAX)
+            cmd.Parameters.AddWithValue("@TEA", sim.TEA)
+            cmd.Parameters.AddWithValue("@TREA", sim.TREA)
+            cmd.Parameters.AddWithValue("@TEA2", sim.TEA2)
+            cmd.Parameters.AddWithValue("@TREA2", sim.TREA2)
+            cmd.Parameters.AddWithValue("@COMISION", sim.COMISION)
+            cmd.Parameters.AddWithValue("@MONTO_LIM", sim.MONTO_LIM)
+            cmd.Parameters.AddWithValue("@MONTO_MIN", sim.MONTO_MIN)
+            cmd.Parameters.AddWithValue("@MONTO_MAX", sim.MONTO_MAX)
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
+            resultado = 1
+        Catch ex As Exception
+            resultado = 0
+        End Try
         cmd.Dispose()
         Return resultado
     End Function
@@ -317,6 +461,8 @@ Public Class Funciones_Conexion
                 sim.COM_ATM = read_consulta.GetDecimal(read_consulta.GetOrdinal("COM_ATM"))
                 sim.MONTO_MIN = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MIN"))
                 sim.MONTO_MAX = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MAX"))
+                sim.FLAG = "0"
+                sim.ACTUAL_VALUE = sim.ObtenerValorRegistro()
                 lista.Add(sim)
             End While
         End If
@@ -326,231 +472,35 @@ Public Class Funciones_Conexion
     End Function
 
     Public Function guardar_SIM_Diferido(ByVal procedimiento As String, _
-                              ByVal lista As List(Of Simulador_Diferido)) As Integer
+                              ByVal sim As Simulador_Diferido) As Integer
         Dim resultado As Integer = 0
-        Dim trans As SqlTransaction
         Dim cmd As New SqlCommand
-        Dim fechahora As DateTime = DateTime.Now
-        trans = cn.BeginTransaction()
         Try
-            For Each a As Simulador_Diferido In lista
-                cmd = New SqlCommand
-                cmd.CommandType = CommandType.StoredProcedure
-                cmd.CommandText = LTrim(RTrim(procedimiento))
-                cmd.Connection = cn
-                cmd.Transaction = trans
-                cmd.Parameters.AddWithValue("@IDDDIF", a.IDDDIF)
-                cmd.Parameters.AddWithValue("@IDPDIF", a.IDPDIF)
-                cmd.Parameters.AddWithValue("@TIPO_TARJETA", a.TIPO_TARJETA)
-                cmd.Parameters.AddWithValue("@PRODUCTO", a.PRODUCTO)
-                cmd.Parameters.AddWithValue("@FECHA_HORA", fechahora)
-                cmd.Parameters.AddWithValue("@PLAZO_MIN", a.PLAZO_MIN)
-                cmd.Parameters.AddWithValue("@PLAZO_MAX", a.PLAZO_MAX)
-                cmd.Parameters.AddWithValue("@ENVIO_EECC", a.ENVIO_EECC)
-                cmd.Parameters.AddWithValue("@SEG_DESG", a.SEG_DESG)
-                cmd.Parameters.AddWithValue("@TEM", a.TEM)
-                cmd.Parameters.AddWithValue("@TEA", a.TEA)
-                cmd.Parameters.AddWithValue("@MEMBRECIA", a.MEMBRECIA)
-                cmd.Parameters.AddWithValue("@COM_ATM", a.COM_ATM)
-                cmd.Parameters.AddWithValue("@MONTO_MIN", a.MONTO_MIN)
-                cmd.Parameters.AddWithValue("@MONTO_MAX", a.MONTO_MAX)
-                cmd.ExecuteNonQuery()
-                cmd.Dispose()
-            Next
-            trans.Commit()
+            cmd = New SqlCommand
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.CommandText = LTrim(RTrim(procedimiento))
+            cmd.Connection = cn
+            cmd.Parameters.AddWithValue("@IDDDIF", sim.IDDDIF)
+            cmd.Parameters.AddWithValue("@IDPDIF", sim.IDPDIF)
+            cmd.Parameters.AddWithValue("@TIPO_TARJETA", sim.TIPO_TARJETA)
+            cmd.Parameters.AddWithValue("@PRODUCTO", sim.PRODUCTO)
+            cmd.Parameters.AddWithValue("@FECHA_HORA", sim.FECHA_HORA)
+            cmd.Parameters.AddWithValue("@PLAZO_MIN", sim.PLAZO_MIN)
+            cmd.Parameters.AddWithValue("@PLAZO_MAX", sim.PLAZO_MAX)
+            cmd.Parameters.AddWithValue("@ENVIO_EECC", sim.ENVIO_EECC)
+            cmd.Parameters.AddWithValue("@SEG_DESG", sim.SEG_DESG)
+            cmd.Parameters.AddWithValue("@TEM", sim.TEM)
+            cmd.Parameters.AddWithValue("@TEA", sim.TEA)
+            cmd.Parameters.AddWithValue("@MEMBRECIA", sim.MEMBRECIA)
+            cmd.Parameters.AddWithValue("@COM_ATM", sim.COM_ATM)
+            cmd.Parameters.AddWithValue("@MONTO_MIN", sim.MONTO_MIN)
+            cmd.Parameters.AddWithValue("@MONTO_MAX", sim.MONTO_MAX)
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
             resultado = 1
         Catch ex As Exception
-            trans.Rollback()
             resultado = 0
         End Try
-        trans.Dispose()
-        cmd.Dispose()
-        Return resultado
-    End Function
-
-    Public Function consultar_SIM_SuperEfectivo(ByVal procedimiento As String, _
-                              ByVal ParamArray x() As Object) As List(Of Simulador_SuperEfectivo)
-        Dim cmd_consulta As New SqlCommand
-        Dim lista As New List(Of Simulador_SuperEfectivo)
-        Dim sim As New Simulador_SuperEfectivo
-        cmd_consulta.CommandType = CommandType.StoredProcedure
-        cmd_consulta.CommandText = LTrim(RTrim(procedimiento))
-        cmd_consulta.Connection = cn
-        If transaccion = True Then
-            cmd_consulta.Transaction = tsql
-        End If
-        Dim y As SqlParameter
-        SqlCommandBuilder.DeriveParameters(cmd_consulta)
-        Dim i As Integer = 0
-        For Each y In cmd_consulta.Parameters
-            If y.ParameterName <> "@RETURN_VALUE" Then
-                y.Value = x(i)
-                i = i + 1
-            End If
-        Next
-        Dim read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
-        If read_consulta.HasRows Then
-            While read_consulta.Read
-                sim = New Simulador_SuperEfectivo()
-                sim.IDDSEF = read_consulta.GetInt32(read_consulta.GetOrdinal("IDDSEF"))
-                sim.IDPSEF = read_consulta.GetInt32(read_consulta.GetOrdinal("IDPSEF"))
-                sim.TIPO_TARJETA = read_consulta.GetInt32(read_consulta.GetOrdinal("TIPO_TARJETA"))
-                If read_consulta.IsDBNull(read_consulta.GetOrdinal("PRODUCTO")) Then
-                    sim.PRODUCTO = ""
-                Else
-                    sim.PRODUCTO = read_consulta.GetString(read_consulta.GetOrdinal("PRODUCTO"))
-                End If
-                'sim.PRODUCTO = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("PRODUCTO")), "", read_consulta.GetString(read_consulta.GetOrdinal("PRODUCTO")))
-                sim.PLAZO_MIN = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MIN"))
-                sim.PLAZO_MAX = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MAX"))
-                sim.ENVIO_EECC = read_consulta.GetDecimal(read_consulta.GetOrdinal("ENVIO_EECC"))
-                sim.SEG_DESG = read_consulta.GetDecimal(read_consulta.GetOrdinal("SEG_DESG"))
-                sim.SEG_PROT = read_consulta.GetDecimal(read_consulta.GetOrdinal("SEG_PROT"))
-                sim.TEM = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEM"))
-                sim.TEA = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEA"))
-                sim.MONTO_MIN = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MIN"))
-                sim.MONTO_MAX = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MAX"))
-                lista.Add(sim)
-            End While
-        End If
-        consultar_SIM_SuperEfectivo = lista
-        read_consulta.Close()
-        cmd_consulta = Nothing
-    End Function
-
-    Public Function guardar_SIM_SuperEfectivo(ByVal procedimiento As String, _
-                              ByVal lista As List(Of Simulador_SuperEfectivo)) As Integer
-        Dim resultado As Integer = 0
-        Dim trans As SqlTransaction
-        Dim cmd As New SqlCommand
-        Dim fechahora As DateTime = DateTime.Now
-        trans = cn.BeginTransaction()
-        Try
-            For Each a As Simulador_SuperEfectivo In lista
-                cmd = New SqlCommand
-                cmd.CommandType = CommandType.StoredProcedure
-                cmd.CommandText = LTrim(RTrim(procedimiento))
-                cmd.Connection = cn
-                cmd.Transaction = trans
-                cmd.Parameters.AddWithValue("@IDDSEF", a.IDDSEF)
-                cmd.Parameters.AddWithValue("@IDPSEF", a.IDPSEF)
-                cmd.Parameters.AddWithValue("@TIPO_TARJETA", a.TIPO_TARJETA)
-                cmd.Parameters.AddWithValue("@PRODUCTO", a.PRODUCTO)
-                cmd.Parameters.AddWithValue("@FECHA_HORA", fechahora)
-                cmd.Parameters.AddWithValue("@PLAZO_MIN", a.PLAZO_MIN)
-                cmd.Parameters.AddWithValue("@PLAZO_MAX", a.PLAZO_MAX)
-                cmd.Parameters.AddWithValue("@ENVIO_EECC", a.ENVIO_EECC)
-                cmd.Parameters.AddWithValue("@SEG_DESG", a.SEG_DESG)
-                cmd.Parameters.AddWithValue("@SEG_PROT", a.SEG_PROT)
-                cmd.Parameters.AddWithValue("@TEM", a.TEM)
-                cmd.Parameters.AddWithValue("@TEA", a.TEA)
-                cmd.Parameters.AddWithValue("@MONTO_MIN", a.MONTO_MIN)
-                cmd.Parameters.AddWithValue("@MONTO_MAX", a.MONTO_MAX)
-                cmd.ExecuteNonQuery()
-                cmd.Dispose()
-            Next
-            trans.Commit()
-            resultado = 1
-        Catch ex As Exception
-            trans.Rollback()
-            resultado = 0
-        End Try
-        trans.Dispose()
-        cmd.Dispose()
-        Return resultado
-    End Function
-
-    Public Function consultar_SIM_Compras(ByVal procedimiento As String, _
-                              ByVal ParamArray x() As Object) As List(Of Simulador_Compras)
-        Dim cmd_consulta As New SqlCommand
-        Dim lista As New List(Of Simulador_Compras)
-        Dim sim As New Simulador_Compras
-        cmd_consulta.CommandType = CommandType.StoredProcedure
-        cmd_consulta.CommandText = LTrim(RTrim(procedimiento))
-        cmd_consulta.Connection = cn
-        If transaccion = True Then
-            cmd_consulta.Transaction = tsql
-        End If
-        Dim y As SqlParameter
-        SqlCommandBuilder.DeriveParameters(cmd_consulta)
-        Dim i As Integer = 0
-        For Each y In cmd_consulta.Parameters
-            If y.ParameterName <> "@RETURN_VALUE" Then
-                y.Value = x(i)
-                i = i + 1
-            End If
-        Next
-        Dim read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
-        If read_consulta.HasRows Then
-            While read_consulta.Read
-                sim = New Simulador_Compras()
-                sim.IDDCOM = read_consulta.GetInt32(read_consulta.GetOrdinal("IDDCOM"))
-                sim.IDPCOM = read_consulta.GetInt32(read_consulta.GetOrdinal("IDPCOM"))
-                sim.TIPO_TARJETA = read_consulta.GetInt32(read_consulta.GetOrdinal("TIPO_TARJETA"))
-                If read_consulta.IsDBNull(read_consulta.GetOrdinal("PRODUCTO")) Then
-                    sim.PRODUCTO = ""
-                Else
-                    sim.PRODUCTO = read_consulta.GetString(read_consulta.GetOrdinal("PRODUCTO"))
-                End If
-                'sim.PRODUCTO = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("PRODUCTO")), "", read_consulta.GetString(read_consulta.GetOrdinal("PRODUCTO")))
-                sim.REVOLVENTE = read_consulta.GetBoolean(read_consulta.GetOrdinal("REVOLVENTE"))
-                sim.PLAZO_MIN = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MIN"))
-                sim.PLAZO_MAX = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MAX"))
-                sim.ENVIO_EECC = read_consulta.GetDecimal(read_consulta.GetOrdinal("ENVIO_EECC"))
-                sim.SEG_DESG = read_consulta.GetDecimal(read_consulta.GetOrdinal("SEG_DESG"))
-                sim.TEM = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEM"))
-                sim.TEA = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEA"))
-                sim.MEMBRECIA = read_consulta.GetDecimal(read_consulta.GetOrdinal("MEMBRECIA"))
-                sim.COM_ATM = read_consulta.GetDecimal(read_consulta.GetOrdinal("COM_ATM"))
-                sim.MONTO_MIN = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MIN"))
-                sim.MONTO_MAX = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MAX"))
-                lista.Add(sim)
-            End While
-        End If
-        consultar_SIM_Compras = lista
-        read_consulta.Close()
-        cmd_consulta = Nothing
-    End Function
-
-    Public Function guardar_SIM_Compras(ByVal procedimiento As String, _
-                              ByVal lista As List(Of Simulador_Compras)) As Integer
-        Dim resultado As Integer = 0
-        Dim trans As SqlTransaction
-        Dim cmd As New SqlCommand
-        Dim fechahora As DateTime = DateTime.Now
-        trans = cn.BeginTransaction()
-        Try
-            For Each a As Simulador_Compras In lista
-                cmd = New SqlCommand
-                cmd.CommandType = CommandType.StoredProcedure
-                cmd.CommandText = LTrim(RTrim(procedimiento))
-                cmd.Connection = cn
-                cmd.Transaction = trans
-                cmd.Parameters.AddWithValue("@IDDCOM", a.IDDCOM)
-                cmd.Parameters.AddWithValue("@IDPCOM", a.IDPCOM)
-                cmd.Parameters.AddWithValue("@TIPO_TARJETA", a.TIPO_TARJETA)
-                cmd.Parameters.AddWithValue("@PRODUCTO", a.PRODUCTO)
-                cmd.Parameters.AddWithValue("@FECHA_HORA", fechahora)
-                cmd.Parameters.AddWithValue("@PLAZO_MIN", a.PLAZO_MIN)
-                cmd.Parameters.AddWithValue("@PLAZO_MAX", a.PLAZO_MAX)
-                cmd.Parameters.AddWithValue("@ENVIO_EECC", a.ENVIO_EECC)
-                cmd.Parameters.AddWithValue("@SEG_DESG", a.SEG_DESG)
-                cmd.Parameters.AddWithValue("@TEM", a.TEM)
-                cmd.Parameters.AddWithValue("@TEA", a.TEA)
-                cmd.Parameters.AddWithValue("@MEMBRECIA", a.MEMBRECIA)
-                cmd.Parameters.AddWithValue("@COM_ATM", a.COM_ATM)
-                cmd.Parameters.AddWithValue("@MONTO_MIN", a.MONTO_MIN)
-                cmd.Parameters.AddWithValue("@MONTO_MAX", a.MONTO_MAX)
-                cmd.ExecuteNonQuery()
-                cmd.Dispose()
-            Next
-            trans.Commit()
-            resultado = 1
-        Catch ex As Exception
-            trans.Rollback()
-            resultado = 0
-        End Try
-        trans.Dispose()
         cmd.Dispose()
         Return resultado
     End Function
@@ -582,6 +532,7 @@ Public Class Funciones_Conexion
                 sim.IDDEFE = read_consulta.GetInt32(read_consulta.GetOrdinal("IDDEFE"))
                 sim.IDPEFE = read_consulta.GetInt32(read_consulta.GetOrdinal("IDPEFE"))
                 sim.TIPO_TARJETA = read_consulta.GetInt32(read_consulta.GetOrdinal("TIPO_TARJETA"))
+                sim.FECHA_HORA = read_consulta.GetDateTime(read_consulta.GetOrdinal("FECHA_HORA"))
                 If read_consulta.IsDBNull(read_consulta.GetOrdinal("PRODUCTO")) Then
                     sim.PRODUCTO = ""
                 Else
@@ -599,6 +550,8 @@ Public Class Funciones_Conexion
                 sim.COM_ATM = read_consulta.GetDecimal(read_consulta.GetOrdinal("COM_ATM"))
                 sim.MONTO_MIN = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MIN"))
                 sim.MONTO_MAX = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MAX"))
+                sim.FLAG = "0"
+                sim.ACTUAL_VALUE = sim.ObtenerValorRegistro()
                 lista.Add(sim)
             End While
         End If
@@ -608,44 +561,35 @@ Public Class Funciones_Conexion
     End Function
 
     Public Function guardar_SIM_EfectivoExpress(ByVal procedimiento As String, _
-                              ByVal lista As List(Of Simulador_EfectivoExpress)) As Integer
+                              ByVal sim As Simulador_EfectivoExpress) As Integer
         Dim resultado As Integer = 0
-        Dim trans As SqlTransaction
         Dim cmd As New SqlCommand
-        Dim fechahora As DateTime = DateTime.Now
-        trans = cn.BeginTransaction()
         Try
-            For Each a As Simulador_EfectivoExpress In lista
-                cmd = New SqlCommand
-                cmd.CommandType = CommandType.StoredProcedure
-                cmd.CommandText = LTrim(RTrim(procedimiento))
-                cmd.Connection = cn
-                cmd.Transaction = trans
-                cmd.Parameters.AddWithValue("@IDDEFE", a.IDDEFE)
-                cmd.Parameters.AddWithValue("@IDPEFE", a.IDPEFE)
-                cmd.Parameters.AddWithValue("@TIPO_TARJETA", a.TIPO_TARJETA)
-                cmd.Parameters.AddWithValue("@PRODUCTO", a.PRODUCTO)
-                cmd.Parameters.AddWithValue("@FECHA_HORA", fechahora)
-                cmd.Parameters.AddWithValue("@PLAZO_MIN", a.PLAZO_MIN)
-                cmd.Parameters.AddWithValue("@PLAZO_MAX", a.PLAZO_MAX)
-                cmd.Parameters.AddWithValue("@ENVIO_EECC", a.ENVIO_EECC)
-                cmd.Parameters.AddWithValue("@SEG_DESG", a.SEG_DESG)
-                cmd.Parameters.AddWithValue("@TEM", a.TEM)
-                cmd.Parameters.AddWithValue("@TEA", a.TEA)
-                cmd.Parameters.AddWithValue("@MEMBRECIA", a.MEMBRECIA)
-                cmd.Parameters.AddWithValue("@COM_ATM", a.COM_ATM)
-                cmd.Parameters.AddWithValue("@MONTO_MIN", a.MONTO_MIN)
-                cmd.Parameters.AddWithValue("@MONTO_MAX", a.MONTO_MAX)
-                cmd.ExecuteNonQuery()
-                cmd.Dispose()
-            Next
-            trans.Commit()
+            cmd = New SqlCommand
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.CommandText = LTrim(RTrim(procedimiento))
+            cmd.Connection = cn
+            cmd.Parameters.AddWithValue("@IDDEFE", sim.IDDEFE)
+            cmd.Parameters.AddWithValue("@IDPEFE", sim.IDPEFE)
+            cmd.Parameters.AddWithValue("@TIPO_TARJETA", sim.TIPO_TARJETA)
+            cmd.Parameters.AddWithValue("@PRODUCTO", sim.PRODUCTO)
+            cmd.Parameters.AddWithValue("@FECHA_HORA", sim.FECHA_HORA)
+            cmd.Parameters.AddWithValue("@PLAZO_MIN", sim.PLAZO_MIN)
+            cmd.Parameters.AddWithValue("@PLAZO_MAX", sim.PLAZO_MAX)
+            cmd.Parameters.AddWithValue("@ENVIO_EECC", sim.ENVIO_EECC)
+            cmd.Parameters.AddWithValue("@SEG_DESG", sim.SEG_DESG)
+            cmd.Parameters.AddWithValue("@TEM", sim.TEM)
+            cmd.Parameters.AddWithValue("@TEA", sim.TEA)
+            cmd.Parameters.AddWithValue("@MEMBRECIA", sim.MEMBRECIA)
+            cmd.Parameters.AddWithValue("@COM_ATM", sim.COM_ATM)
+            cmd.Parameters.AddWithValue("@MONTO_MIN", sim.MONTO_MIN)
+            cmd.Parameters.AddWithValue("@MONTO_MAX", sim.MONTO_MAX)
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
             resultado = 1
         Catch ex As Exception
-            trans.Rollback()
             resultado = 0
         End Try
-        trans.Dispose()
         cmd.Dispose()
         Return resultado
     End Function
@@ -680,6 +624,8 @@ Public Class Funciones_Conexion
                 sim.TEA = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEA"))
                 sim.MONTO_MIN = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MIN"))
                 sim.MONTO_MAX = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MAX"))
+                sim.FLAG = "0"
+                sim.ACTUAL_VALUE = sim.ObtenerValorRegistro()
                 lista.Add(sim)
             End While
         End If
@@ -689,43 +635,35 @@ Public Class Funciones_Conexion
     End Function
 
     Public Function guardar_SIM_PrestamoEfectivo(ByVal procedimiento As String, _
-                              ByVal lista As List(Of Simulador_PrestamoEfectivo)) As Integer
+                              ByVal sim As Simulador_PrestamoEfectivo) As Integer
         Dim resultado As Integer = 0
-        Dim trans As SqlTransaction
         Dim cmd As New SqlCommand
-        trans = cn.BeginTransaction()
         Try
-            For Each a As Simulador_PrestamoEfectivo In lista
-                cmd = New SqlCommand
-                cmd.CommandType = CommandType.StoredProcedure
-                cmd.CommandText = LTrim(RTrim(procedimiento))
-                cmd.Connection = cn
-                cmd.Transaction = trans
-                cmd.Parameters.AddWithValue("@IDPEF", a.IDPEF)
-                cmd.Parameters.AddWithValue("@PLAZO_MIN", a.PLAZO_MIN)
-                cmd.Parameters.AddWithValue("@PLAZO_MAX", a.PLAZO_MAX)
-                cmd.Parameters.AddWithValue("@TEA", a.TEA)
-                cmd.Parameters.AddWithValue("@MONTO_MIN", a.MONTO_MIN)
-                cmd.Parameters.AddWithValue("@MONTO_MAX", a.MONTO_MAX)
-                cmd.ExecuteNonQuery()
-                cmd.Dispose()
-            Next
-            trans.Commit()
+            cmd = New SqlCommand
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.CommandText = LTrim(RTrim(procedimiento))
+            cmd.Connection = cn
+            cmd.Parameters.AddWithValue("@IDPEF", sim.IDPEF)
+            cmd.Parameters.AddWithValue("@PLAZO_MIN", sim.PLAZO_MIN)
+            cmd.Parameters.AddWithValue("@PLAZO_MAX", sim.PLAZO_MAX)
+            cmd.Parameters.AddWithValue("@TEA", sim.TEA)
+            cmd.Parameters.AddWithValue("@MONTO_MIN", sim.MONTO_MIN)
+            cmd.Parameters.AddWithValue("@MONTO_MAX", sim.MONTO_MAX)
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
             resultado = 1
         Catch ex As Exception
-            trans.Rollback()
             resultado = 0
         End Try
-        trans.Dispose()
         cmd.Dispose()
         Return resultado
     End Function
 
-    Public Function consultar_SIM_ConsolidacionDeDeuda(ByVal procedimiento As String, _
-                              ByVal ParamArray x() As Object) As List(Of Simulador_ConsolidacionDeDeuda)
+    Public Function consultarReprogramaciones(ByVal procedimiento As String, _
+                              ByVal ParamArray x() As Object) As List(Of Simulador_Reprogramacion)
         Dim cmd_consulta As New SqlCommand
-        Dim lista As New List(Of Simulador_ConsolidacionDeDeuda)
-        Dim sim As New Simulador_ConsolidacionDeDeuda
+        Dim lista As New List(Of Simulador_Reprogramacion)
+        Dim sim As New Simulador_Reprogramacion
         cmd_consulta.CommandType = CommandType.StoredProcedure
         cmd_consulta.CommandText = LTrim(RTrim(procedimiento))
         cmd_consulta.Connection = cn
@@ -744,139 +682,179 @@ Public Class Funciones_Conexion
         Dim read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
         If read_consulta.HasRows Then
             While read_consulta.Read
-                sim = New Simulador_ConsolidacionDeDeuda()
-                sim.IDCDD = read_consulta.GetInt32(read_consulta.GetOrdinal("IDCDD"))
-                sim.PLAZO_MIN = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MIN"))
-                sim.PLAZO_MAX = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MAX"))
-                sim.TEA = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEA"))
-                sim.MONTO_MIN = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MIN"))
-                sim.MONTO_MAX = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MAX"))
-                lista.Add(sim)
-            End While
-        End If
-        consultar_SIM_ConsolidacionDeDeuda = lista
-        read_consulta.Close()
-        cmd_consulta = Nothing
-    End Function
-
-    Public Function guardar_SIM_ConsolidacionDeDeuda(ByVal procedimiento As String, _
-                              ByVal lista As List(Of Simulador_ConsolidacionDeDeuda)) As Integer
-        Dim resultado As Integer = 0
-        Dim trans As SqlTransaction
-        Dim cmd As New SqlCommand
-        trans = cn.BeginTransaction()
-        Try
-            For Each a As Simulador_ConsolidacionDeDeuda In lista
-                cmd = New SqlCommand
-                cmd.CommandType = CommandType.StoredProcedure
-                cmd.CommandText = LTrim(RTrim(procedimiento))
-                cmd.Connection = cn
-                cmd.Transaction = trans
-                cmd.Parameters.AddWithValue("@IDCDD", a.IDCDD)
-                cmd.Parameters.AddWithValue("@PLAZO_MIN", a.PLAZO_MIN)
-                cmd.Parameters.AddWithValue("@PLAZO_MAX", a.PLAZO_MAX)
-                cmd.Parameters.AddWithValue("@TEA", a.TEA)
-                cmd.Parameters.AddWithValue("@MONTO_MIN", a.MONTO_MIN)
-                cmd.Parameters.AddWithValue("@MONTO_MAX", a.MONTO_MAX)
-                cmd.ExecuteNonQuery()
-                cmd.Dispose()
-            Next
-            trans.Commit()
-            resultado = 1
-        Catch ex As Exception
-            trans.Rollback()
-            resultado = 0
-        End Try
-        trans.Dispose()
-        cmd.Dispose()
-        Return resultado
-    End Function
-
-    Public Function consultar_SIM_DepositoPlazo(ByVal procedimiento As String, _
-                              ByVal ParamArray x() As Object) As List(Of Simulador_DepositoPlazo)
-        Dim cmd_consulta As New SqlCommand
-        Dim lista As New List(Of Simulador_DepositoPlazo)
-        Dim sim As New Simulador_DepositoPlazo
-        cmd_consulta.CommandType = CommandType.StoredProcedure
-        cmd_consulta.CommandText = LTrim(RTrim(procedimiento))
-        cmd_consulta.Connection = cn
-        If transaccion = True Then
-            cmd_consulta.Transaction = tsql
-        End If
-        Dim y As SqlParameter
-        SqlCommandBuilder.DeriveParameters(cmd_consulta)
-        Dim i As Integer = 0
-        For Each y In cmd_consulta.Parameters
-            If y.ParameterName <> "@RETURN_VALUE" Then
-                y.Value = x(i)
-                i = i + 1
-            End If
-        Next
-        Dim read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
-        If read_consulta.HasRows Then
-            While read_consulta.Read
-                sim = New Simulador_DepositoPlazo()
-                sim.IDDPF = read_consulta.GetInt32(read_consulta.GetOrdinal("IDDPF"))
-                sim.MONEDA = read_consulta.GetString(read_consulta.GetOrdinal("MONEDA"))
-                If read_consulta.IsDBNull(read_consulta.GetOrdinal("DESCRIPCION")) Then
-                    sim.DESCRIPCION = ""
+                sim = New Simulador_Reprogramacion()
+                sim.IDDREP = read_consulta.GetInt32(read_consulta.GetOrdinal("IDDREP"))
+                sim.IDPREP = read_consulta.GetInt32(read_consulta.GetOrdinal("IDPREP"))
+                sim.TIPO_TARJETA = read_consulta.GetInt32(read_consulta.GetOrdinal("TIPO_TARJETA"))
+                If read_consulta.IsDBNull(read_consulta.GetOrdinal("PRODUCTO")) Then
+                    sim.PRODUCTO = ""
                 Else
-                    sim.DESCRIPCION = read_consulta.GetString(read_consulta.GetOrdinal("DESCRIPCION"))
+                    sim.PRODUCTO = read_consulta.GetString(read_consulta.GetOrdinal("PRODUCTO"))
                 End If
+                'sim.PRODUCTO = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("PRODUCTO")), "", read_consulta.GetString(read_consulta.GetOrdinal("PRODUCTO")))
                 sim.PLAZO_MIN = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MIN"))
                 sim.PLAZO_MAX = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MAX"))
+                sim.ENVIO_EECC = read_consulta.GetDecimal(read_consulta.GetOrdinal("ENVIO_EECC"))
+                sim.SEG_DESG = read_consulta.GetDecimal(read_consulta.GetOrdinal("SEG_DESG"))
+                sim.TEM = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEM"))
                 sim.TEA = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEA"))
-                sim.TREA = read_consulta.GetDecimal(read_consulta.GetOrdinal("TREA"))
-                sim.TEA2 = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEA2"))
-                sim.TREA2 = read_consulta.GetDecimal(read_consulta.GetOrdinal("TREA2"))
-                sim.COMISION = read_consulta.GetDecimal(read_consulta.GetOrdinal("COMISION"))
-                sim.MONTO_LIM = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_LIM"))
+                sim.MEMBRECIA = read_consulta.GetDecimal(read_consulta.GetOrdinal("MEMBRECIA"))
+                sim.COM_ATM = read_consulta.GetDecimal(read_consulta.GetOrdinal("COM_ATM"))
                 sim.MONTO_MIN = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MIN"))
                 sim.MONTO_MAX = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MAX"))
+                sim.FLAG = "0"
+                sim.ACTUAL_VALUE = sim.ObtenerValorRegistro()
                 lista.Add(sim)
             End While
         End If
-        consultar_SIM_DepositoPlazo = lista
+        consultarReprogramaciones = lista
         read_consulta.Close()
         cmd_consulta = Nothing
     End Function
 
-    Public Function guardar_SIM_DepositoPlazo(ByVal procedimiento As String, _
-                              ByVal lista As List(Of Simulador_DepositoPlazo)) As Integer
+    Public Function guardarReprogramaciones(ByVal procedimiento As String, _
+                              ByVal sim As Simulador_Reprogramacion) As Integer
         Dim resultado As Integer = 0
-        Dim trans As SqlTransaction
         Dim cmd As New SqlCommand
-        trans = cn.BeginTransaction()
+
         Try
-            For Each a As Simulador_DepositoPlazo In lista
-                cmd = New SqlCommand
-                cmd.CommandType = CommandType.StoredProcedure
-                cmd.CommandText = LTrim(RTrim(procedimiento))
-                cmd.Connection = cn
-                cmd.Transaction = trans
-                cmd.Parameters.AddWithValue("@IDDPF", a.IDDPF)
-                'cmd.Parameters.AddWithValue("@MONEDA", a.MONEDA)
-                cmd.Parameters.AddWithValue("@DESCRIPCION", a.DESCRIPCION)
-                cmd.Parameters.AddWithValue("@PLAZO_MIN", a.PLAZO_MIN)
-                cmd.Parameters.AddWithValue("@PLAZO_MAX", a.PLAZO_MAX)
-                cmd.Parameters.AddWithValue("@TEA", a.TEA)
-                cmd.Parameters.AddWithValue("@TREA", a.TREA)
-                cmd.Parameters.AddWithValue("@TEA2", a.TEA2)
-                cmd.Parameters.AddWithValue("@TREA2", a.TREA2)
-                cmd.Parameters.AddWithValue("@COMISION", a.COMISION)
-                cmd.Parameters.AddWithValue("@MONTO_LIM", a.MONTO_LIM)
-                cmd.Parameters.AddWithValue("@MONTO_MIN", a.MONTO_MIN)
-                cmd.Parameters.AddWithValue("@MONTO_MAX", a.MONTO_MAX)
-                cmd.ExecuteNonQuery()
-                cmd.Dispose()
-            Next
-            trans.Commit()
+            cmd = New SqlCommand
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.CommandText = LTrim(RTrim(procedimiento))
+            cmd.Connection = cn
+            cmd.Parameters.AddWithValue("@IDDREP", sim.IDDREP)
+            cmd.Parameters.AddWithValue("@IDPREP", sim.IDPREP)
+            cmd.Parameters.AddWithValue("@TIPO_TARJETA", sim.TIPO_TARJETA)
+            cmd.Parameters.AddWithValue("@PRODUCTO", sim.PRODUCTO)
+            cmd.Parameters.AddWithValue("@FECHA_HORA", sim.FECHA_HORA)
+            cmd.Parameters.AddWithValue("@PLAZO_MIN", sim.PLAZO_MIN)
+            cmd.Parameters.AddWithValue("@PLAZO_MAX", sim.PLAZO_MAX)
+            cmd.Parameters.AddWithValue("@ENVIO_EECC", sim.ENVIO_EECC)
+            cmd.Parameters.AddWithValue("@SEG_DESG", sim.SEG_DESG)
+            cmd.Parameters.AddWithValue("@TEM", sim.TEM)
+            cmd.Parameters.AddWithValue("@TEA", sim.TEA)
+            cmd.Parameters.AddWithValue("@MEMBRECIA", sim.MEMBRECIA)
+            cmd.Parameters.AddWithValue("@COM_ATM", sim.COM_ATM)
+            cmd.Parameters.AddWithValue("@MONTO_MIN", sim.MONTO_MIN)
+            cmd.Parameters.AddWithValue("@MONTO_MAX", sim.MONTO_MAX)
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
             resultado = 1
         Catch ex As Exception
-            trans.Rollback()
             resultado = 0
         End Try
-        trans.Dispose()
+        cmd.Dispose()
+        Return resultado
+    End Function
+
+    Public Function consultar_SIM_SuperEfectivo(ByVal procedimiento As String, _
+                              ByVal ParamArray x() As Object) As List(Of Simulador_SuperEfectivo)
+        Dim cmd_consulta As New SqlCommand
+        Dim lista As New List(Of Simulador_SuperEfectivo)
+        Dim sim As New Simulador_SuperEfectivo
+        cmd_consulta.CommandType = CommandType.StoredProcedure
+        cmd_consulta.CommandText = LTrim(RTrim(procedimiento))
+        cmd_consulta.Connection = cn
+        If transaccion = True Then
+            cmd_consulta.Transaction = tsql
+        End If
+        Dim y As SqlParameter
+        SqlCommandBuilder.DeriveParameters(cmd_consulta)
+        Dim i As Integer = 0
+        For Each y In cmd_consulta.Parameters
+            If y.ParameterName <> "@RETURN_VALUE" Then
+                y.Value = x(i)
+                i = i + 1
+            End If
+        Next
+        Dim read_consulta As SqlDataReader = cmd_consulta.ExecuteReader()
+        If read_consulta.HasRows Then
+            While read_consulta.Read
+                sim = New Simulador_SuperEfectivo()
+                sim.IDDSEF = read_consulta.GetInt32(read_consulta.GetOrdinal("IDDSEF"))
+                sim.IDPSEF = read_consulta.GetInt32(read_consulta.GetOrdinal("IDPSEF"))
+                sim.TIPO_TARJETA = read_consulta.GetInt32(read_consulta.GetOrdinal("TIPO_TARJETA"))
+                sim.FECHA_HORA = read_consulta.GetDateTime(read_consulta.GetOrdinal("FECHA_HORA"))
+                If read_consulta.IsDBNull(read_consulta.GetOrdinal("PRODUCTO")) Then
+                    sim.PRODUCTO = ""
+                Else
+                    sim.PRODUCTO = read_consulta.GetString(read_consulta.GetOrdinal("PRODUCTO"))
+                End If
+                'sim.PRODUCTO = IIf(read_consulta.IsDBNull(read_consulta.GetOrdinal("PRODUCTO")), "", read_consulta.GetString(read_consulta.GetOrdinal("PRODUCTO")))
+                sim.PLAZO_MIN = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MIN"))
+                sim.PLAZO_MAX = read_consulta.GetInt32(read_consulta.GetOrdinal("PLAZO_MAX"))
+                sim.ENVIO_EECC = read_consulta.GetDecimal(read_consulta.GetOrdinal("ENVIO_EECC"))
+                sim.SEG_DESG = read_consulta.GetDecimal(read_consulta.GetOrdinal("SEG_DESG"))
+                sim.SEG_PROT = read_consulta.GetDecimal(read_consulta.GetOrdinal("SEG_PROT"))
+                sim.TEM = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEM"))
+                sim.TEA = read_consulta.GetDecimal(read_consulta.GetOrdinal("TEA"))
+                sim.MONTO_MIN = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MIN"))
+                sim.MONTO_MAX = read_consulta.GetDecimal(read_consulta.GetOrdinal("MONTO_MAX"))
+                sim.FLAG = "0"
+                sim.ACTUAL_VALUE = sim.ObtenerValorRegistro()
+                lista.Add(sim)
+            End While
+        End If
+        consultar_SIM_SuperEfectivo = lista
+        read_consulta.Close()
+        cmd_consulta = Nothing
+    End Function
+
+    Public Function guardar_SIM_SuperEfectivo(ByVal procedimiento As String, _
+                              ByVal sim As Simulador_SuperEfectivo) As Integer
+        Dim resultado As Integer = 0
+        Dim cmd As New SqlCommand
+        Try
+            cmd = New SqlCommand
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.CommandText = LTrim(RTrim(procedimiento))
+            cmd.Connection = cn
+            cmd.Parameters.AddWithValue("@IDDSEF", sim.IDDSEF)
+            cmd.Parameters.AddWithValue("@IDPSEF", sim.IDPSEF)
+            cmd.Parameters.AddWithValue("@TIPO_TARJETA", sim.TIPO_TARJETA)
+            cmd.Parameters.AddWithValue("@PRODUCTO", sim.PRODUCTO)
+            cmd.Parameters.AddWithValue("@FECHA_HORA", sim.FECHA_HORA)
+            cmd.Parameters.AddWithValue("@PLAZO_MIN", sim.PLAZO_MIN)
+            cmd.Parameters.AddWithValue("@PLAZO_MAX", sim.PLAZO_MAX)
+            cmd.Parameters.AddWithValue("@ENVIO_EECC", sim.ENVIO_EECC)
+            cmd.Parameters.AddWithValue("@SEG_DESG", sim.SEG_DESG)
+            cmd.Parameters.AddWithValue("@SEG_PROT", sim.SEG_PROT)
+            cmd.Parameters.AddWithValue("@TEM", sim.TEM)
+            cmd.Parameters.AddWithValue("@TEA", sim.TEA)
+            cmd.Parameters.AddWithValue("@MONTO_MIN", sim.MONTO_MIN)
+            cmd.Parameters.AddWithValue("@MONTO_MAX", sim.MONTO_MAX)
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
+            resultado = 1
+        Catch ex As Exception
+            resultado = 0
+        End Try
+        cmd.Dispose()
+        Return resultado
+    End Function
+
+    Public Function guardar_LOG_SIM(ByVal procedimiento As String, _
+                              ByVal sim As Simulador_Log) As Integer
+        Dim resultado As Integer = 0
+        Dim cmd As New SqlCommand
+        Try
+            cmd = New SqlCommand
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.CommandText = LTrim(RTrim(procedimiento))
+            cmd.Connection = cn
+            cmd.Parameters.AddWithValue("@IDSIMULADOR", sim.IdSimulador)
+            cmd.Parameters.AddWithValue("@SIMULADOR", sim.Simulador)
+            cmd.Parameters.AddWithValue("@VALOR_INICIAL", sim.ValorInicial)
+            cmd.Parameters.AddWithValue("@VALOR_FINAL", sim.ValorFinal)
+            cmd.Parameters.AddWithValue("@USUARIO", sim.Usuario)
+            cmd.Parameters.AddWithValue("@IP", sim.IP)
+            cmd.Parameters.AddWithValue("@FECHA", sim.Fecha)
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
+            resultado = 1
+        Catch ex As Exception
+            resultado = 0
+        End Try
         cmd.Dispose()
         Return resultado
     End Function
@@ -1074,4 +1052,6 @@ Public Class Funciones_Conexion
         read_consulta.Close()
         cmd_consulta = Nothing
     End Function
+
+    
 End Class

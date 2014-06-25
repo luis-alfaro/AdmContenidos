@@ -42,14 +42,16 @@
             });
 
             function CrearTabla(tabla) {
-                var c = ['IDCDD', 'Plazo Mínimo', 'Plazo Máximo', 'TEA', 'Monto Mínimo', 'Monto Máximo'];
+                var c = ['IDCDD', 'Plazo Mínimo', 'Plazo Máximo', 'TEA', 'Monto Mínimo', 'Monto Máximo','FLAG','ACTUAL_VALUE'];
                 var cm = [
-            { name: 'IDCDD', index: 'IDCDD', width: 12, align: 'center', hidden: true },
-            { name: 'PLAZO_MIN', index: 'PLAZO_MIN', width: 95, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 0} },
-            { name: 'PLAZO_MAX', index: 'PLAZO_MAX', width: 95, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 0} },
-            { name: 'TEA', index: 'TEA', width: 50, align: 'center', editable: true, formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
-            { name: 'MONTO_MIN', index: 'MONTO_MIN', width: 105, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} },
-            { name: 'MONTO_MAX', index: 'MONTO_MAX', width: 105, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} }
+            { name: 'IDCDD', index: 'IDCDD', width: 12, align: 'center', hidden: true, sortable: false },
+            { name: 'PLAZO_MIN', index: 'PLAZO_MIN', width: 95, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 0} },
+            { name: 'PLAZO_MAX', index: 'PLAZO_MAX', width: 95, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 0} },
+            { name: 'TEA', index: 'TEA', width: 50, align: 'center', editable: true, sortable: false, formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
+            { name: 'MONTO_MIN', index: 'MONTO_MIN', width: 105, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} },
+            { name: 'MONTO_MAX', index: 'MONTO_MAX', width: 105, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} },
+            { name: 'FLAG', index: 'FLAG', width: 80, align: 'center', hidden: true },
+            { name: 'ACTUAL_VALUE', index: 'ACTUAL_VALUE', width: 80, align: 'center', hidden: true }
         ];
                 tableToGrid(tabla, {
                     colNames: c,
@@ -85,6 +87,10 @@
                         if (parseFloat(row['PLAZO_MIN']) > parseFloat(row['PLAZO_MAX'])) {
                             alert("El valor Ingresado no es válido, el plazo máximo debe ser mayor al plazo mínimo");
                             row[cellname] = valorPrevio;
+                            jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);
+                        }
+                        if (row[cellname] != valorPrevio) {
+                            row['FLAG'] = "1";
                             jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);
                         }
                     },
@@ -142,7 +148,10 @@
                     success: function (result) {
                         var res = result.hasOwnProperty("d") ? result.d : result;
                         if (res == 1) {
-                            BI.ShowAlert('',"Los datos se guardaron con éxito.");
+                            BI.ShowAlert('', "Los datos se guardaron con éxito.");
+                            $("#" + tablaMantenimiento).jqGrid("GridUnload");
+                            CrearTabla("#" + tablaMantenimiento);
+                            dibujarTabla(); 
                         }
                         else {
                             BI.ShowAlert('',"Ocurrió un error, intentelo nuevamente.");

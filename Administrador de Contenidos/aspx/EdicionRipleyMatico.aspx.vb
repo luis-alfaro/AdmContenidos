@@ -17,6 +17,7 @@ Partial Class aspx_EdicionRipleyMatico
     Public Shared fechaHora As DateTime = DateTime.Now
     Public Shared rptaCompletar As String = ""
     Public Shared session_id As String = ""
+    Public Shared username As String = ""
     Public Shared rutaTemplate As String = ""
 
 
@@ -51,6 +52,7 @@ Partial Class aspx_EdicionRipleyMatico
 
                 rutaTemplate = Server.MapPath("~\Templates\")
                 session_id = Session("SESSION_ID")
+                username = GetNombreUsuario()
                 'Dim kioscs As List(Of String) = New List(Of String)
                 'kioscs.Add("a")
                 'kioscs.Add("a")
@@ -109,7 +111,7 @@ Partial Class aspx_EdicionRipleyMatico
         Try
             rptaCompletar = ""
             If Archivos.Count < 1 Then
-                rptaCompletar = "No ha seleccionado ningun archivo!"
+                EnvioData.Instancia.EscribirLog(identificador, "-No se seleccionaron imagenes.", ActualizacionImagenes)
                 Return
             Else
                 'Label1.Visible = False
@@ -151,9 +153,10 @@ Partial Class aspx_EdicionRipleyMatico
             EnvioData.Instancia.EscribirLog(identificador, "-Se copiarán los archivos a " + listaFinalKioscos.Count.ToString() + " Kioskos", ActualizacionImagenes)
 
             For Each kio As ENKiosco In listaFinalKioscos
+                Dim ok As Boolean
+                Dim nombreKiosko As String = kio.IpKiosco
                 Try
-                    Dim ok As Boolean
-                    Dim nombreKiosko As String = kio.IpKiosco
+
                     Dim kiosko As ENKiosco = kio
                     kiosko.IpKiosco = obtenerIP(kiosko.IpKiosco)
                     ok = EnvioData.Instancia.EnviarArchivos(kiosko, directorioSeleccionado, PathServer, usuario, password, dominio, textoLog, listaARchivos, identificador)
@@ -164,10 +167,7 @@ Partial Class aspx_EdicionRipleyMatico
                         EnvioData.Instancia.EscribirLog(identificador, "-No se pudo terminar el kiosko " + nombreKiosko, ActualizacionImagenes)
                     End If
                 Catch ex As Exception
-                    EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Es posible que no tenga permiso de acceso a un archivo, o haya sido borrado durante la ejecución.", ActualizacionImagenes)
-                    rptaCompletar = "Es posible que no tenga permiso de acceso a un archivo, o haya sido borrado durante la ejecución"
-                    EnviarEmailConfirmacion(email, Archivos, Kioscos, descripcion)
-                    Return
+                    EnvioData.Instancia.EscribirLog(identificador, "Error: " + nombreKiosko + " Es posible que no tenga permiso de acceso a un archivo, o haya sido borrado durante la ejecución.", ActualizacionImagenes)
                 End Try
             Next
             EnvioData.Instancia.EscribirLog(identificador, "-Fin Proceso: " + "Se terminó de ejecutar el proceso. ", ActualizacionImagenes)
@@ -177,7 +177,7 @@ Partial Class aspx_EdicionRipleyMatico
             InicarIdentificador()
             Return
         Catch ex As Exception
-            EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Intentelo nuevamente más tarde.", ActualizacionImagenes)
+            EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Intentelo nuevamente más tarde. " + ex.Message, ActualizacionImagenes)
             rptaCompletar = "Ha ocurrido un error en el código, revise las fuentes." + ex.Message
             EnviarEmailConfirmacion(email, Archivos, Kioscos, descripcion)
             Return
@@ -193,7 +193,7 @@ Partial Class aspx_EdicionRipleyMatico
     Public Shared Sub EnviarEmailConfirmacion(ByVal email As String, ByVal Archivos As List(Of String), ByVal Kioscos As List(Of String), ByVal descripcion As String)
         If String.IsNullOrEmpty(email) = False Then
             Dim body As String = System.IO.File.ReadAllText(rutaTemplate + "EdicionTemplate.htm")
-            body = body.Replace("#Nombre#", GetNombreUsuario())
+            body = body.Replace("#Nombre#", username)
             body = body.Replace("#Contenido#", String.Format("Se ha enviado {0} nuevos archivos para actualizar a {1} Ripleymatico(s) desde el modulo de {2}.", Archivos.Count, Kioscos.Count, modulo))
             body = body.Replace("#Descripcion#", descripcion)
             body = body.Replace("#Fecha#", DateTime.Now.ToShortDateString())
@@ -327,7 +327,7 @@ Partial Class aspx_EdicionRipleyMatico
     End Function
 
     Public Shared Function GetNombreUsuario() As String
-        Dim username As String = "Anónimo"
+        Dim usern As String = "Anónimo"
         If Not (session_id Is Nothing) Then
             Dim dtConfig As New DataTable
             Dim sMensajeError As String = ""
@@ -335,11 +335,20 @@ Partial Class aspx_EdicionRipleyMatico
 
 
             If dtConfig.Rows.Count <= 0 Then 'Su session ha expirado
-                username = "Anónimo"
+                usern = "Anónimo"
             Else
-                username = Cryptor(dtConfig.Rows(0).Item("LOGUEADO")).ToUpper()
+                usern = Cryptor(dtConfig.Rows(0).Item("LOGUEADO")).ToUpper()
             End If
         End If
-        Return username
+        Return usern
     End Function
+
+    Protected Sub btnContinuar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnContinuar.Click
+        Try
+            Server.TransferRequest(Request.Url.AbsolutePath, False)
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
 End Class

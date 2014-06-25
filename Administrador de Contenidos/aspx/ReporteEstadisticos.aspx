@@ -110,8 +110,9 @@
 <td>
 
 <div class="scrolling" runat="server" id="divPrint">
-    <asp:Label ID="Label1" runat="server" Text="REPORTE GENERAL" Font-Bold="True" 
-        Font-Size="Smaller" ForeColor="Black"></asp:Label>
+    <h3><b>REPORTE GENERAL</b></h3>
+    <%--<asp:Label ID="Label1" runat="server" Text="REPORTE GENERAL" Font-Bold="True" 
+        Font-Size="Smaller" ForeColor="Black"></asp:Label>--%>
     <br><br />
     <asp:GridView ID="GridView1" runat="server" BackColor="White" 
         BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" 
@@ -196,9 +197,10 @@
 <td></td>
 <td >
 <br><br><div class="scroll">
-    <asp:Label ID="Label2" runat="server" Text="REPORTE DETALLADO POR KIOSKO" 
-            Font-Bold="True" ForeColor="Black" Font-Size="Smaller"></asp:Label>
-        </b><br><br />
+    <h3><b>REPORTE DETALLADO POR KIOSKO</b></h3>
+    <%--<asp:Label ID="Label2" runat="server" Text="REPORTE DETALLADO POR KIOSKO" 
+            Font-Bold="True" ForeColor="Black" Font-Size="Smaller"></asp:Label>--%>
+        <br><br />
     <asp:GridView ID="gvdetalle" runat="server" BackColor="White" 
         BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" 
         ForeColor="Black" Font-Size="Small">

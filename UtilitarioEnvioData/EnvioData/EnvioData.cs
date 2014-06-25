@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 using System.IO;
 using UtilitarioEnvioData.Entidades;
 using UtilitarioEnvioData.GenerarXML;
@@ -432,8 +433,17 @@ namespace UtilitarioEnvioData.EnvioData
 
         public void EscribirLog(string identificador,string descripcion,string tipo)
         {
-            DataAccess.Instancia.Insert_LogRipleymatico(identificador, descripcion,tipo);
-            hacerLineaLogPantalla(descripcion,tipo);
+            try
+            {
+                DataAccess.Instancia.Insert_LogRipleymatico(identificador, descripcion,tipo);
+                hacerLineaLogPantalla(descripcion,tipo);
+            }
+            catch (Exception ex)
+            {
+                hacerLineaLogPantalla(ex.Message + " " + descripcion+" _ " + ex.InnerException.Message, tipo);
+                
+            }
+            
         }
 
         public List<string> ConsultarLog(string identificador, string tipo)
@@ -559,6 +569,157 @@ namespace UtilitarioEnvioData.EnvioData
             else
                 return true;
 
+        }
+
+        public DataSet GET_ESTADISTICA_ACEPTACION_SEF(string fini, string ffin,string tipo)
+        {
+            DataSet ds = new DataSet();
+            string titulo1 = "";
+            try
+            {
+                DataTable dt = new DataTable("consulta");
+                
+
+                var lista = DataAccess.Instancia.GET_ESTADISTICA_ACEPTACION_SEF(fini, ffin);
+
+                if (tipo == "1")//Por Fecha
+                { 
+                    titulo1 = "Fecha"; 
+                }
+                else 
+                { 
+                    titulo1 = "Mes"; 
+                }
+
+                dt.Columns.Add(new DataColumn(titulo1, typeof(string)));
+                dt.Columns.Add(new DataColumn("Cant.", typeof(int)));//C
+                dt.Columns.Add(new DataColumn("Monto Ofrecido", typeof(decimal)));//C
+                dt.Columns.Add(new DataColumn("Monto Desemb.", typeof(decimal)));//C
+
+                dt.Columns.Add(new DataColumn("Cant. ", typeof(int)));//R
+                dt.Columns.Add(new DataColumn("Monto Ofrecido ", typeof(decimal)));//R
+                dt.Columns.Add(new DataColumn("Monto Desemb. ", typeof(decimal)));//R
+
+                dt.Columns.Add(new DataColumn("Cant.  ", typeof(int)));//OTRO
+                dt.Columns.Add(new DataColumn("Monto Ofrecido  ", typeof(decimal)));//OTRO
+                dt.Columns.Add(new DataColumn("Monto Desemb.  ", typeof(decimal)));//OTRO
+
+                dt.Columns.Add(new DataColumn(" Cant. ", typeof(int)));//total
+                dt.Columns.Add(new DataColumn(" Monto Ofrecido ", typeof(decimal)));//total
+                dt.Columns.Add(new DataColumn(" Monto Desemb. ", typeof(decimal)));//total
+
+                if (tipo == "1")//Por Fecha
+                {
+                    
+                    var distinct = lista.Select(m => m.O_FEC_CLIE_FIN).Distinct().ToList();
+
+                    var otralista = (from extracted in (from p in distinct
+                                                    select new {item = p,  
+                                                        p = DateTime.Parse(p)}) 
+                                 orderby extracted.p 
+                                     select extracted.item).ToList();
+
+                    foreach (var item in otralista)
+                    {
+                        var valor1 = lista.Where(m => m.O_FEC_CLIE_FIN == item && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "C").ToList().Count;
+                        var valor2 = lista.Where(m => m.O_FEC_CLIE_FIN == item && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "C").Sum(m => m.O_DATO_NUM2);
+                        var valor3 = lista.Where(m => m.O_FEC_CLIE_FIN == item && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "C").Sum(m => m.O_DATO_NUM6);
+                        var valor4 = lista.Where(m => m.O_FEC_CLIE_FIN == item && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "R").ToList().Count;
+                        var valor5 = lista.Where(m => m.O_FEC_CLIE_FIN == item && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "R").Sum(m => m.O_DATO_NUM2);
+                        var valor6 = lista.Where(m => m.O_FEC_CLIE_FIN == item && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "R").Sum(m => m.O_DATO_NUM6);
+                        var valor7 = lista.Where(m => m.O_FEC_CLIE_FIN == item && m.O_ESTADO == "D" && string.IsNullOrEmpty(m.O_TIP_IMP_TCK)).ToList().Count;
+                        var valor8 = lista.Where(m => m.O_FEC_CLIE_FIN == item && m.O_ESTADO == "D" && string.IsNullOrEmpty(m.O_TIP_IMP_TCK)).Sum(m => m.O_DATO_NUM2);
+                        var valor9 = lista.Where(m => m.O_FEC_CLIE_FIN == item && m.O_ESTADO == "D" && string.IsNullOrEmpty(m.O_TIP_IMP_TCK)).Sum(m => m.O_DATO_NUM6);
+
+                        DataRow dr = dt.NewRow();
+                        dr["Fecha"] = item;
+                        dr["Cant."] = valor1;
+                        dr["Monto Ofrecido"] = valor2;
+                        dr["Monto Desemb."] = valor3;
+
+                        dr["Cant. "] = valor4;
+                        dr["Monto Ofrecido "] = valor5;
+                        dr["Monto Desemb. "] = valor6;
+
+                        dr["Cant.  "] = valor7;
+                        dr["Monto Ofrecido  "] = valor8;
+                        dr["Monto Desemb.  "] = valor9;
+
+                        dr[" Cant. "] = valor1 + valor4 + valor7;
+                        dr[" Monto Ofrecido "] = valor2 + valor5 + valor8;
+                        dr[" Monto Desemb. "] = valor3 + valor6 + valor9;
+                        dt.Rows.Add(dr);
+                    }
+                    ds.Tables.Add(dt);
+                }
+                else //Por Mes
+                {
+                    
+                    var distincto = lista.Select(m => new { m.O_MONTH, m.O_YEAR,m.O_FEC_CLIE_FIN,m.O_MES}).Distinct().ToList();
+                    var otralista = (from extracted in
+                                     (from p in distincto
+                                      select new
+                                      {
+                                          item = p,
+                                          p = DateTime.Parse(p.O_FEC_CLIE_FIN)
+                                      }) 
+                                 orderby extracted.item.O_YEAR,extracted.item.O_MONTH
+                                 select extracted.item).ToList();
+
+                    foreach (var item in otralista)
+                    {
+                        var valor1 = lista.Where(m => m.O_MONTH == item.O_MONTH && m.O_YEAR == item.O_YEAR && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "C").ToList().Count;
+                        var valor2 = lista.Where(m => m.O_MONTH == item.O_MONTH && m.O_YEAR == item.O_YEAR && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "C").Sum(m => m.O_DATO_NUM2);
+                        var valor3 = lista.Where(m => m.O_MONTH == item.O_MONTH && m.O_YEAR == item.O_YEAR && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "C").Sum(m => m.O_DATO_NUM6);
+                        var valor4 = lista.Where(m => m.O_MONTH == item.O_MONTH && m.O_YEAR == item.O_YEAR && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "R").ToList().Count;
+                        var valor5 = lista.Where(m => m.O_MONTH == item.O_MONTH && m.O_YEAR == item.O_YEAR && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "R").Sum(m => m.O_DATO_NUM2);
+                        var valor6 = lista.Where(m => m.O_MONTH == item.O_MONTH && m.O_YEAR == item.O_YEAR && m.O_ESTADO == "D" && m.O_TIP_IMP_TCK == "R").Sum(m => m.O_DATO_NUM6);
+                        var valor7 = lista.Where(m => m.O_MONTH == item.O_MONTH && m.O_YEAR == item.O_YEAR && m.O_ESTADO == "D" && string.IsNullOrEmpty(m.O_TIP_IMP_TCK)).ToList().Count;
+                        var valor8 = lista.Where(m => m.O_MONTH == item.O_MONTH && m.O_YEAR == item.O_YEAR && m.O_ESTADO == "D" && string.IsNullOrEmpty(m.O_TIP_IMP_TCK)).Sum(m => m.O_DATO_NUM2);
+                        var valor9 = lista.Where(m => m.O_MONTH == item.O_MONTH && m.O_YEAR == item.O_YEAR && m.O_ESTADO == "D" && string.IsNullOrEmpty(m.O_TIP_IMP_TCK)).Sum(m => m.O_DATO_NUM6);
+
+                        DataRow dr = dt.NewRow();
+                        dr["Mes"] = item.O_MES + "-" + item.O_YEAR.ToString();
+                        dr["Cant."] = valor1;
+                        dr["Monto Ofrecido"] = valor2;
+                        dr["Monto Desemb."] = valor3;
+
+                        dr["Cant. "] = valor4;
+                        dr["Monto Ofrecido "] = valor5;
+                        dr["Monto Desemb. "] = valor6;
+
+                        dr["Cant.  "] = valor7;
+                        dr["Monto Ofrecido  "] = valor8;
+                        dr["Monto Desemb.  "] = valor9;
+
+                        dr[" Cant. "] = valor1 + valor4 + valor7;
+                        dr[" Monto Ofrecido "] = valor2 + valor5 + valor8;
+                        dr[" Monto Desemb. "] = valor3 + valor6 + valor9;
+                        dt.Rows.Add(dr);
+                    }
+                    ds.Tables.Add(dt);
+
+                }
+                
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ds;
+        }
+
+        public string PRUEBA_CONEXION_ORA()
+        {
+            try
+            {
+                return DataAccess.Instancia.PRUEBA_CONEXION_ORA();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         
         #endregion

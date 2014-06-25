@@ -270,7 +270,7 @@ Inherits="aspx_EdicionRipleyMatico" %>
                     return false;
                 }
 
-                if (descripcion == "" || descripcion.length < 20 ) {
+                if (descripcion == "" || descripcion.length < 20) {
                     BI.ShowAlert('', "Debe ingresar una descripción de la actualización de 20 caracteres como mínimo.");
                     return false;
                 }
@@ -288,15 +288,16 @@ Inherits="aspx_EdicionRipleyMatico" %>
                         Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion);
                     }, function () { }, "");
                 }
-                
+
                 e.preventDefault();
             });
 
-
+            $("#" + btnCompletar).click(function (e) { });
         });
         function Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion) {
             BI.ShowAlert('', inicializador);
             $("#" + logPantalla).append("<li>" + "-Espere mientras se procesa la actualización..." + "</li>");
+            console.log(imageList, radio, values, usuario, password, dominio, email, descripcion);
             var parameters = { Archivos: imageList, radio: radio, Kioscos: values, usuario: usuario, password: password, dominio: dominio, email: email, descripcion: descripcion };
             $.ajax({
                 type: "POST",
@@ -355,6 +356,9 @@ Inherits="aspx_EdicionRipleyMatico" %>
             $("#" + cblKioscos).hide();
             $("#Continuar").show();
             $("#controles").hide();
+        }
+        function ReloadPage() {
+            window.location.reload();
         }
     </script>
 </head>

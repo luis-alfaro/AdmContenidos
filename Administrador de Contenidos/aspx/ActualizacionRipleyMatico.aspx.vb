@@ -112,7 +112,7 @@ Partial Class aspx_ActualizacionRipleyMatico
         Try
             rptaCompletar = ""
             If Archivos.Count < 1 Then
-                rptaCompletar = "No ha seleccionado ningun archivo!"
+                EnvioData.Instancia.EscribirLog(identificador, "No ha seleccionado ningun archivo!", ActualizacionFlash)
                 Return
             Else
                 'Label1.Visible = False
@@ -170,9 +170,7 @@ Partial Class aspx_ActualizacionRipleyMatico
                     End If
                 Catch ex As Exception
                     EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Es posible que no tenga permiso de acceso a un archivo, o haya sido borrado durante la ejecución.", ActualizacionFlash)
-                    rptaCompletar = "Es posible que no tenga permiso de acceso a un archivo, o haya sido borrado durante la ejecución."
-                    EnviarEmailConfirmacion(email, Archivos, Kioscos, descripcion)
-                    Return
+                    
                 End Try
             Next
             EnvioData.Instancia.EscribirLog(identificador, "-Fin Proceso: " + "Se terminó de ejecutar el proceso. ", ActualizacionFlash)
@@ -183,7 +181,7 @@ Partial Class aspx_ActualizacionRipleyMatico
             InicarIdentificador()
             Return
         Catch ex As Exception
-            EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Intentelo nuevamente más tarde.", ActualizacionFlash)
+            EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Intentelo nuevamente más tarde. " + ex.Message, ActualizacionFlash)
             rptaCompletar = "Ha ocurrido un error en el código, revise las fuentes." + ex.Message
             EnviarEmailConfirmacion(email, Archivos, Kioscos, descripcion)
             Return

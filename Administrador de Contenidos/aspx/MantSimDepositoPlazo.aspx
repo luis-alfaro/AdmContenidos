@@ -43,62 +43,70 @@
 
             function CrearTabla(tabla) {
                 var c = ['IDDPF', 'Moneda', 'Descripción', 'Plazo Mínimo', 'Plazo Máximo', 'TEA', 'TREA', 'TEA2', 'TREA2'
-                ,'Monto Límite', 'Monto Mínimo', 'Monto Máximo'];
+                , 'Monto Límite', 'Monto Mínimo', 'Monto Máximo', 'FLAG', 'ACTUAL_VALUE'];
                 var cm = [
-            { name: 'IDDPF', index: 'IDDPF', width: 12, align: 'center', hidden: true },
-            { name: 'MONEDA_TEXT', index: 'MONEDA_TEXT', width: 85, align: 'center' },
-            { name: 'DESCRIPCION', index: 'DESCRIPCION', width: 200, align: 'center' },
-            { name: 'PLAZO_MIN', index: 'PLAZO_MIN', width: 85, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "", decimalPlaces: 0} },
-            { name: 'PLAZO_MAX', index: 'PLAZO_MAX', width: 85, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "", decimalPlaces: 0} },
-            { name: 'TEA', index: 'TEA', width: 50, align: 'center', editable: true, formatter: 'currency', formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
-            { name: 'TREA', index: 'TREA', width: 50, align: 'center', editable: true, formatter: 'currency', formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
-            { name: 'TEA2', index: 'TEA2', width: 50, align: 'center', editable: true, formatter: 'currency', formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
-            { name: 'TREA2', index: 'TREA2', width: 50, align: 'center', editable: true, formatter: 'currency', formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
-            { name: 'MONTO_LIM', index: 'MONTO_LIM', width: 100, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} },
-            { name: 'MONTO_MIN', index: 'MONTO_MIN', width: 100, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} },
-            { name: 'MONTO_MAX', index: 'MONTO_MAX', width: 100, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} }
+            { name: 'IDDPF', index: 'IDDPF', width: 12, align: 'center', hidden: true, sortable: false },
+            { name: 'MONEDA_TEXT', index: 'MONEDA_TEXT', width: 85, align: 'center', sortable: false },
+            { name: 'DESCRIPCION', index: 'DESCRIPCION', width: 200, align: 'center', editable: true, sortable: false },
+            { name: 'PLAZO_MIN', index: 'PLAZO_MIN', width: 85, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "", decimalPlaces: 0} },
+            { name: 'PLAZO_MAX', index: 'PLAZO_MAX', width: 85, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "", decimalPlaces: 0} },
+            { name: 'TEA', index: 'TEA', width: 50, align: 'center', editable: true, sortable: false, formatter: 'currency', formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
+            { name: 'TREA', index: 'TREA', width: 50, align: 'center', editable: true, sortable: false, formatter: 'currency', formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
+            { name: 'TEA2', index: 'TEA2', width: 50, align: 'center', editable: true, sortable: false, formatter: 'currency', formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
+            { name: 'TREA2', index: 'TREA2', width: 50, align: 'center', editable: true, sortable: false, formatter: 'currency', formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
+            { name: 'MONTO_LIM', index: 'MONTO_LIM', width: 100, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} },
+            { name: 'MONTO_MIN', index: 'MONTO_MIN', width: 100, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} },
+            { name: 'MONTO_MAX', index: 'MONTO_MAX', width: 100, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} },
+            { name: 'FLAG', index: 'FLAG', width: 80, align: 'center', hidden: true },
+            { name: 'ACTUAL_VALUE', index: 'ACTUAL_VALUE', width: 80, align: 'center', hidden: true }
         ];
-                tableToGrid(tabla, {
-                    colNames: c,
-                    colModel: cm,
-                    width: 900,
-                    height: 500,
-                    datatype: 'local',
-                    cellsubmit: "clientArray",
-                    rowNum: 28,
-                    pgbuttons: false,
-                    viewrecords: true,
-                    viewGrid: true,
-                    cellEdit: true,
-                    hidegrid: false,
-                    pager: '#barraMantenimiento',
-                    beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
-                        IDRow = iRow;
-                        IDCol = iCol;
-                        valorPrevio = value;
-                    },
-                    afterSaveCell: function (rowid, cellname, value, iRow, iCol) {
-                            var row = jQuery("#" + tablaMantenimiento).getRowData(rowid);
-                            if (!BI.ValidarDecimal(value)) {
-                                row[cellname] = valorPrevio;
-                                jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);
-                            }
+            tableToGrid(tabla, {
+                colNames: c,
+                colModel: cm,
+                width: 900,
+                height: 500,
+                datatype: 'local',
+                cellsubmit: "clientArray",
+                rowNum: 28,
+                pgbuttons: false,
+                viewrecords: true,
+                viewGrid: true,
+                cellEdit: true,
+                hidegrid: false,
+                pager: '#barraMantenimiento',
+                beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+                    IDRow = iRow;
+                    IDCol = iCol;
+                    valorPrevio = value;
+                },
+                afterSaveCell: function (rowid, cellname, value, iRow, iCol) {
+                    var row = jQuery("#" + tablaMantenimiento).getRowData(rowid);
+                    if (cellname != "DESCRIPCION") {
+                        if (!BI.ValidarDecimal(value)) {
+                            row[cellname] = valorPrevio;
+                            jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);
+                        }
 
-                            if (parseFloat(row['MONTO_MIN']) > parseFloat(row['MONTO_MAX'])) {
-                                alert("El valor Ingresado no es válido, el monto máximo debe ser mayor al monto mínimo");
-                                row[cellname] = valorPrevio;
-                                jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);
-                            }
-                            if (parseFloat(row['PLAZO_MIN']) > parseFloat(row['PLAZO_MAX'])) {
-                                alert("El valor Ingresado no es válido, el plazo máximo debe ser mayor al plazo mínimo");
-                                row[cellname] = valorPrevio;
-                                jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);
-                            }
-                    },
-                    afterEditCell: function afterEditCell(rowID, cellname, value, iRow, iCol) {
-                        $("#" + this.id + " tbody>tr:eq(" + iRow + ")>td:eq(" + iCol + ") input, select, textarea").select();
+                        if (parseFloat(row['MONTO_MIN']) > parseFloat(row['MONTO_MAX'])) {
+                            alert("El valor Ingresado no es válido, el monto máximo debe ser mayor al monto mínimo");
+                            row[cellname] = valorPrevio;
+                            jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);
+                        }
+                        if (parseFloat(row['PLAZO_MIN']) > parseFloat(row['PLAZO_MAX'])) {
+                            alert("El valor Ingresado no es válido, el plazo máximo debe ser mayor al plazo mínimo");
+                            row[cellname] = valorPrevio;
+                            jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);
+                        }
                     }
-                });
+                    if (row[cellname] != valorPrevio) {
+                        row['FLAG'] = "1";
+                        jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);
+                    }
+                },
+                afterEditCell: function afterEditCell(rowID, cellname, value, iRow, iCol) {
+                    $("#" + this.id + " tbody>tr:eq(" + iRow + ")>td:eq(" + iCol + ") input, select, textarea").select();
+                }
+            });
 
                 jQuery("#" + tablaMantenimiento).jqGrid('navGrid', '#barraMantenimiento',
             { edit: false, add: false, del: false, search: false, refresh: true },
@@ -149,7 +157,10 @@
                     success: function (result) {
                         var res = result.hasOwnProperty("d") ? result.d : result;
                         if (res == 1) {
-                            BI.ShowAlert('',"Los datos se guardaron con éxito.");
+                            BI.ShowAlert('', "Los datos se guardaron con éxito.");
+                            $("#" + tablaMantenimiento).jqGrid("GridUnload");
+                            CrearTabla("#" + tablaMantenimiento);
+                            dibujarTabla(); 
                         }
                         else {
                             BI.ShowAlert('',"Ocurrió un error, intentelo nuevamente.");

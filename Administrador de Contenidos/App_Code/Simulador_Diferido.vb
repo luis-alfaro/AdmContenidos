@@ -152,4 +152,44 @@ Public Class Simulador_Diferido
         End Set
     End Property
 
+    Private _FLAG As String
+    Public Property FLAG() As String
+        Get
+            Return _FLAG
+        End Get
+        Set(ByVal value As String)
+            _FLAG = value
+        End Set
+    End Property
+
+    Private _ACTUAL_VALUE As String
+    Public Property ACTUAL_VALUE() As String
+        Get
+            Return _ACTUAL_VALUE
+        End Get
+        Set(ByVal value As String)
+            _ACTUAL_VALUE = value
+        End Set
+    End Property
+
+    Public Function ObtenerValorRegistro() As String
+        Dim valor As String = ""
+        valor = valor + Me.IDDDIF.ToString() + " | "
+        valor = valor + Me.IDPDIF.ToString() + " | "
+        valor = valor + Me.TIPO_TARJETA.ToString() + " | "
+        valor = valor + Me.FECHA_HORA.ToString() + " | "
+        valor = valor + Me.PLAZO_MIN.ToString() + " | "
+        valor = valor + Me.PLAZO_MAX.ToString() + " | "
+        valor = valor + Me.ENVIO_EECC.ToString() + " | "
+        valor = valor + Me.SEG_DESG.ToString() + " | "
+        valor = valor + Me.TEM.ToString() + " | "
+        valor = valor + Me.TEA.ToString() + " | "
+        valor = valor + Me.MEMBRECIA.ToString() + " | "
+        valor = valor + Me.COM_ATM.ToString() + " | "
+        valor = valor + Me.MONTO_MIN.ToString() + " | "
+        valor = valor + Me.MONTO_MAX.ToString() + " | "
+        valor = valor + Me.PRODUCTO
+        Return valor
+    End Function
+
 End Class

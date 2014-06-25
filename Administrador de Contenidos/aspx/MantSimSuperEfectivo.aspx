@@ -30,6 +30,7 @@
             var identificadorddlTarjetas = "";
             var IDRow = 0, IDCol = 0,valorPrevio=0;
             var go = true;
+            var idT = 0;
             $(function () {
                 var arrayDialog = [{ name: dialogAlter, height: 140, width: 350, title: 'Administrador de Contenidos'}];
                 BI.CreateDialogs(arrayDialog);
@@ -41,6 +42,7 @@
 
                 $("#" + identificadorddlTarjetas).change(function () {
                     var id = $(this).val();
+                    idT = id;
                     $("#" + tablaMantenimiento).jqGrid("GridUnload");
                     CrearTabla("#" + tablaMantenimiento);
                     dibujarTabla(id);
@@ -50,21 +52,23 @@
 
             function CrearTabla(tabla) {
                 var c = ['IDDSEF', 'IDPSEF', 'TIPO_TARJETA','Producto', 'Plazo Mínimo', 'Plazo Máximo', 'Envio EECC'
-                        , 'Seguro Desgravamen', 'Seguro Protección Pagos', 'TEM', 'TEA', 'Monto Mínimo', 'Monto Máximo'];
+                        , 'Seguro Desgravamen', 'Seguro Protección Pagos', 'TEM', 'TEA', 'Monto Mínimo', 'Monto Máximo', 'FLAG', 'ACTUAL_VALUE'];
                 var cm = [
-            { name: 'IDDSEF', index: 'IDDSEF', width: 12, align: 'center', hidden: true },
-            { name: 'IDPSEF', index: 'IDPSEF', width: 3, align: 'center', hidden: true },
-            { name: 'TIPO_TARJETA', index: 'TIPO_TARJETA', width: 3, align: 'center', hidden: true },
-            { name: 'PRODUCTO', index: 'PRODUCTO', width: 150, align: 'center', editable: true },
-            { name: 'PLAZO_MIN', index: 'PLAZO_MIN', width: 95, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 0} },
-            { name: 'PLAZO_MAX', index: 'PLAZO_MAX', width: 95, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 0} },
-            { name: 'ENVIO_EECC', index: 'ENVIO_EECC', width: 80, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 2} },
-            { name: 'SEG_DESG', index: 'SEG_DESG', width: 80, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 2} },
-            { name: 'SEG_PROT', index: 'SEG_PROT', width: 80, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 2} },
-            { name: 'TEM', index: 'TEM', width: 50, align: 'center', editable: true, formatter: 'currency', formatoptions: { decimalSeparator: "," , decimalPlaces: 2, suffix: "%"} },
-            { name: 'TEA', index: 'TEA', width: 50, align: 'center', editable: true, formatter: 'currency', formatoptions: { decimalSeparator: "," , decimalPlaces: 2, suffix: "%"} },
-            { name: 'MONTO_MIN', index: 'MONTO_MIN', width: 105, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} },
-            { name: 'MONTO_MAX', index: 'MONTO_MAX', width: 105, align: 'center', editable: true, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} }
+            { name: 'IDDSEF', index: 'IDDSEF', width: 12, align: 'center', hidden: true, sortable: false },
+            { name: 'IDPSEF', index: 'IDPSEF', width: 3, align: 'center', hidden: true, sortable: false },
+            { name: 'TIPO_TARJETA', index: 'TIPO_TARJETA', width: 3, align: 'center', hidden: true, sortable: false },
+            { name: 'PRODUCTO', index: 'PRODUCTO', width: 150, align: 'center', editable: true, sortable: false },
+            { name: 'PLAZO_MIN', index: 'PLAZO_MIN', width: 95, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 0} },
+            { name: 'PLAZO_MAX', index: 'PLAZO_MAX', width: 95, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 0} },
+            { name: 'ENVIO_EECC', index: 'ENVIO_EECC', width: 80, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 2} },
+            { name: 'SEG_DESG', index: 'SEG_DESG', width: 80, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 2} },
+            { name: 'SEG_PROT', index: 'SEG_PROT', width: 80, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", decimalPlaces: 2} },
+            { name: 'TEM', index: 'TEM', width: 50, align: 'center', editable: true, sortable: false, formatter: 'currency', formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
+            { name: 'TEA', index: 'TEA', width: 50, align: 'center', editable: true, sortable: false, formatter: 'currency', formatoptions: { decimalSeparator: ",", decimalPlaces: 2, suffix: "%"} },
+            { name: 'MONTO_MIN', index: 'MONTO_MIN', width: 105, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} },
+            { name: 'MONTO_MAX', index: 'MONTO_MAX', width: 105, align: 'center', editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ",", thousandsSeparator: "'", decimalPlaces: 2} },
+            { name: 'FLAG', index: 'FLAG', width: 80, align: 'center', hidden: true },
+            { name: 'ACTUAL_VALUE', index: 'ACTUAL_VALUE', width: 80, align: 'center', hidden: true }
         ];
             tableToGrid(tabla, {
                 colNames: c,
@@ -103,6 +107,10 @@
                             row[cellname] = valorPrevio;
                             jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);
                         }
+                    }
+                    if (row[cellname] != valorPrevio) {
+                        row['FLAG'] = "1";
+                        jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);
                     }
                 },
                 afterEditCell: function afterEditCell(rowID, cellname, value, iRow, iCol) {
@@ -161,7 +169,10 @@
                     success: function (result) {
                         var res = result.hasOwnProperty("d") ? result.d : result;
                         if (res == 1) {
-                            BI.ShowAlert('',"Los datos se guardaron con éxito.");
+                            BI.ShowAlert('', "Los datos se guardaron con éxito.");
+                            $("#" + tablaMantenimiento).jqGrid("GridUnload");
+                            CrearTabla("#" + tablaMantenimiento);
+                            dibujarTabla(idT); 
                         }
                         else {
                             BI.ShowAlert('',"Ocurrió un error, intentelo nuevamente.");

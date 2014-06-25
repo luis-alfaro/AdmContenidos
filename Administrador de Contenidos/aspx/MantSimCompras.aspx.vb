@@ -5,6 +5,8 @@ Imports System.Web.Services
 
 Partial Class aspx_MantSimCompras
     Inherits System.Web.UI.Page
+    Public Shared session_id As String = ""
+    Public Shared username As String = ""
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If IsPostBack = False Then
@@ -16,6 +18,9 @@ Partial Class aspx_MantSimCompras
                 Me.ddlTarjeta.DataTextField = "NOMBRE_TARJETA"
                 Me.ddlTarjeta.DataValueField = "TIPO_TARJETA"
                 Me.ddlTarjeta.DataBind()
+
+                session_id = Session("SESSION_ID")
+                username = GetNombreUsuario()
             Catch ex As Exception
 
             End Try
@@ -44,7 +49,34 @@ Partial Class aspx_MantSimCompras
         Dim nro As New Integer
         Dim sim As New Simulador_Compras()
         Dim menus As New ClsReportes
-        nro = menus.sp_get_Guardar_SIM_Compras(lista)
+        nro = menus.sp_get_Guardar_SIM_Compras(lista, username, GetIp())
         Return nro
+    End Function
+
+    Public Shared Function GetNombreUsuario() As String
+        Dim usern As String = "Anónimo"
+        If Not (session_id Is Nothing) Then
+            Dim dtConfig As New DataTable
+            Dim sMensajeError As String = ""
+            dtConfig = fun_devolverDatosConfiguracion(session_id.ToString.Trim, sMensajeError) 'el Session.SessionID cambia de numero al que se guardo revisar.
+
+            If dtConfig.Rows.Count <= 0 Then 'Su session ha expirado
+                usern = "Anónimo"
+            Else
+                usern = Cryptor(dtConfig.Rows(0).Item("LOGUEADO")).ToUpper()
+            End If
+        End If
+        Return usern
+    End Function
+
+    Public Shared Function GetIp() As String
+        Dim context As System.Web.HttpContext = System.Web.HttpContext.Current
+        Dim sIpAddress As String = context.Request.ServerVariables("HTTP_X_FORWARDED_FOR")
+        If String.IsNullOrEmpty(sIpAddress) Then
+            Return context.Request.ServerVariables("REMOTE_ADDR")
+        Else
+            Dim ipArray As String() = sIpAddress.Split(New [Char]() {","c})
+            Return ipArray(0)
+        End If
     End Function
 End Class
