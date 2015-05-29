@@ -38,6 +38,7 @@
                 var txtTotalPaginas = '<%= txtTotalPaginas.ClientID %>'; 
                 var btnGo = '<%= btnGo.ClientID %>';
                 var ddltipo = '<%= ddltipo.ClientID %>';
+                var ddlCanal = '<%= ddlCanal.ClientID %>';
 
                 $("#" + txtfechadesde).prop("readonly", true);
                 $("#" + txtfechahasta).prop("readonly", true);
@@ -69,6 +70,7 @@
                     $("#" + txtfechadesde).val('');
                     $("#" + txtfechahasta).val('');
                     $("#" + ddltipo).val('0');
+                    $("#" + ddlCanal).val('0');
                     e.preventDefault();
                 }); 
 
@@ -145,8 +147,11 @@
                                 </asp:DropDownList>
                             </td>
                             <td>
+                                Canal:
                             </td>
                             <td colspan="2">
+                                <asp:DropDownList ID="ddlCanal" runat="server">
+                                </asp:DropDownList>
                             </td>
                             <td>
                             </td>
@@ -161,7 +166,7 @@
                                 Desde:
                             </td>
                             <td colspan="2">
-                                &nbsp;<asp:TextBox ID="txtfechadesde" runat="server" data-entryType="Date"></asp:TextBox>
+                                <asp:TextBox ID="txtfechadesde" runat="server" data-entryType="Date"></asp:TextBox>
                             </td>
                             <td>
                                 Hasta:

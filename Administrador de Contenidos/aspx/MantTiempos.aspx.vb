@@ -18,7 +18,7 @@ Partial Class aspx_MantTiempos
                 txtTiempoOpc.Text = dt.Rows(0)(2).ToString()
                 txtNroErrorTarjeta.Text = dt.Rows(0)(3).ToString()
                 txtTiempoComisiones.Text = dt.Rows(0)(4).ToString()
-
+                txtTiempoOfertas.Text = dt.Rows(0)(5).ToString()
 
             End If
         Catch ex As Exception
@@ -50,8 +50,14 @@ Partial Class aspx_MantTiempos
                 Exit Sub
             End If
 
+            flagNumero = Integer.TryParse(txtTiempoOfertas.Text, i)
+            If flagNumero = False Then
+                lblMsg.Visible = True
+                Exit Sub
+            End If
+
             Dim objTiempo As New tiempos
-            objTiempo.Actualizar_Tiempos(txtTiempoDoc.Text, txtTiempoOpc.Text, txtNroErrorTarjeta.Text, txtTiempoComisiones.Text)
+            objTiempo.Actualizar_Tiempos(txtTiempoDoc.Text, txtTiempoOpc.Text, txtNroErrorTarjeta.Text, txtTiempoComisiones.Text, txtTiempoOfertas.Text)
             Response.Redirect("Welcome.aspx")
         Catch ex As Exception
 

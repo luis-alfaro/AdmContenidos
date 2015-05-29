@@ -45,22 +45,23 @@
         <link href="estilos/Estilos.css" rel=Stylesheet type="text/css" />
 	</HEAD>
 	<BODY leftMargin="0" topMargin="0" bgcolor="#545454"><center>
-		<TABLE background="images/back.png"id="table1" 
+		z<TABLE background="images/back.png"id="table1" 
             style="FONT-SIZE: 8pt; FONT-FAMILY: Verdana; height: 616px; width: 85%;" 
             cellSpacing="0" width:1024px;
 			cellPadding="0" border="0">
 			<TR>
 				<TD vAlign="middle" align="center" width="100%" height="100%">
 											<FORM id="FORM1" name="Login" method="post" encType="application/x-www-form-urlencoded" runat="server">
-					<TABLE id="table2" 
-                        
-                        
-                        
-                        style="FONT-SIZE: 8pt; FONT-FAMILY: Verdana; width: 733px; height: 606px;" cellSpacing="0"
+					<TABLE id="table2" style="FONT-SIZE: 8pt; FONT-FAMILY: Verdana; width: 850px; height: 500px;" cellSpacing="0"
 						cellPadding="0" border="0">
-						<td></td>
-						<TR>
-							<TD align="center"  >
+                        <tr>
+                            <td style="width:28%;"></td>
+                            <td></td>
+                            <td style="width:32%;"></td>
+                        </tr>
+						<tr>
+                            <td style="width:28%;"></td>
+							<td align="center"  >
                                 <table>
                                     <tr>
                                         <td>
@@ -140,12 +141,18 @@
 										<TD vAlign="top" align="right" ></TD>
 									</TR>
 								</TABLE>
-							</TD>
-							
-						</TR>
-						<tr><td colspan="2" align=right>
+							</td>
+							<td style="width:32%;"></td>
+						</tr>
+						<tr>
+                            <td  style="width:28%;">
                             </td>
-						<td></td>
+                            <td></td>
+						    <td  style="width:32%;">
+                            <p style="text-align:left;">
+                            <label style="color:#4A4A4A">Recomendamos utilizar Google Chrome para obtener todas las funcionalidades. 
+                            También puede utilizar IE8 o superior y Firefox.</label> </p>                      
+                            </td>
 						</tr>
 					</TABLE>
 											</FORM>

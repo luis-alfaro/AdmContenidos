@@ -225,12 +225,15 @@
         var culminar = 0;
         var flashList = new Array();
         var radio = "Todos";
+        var ubicacion = "T";
         var cont = 1;
         var logPantalla = 'logPantalla';
         var btnCompletar = '<%= btnCompletar.ClientID %>';
         var LbxFlash = '<%= LbxFlash.ClientID %>';
         var rbUno = '<%= rbUno.ClientID %>';
         var rbTodos = '<%= rbTodos.ClientID %>';
+        var rbLima = '<%= rbLima.ClientID %>';
+        var rbProvincia = '<%= rbProvincia.ClientID %>';
         var cblKioscos = '<%= cblKioscos.ClientID %>';
         var txtUsuario = '<%= txtUsuario.ClientID %>';
         var txtPassword = '<%= txtPassword.ClientID %>';
@@ -293,11 +296,20 @@
                         BI.ShowAlert('', "Debe seleccionar por lo menos un Ripleymático.");
                         return false;
                     }
-                    Ejecutar(flashList, radio, values, usuario, password, dominio,email, descripcion);
+                    Ejecutar(flashList, radio, values, usuario, password, dominio, email, descripcion, ubicacion);
+                } else if ($("#" + rbLima).is(":checked")) {
+                    radio = "Todos";
+                    ubicacion = "L";
+                    Ejecutar(flashList, radio, values, usuario, password, dominio, email, descripcion, ubicacion);
+                } else if ($("#" + rbProvincia).is(":checked")) {
+                    radio = "Todos";
+                    ubicacion = "P";
+                    Ejecutar(flashList, radio, values, usuario, password, dominio, email, descripcion, ubicacion);
                 } else if ($("#" + rbTodos).is(":checked")) {
                     radio = "Todos";
+                    ubicacion = "T";
                     BI.confirm("¿Está seguro de querer actualizar todos los kioskos?", function () {
-                        Ejecutar(flashList, radio, values, usuario, password, dominio,email, descripcion);
+                        Ejecutar(flashList, radio, values, usuario, password, dominio, email, descripcion, ubicacion);
                     }, function () { }, "");
                 }
 
@@ -339,6 +351,36 @@
             });
         }
 
+        function Ejecutar(flashList, radio, values, usuario, password, dominio, email, descripcion, ubicacion) {
+            culminar = 0;
+            BI.ShowAlert('', inicializador);
+            $("#" + logPantalla).append("<li>" + "-Espere mientras se procesa la actualización..." + "</li>");
+            var parameters = { Archivos: flashList, radio: radio, Kioscos: values, usuario: usuario, password: password, dominio: dominio, email: email, descripcion: descripcion, ubicacion: ubicacion };
+            $.ajax({
+                type: "POST",
+                url: "ActualizacionRipleyMatico.aspx/Completar",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(parameters),
+                dataType: 'json',
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
+                },
+                success: function (result) {
+                    var res = result.hasOwnProperty("d") ? result.d : result;
+                    //                    var arr = res.split("|");
+                    //                    if (arr[0] == "exito") {
+                    //                        $("#" + txtSeleccionados).val(arr[1]);
+                    //                        $("#" + txtActualizados).val(arr[2]);
+                    //                        $("#" + txtNoActualizados).val(arr[3]);
+                    //                        limpiarCampos();
+                    //                    } else {
+                    //                        BI.ShowAlert('', arr[0]);
+                    //                        return false;
+                    //                    }
+                }
+            });
+        }
+
         function rpta(resultado) {
             var res = resultado.hasOwnProperty("d") ? resultado.d : resultado;
             if (!$('#' + dialogAlter).is(":visible")) {
@@ -372,8 +414,8 @@
             $('#' + LbxFlash + ' > option').remove();
             $("#" + rbTodos).attr("checked", "checked");
             $("#" + cblKioscos).hide();
-            $("#Continuar").show();
             $("#controles").hide();
+            $("#Continuar").show();            
         }
     </script>
 </head>
@@ -544,6 +586,12 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <asp:RadioButton ID="rbUno" runat="server" AutoPostBack="True" GroupName="seleccion"
                             Text="Seleccion Personalizada" />
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <asp:RadioButton ID="rbLima" runat="server" AutoPostBack="True" 
+                            GroupName="seleccion" Text="Lima" />
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <asp:RadioButton ID="rbProvincia" runat="server"  AutoPostBack="True" 
+                            GroupName="seleccion" Text="Provincia" />
                     </asp:Panel>
                 </td>
                 <td class="style31">

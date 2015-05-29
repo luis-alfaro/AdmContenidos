@@ -92,8 +92,9 @@
                         valorPrevio = value;
                     },
                     afterSaveCell: function (rowid, cellname, value, iRow, iCol) {
+                        var row = jQuery("#" + tablaMantenimiento).getRowData(rowid);
                         if (cellname != "PRODUCTO") {
-                            var row = jQuery("#" + tablaMantenimiento).getRowData(rowid);
+                            
                             if (!BI.ValidarDecimal(value)) {
                                 row[cellname] = valorPrevio;
                                 jQuery("#" + tablaMantenimiento).jqGrid('setRowData', rowid, row);

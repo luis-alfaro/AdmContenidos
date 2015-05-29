@@ -153,6 +153,18 @@
                         </tr>
                         <tr>
                             <td style="width: 234px">
+                                <asp:Label ID="Label4" runat="server" 
+                                    Text="Tiempo de Inactividad - Ofertas"></asp:Label>
+                            </td>
+                            <td style="width: 27px">
+                                <asp:TextBox ID="txtTiempoOfertas" runat="server" Width="34px" Height="22px" 
+                                    Wrap="False"></asp:TextBox>
+                            </td>
+                            <td>
+                                seg.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 234px">
                                 &nbsp;</td>
                             <td style="width: 27px">
                                 &nbsp;</td>

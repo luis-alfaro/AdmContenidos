@@ -70,10 +70,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entidades\DireccionCorreo.cs" />
     <Compile Include="Entidades\EmailFile.cs" />
     <Compile Include="Entidades\EmailMessage.cs" />
     <Compile Include="Entidades\ENArchivo.cs" />
     <Compile Include="Entidades\ENKiosco.cs" />
+    <Compile Include="Entidades\Log.cs" />
     <Compile Include="EnvioData\EnvioData.cs" />
     <Compile Include="EnvioData\EnvioEmail.cs" />
     <Compile Include="EnvioData\UtilitarioVideos.cs" />

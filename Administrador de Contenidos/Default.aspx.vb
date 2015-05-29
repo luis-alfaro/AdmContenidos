@@ -100,6 +100,8 @@ Public Class _Default
 
     Protected Sub btniniciar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btniniciar.Click
         'Iniciar la validacion del usuario
+
+        Log.ErrorLog("btniniciar_Click")
         Call m_ValidarUsuario()
 
     End Sub

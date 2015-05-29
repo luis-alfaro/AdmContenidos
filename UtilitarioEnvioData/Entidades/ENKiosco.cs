@@ -13,6 +13,12 @@ namespace UtilitarioEnvioData.Entidades
         /// </summary>
         public string RutaPathArchivos { get; set; }
 
+        public string Ubicacion { get; set; }
+
         public List<ENArchivo> Archivos { get; set; }
+
+        public string Nombre { get; set; }
+
+        public string Id { get; set; }
     }
 }

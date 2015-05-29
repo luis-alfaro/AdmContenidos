@@ -224,12 +224,15 @@ Inherits="aspx_EdicionRipleyMatico" %>
         var consultarlog = true;
         var imageList = new Array();
         var radio = "Todos";
+        var ubicacion = "T";
         var cont = 1;
         var logPantalla = 'logPantalla';
         var btnCompletar = '<%= btnCompletar.ClientID %>';
         var LbxImagenes = '<%= LbxImagenes.ClientID %>';
         var rbUno = '<%= rbUno.ClientID %>';
         var rbTodos = '<%= rbTodos.ClientID %>';
+        var rbLima = '<%= rbLima.ClientID %>';
+        var rbProvincia = '<%= rbProvincia.ClientID %>';
         var cblKioscos = '<%= cblKioscos.ClientID %>';
         var txtUsuario = '<%= txtUsuario.ClientID %>';
         var txtPassword = '<%= txtPassword.ClientID %>';
@@ -238,13 +241,17 @@ Inherits="aspx_EdicionRipleyMatico" %>
         var txtDescripcion = '<%= txtDescripcion.ClientID %>';
         var loghub = '<%= loghub.ClientID %>';
         var btnContinuar = '<%= btnContinuar.ClientID %>';
+        var txthidden = '<%= txthidden.ClientID %>';
 
         $(function () {
             $("#Continuar").hide();
 
-            var arrayDialog = [{ name: dialogAlter, height: 250, width: 600, title: 'Log de Edicion Ripleymatico'}];
+            var arrayDialog = [{ name: dialogAlter, height: 250, width: 600, title: 'Log de Edición Ripleymatico'}];
             BI.CreateDialogLog(arrayDialog);
-
+            if ($("#" + txthidden).val() != '') {
+                BI.ShowAlert('', $("#" + txthidden).val());
+                $("#" + txthidden).val('')
+            }
 
             $("#" + btnCompletar).click(function (e) {
                 imageList = new Array();
@@ -281,11 +288,20 @@ Inherits="aspx_EdicionRipleyMatico" %>
                         BI.ShowAlert('', "Debe seleccionar por lo menos un Ripleymático.");
                         return false;
                     }
-                    Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion);
+                    Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion, ubicacion);
+                } else if ($("#" + rbLima).is(":checked")) {
+                    radio = "Todos";
+                    ubicacion = "L";
+                    Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion, ubicacion);
+                } else if ($("#" + rbProvincia).is(":checked")) {
+                    radio = "Todos";
+                    ubicacion = "P";
+                    Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion, ubicacion);
                 } else if ($("#" + rbTodos).is(":checked")) {
                     radio = "Todos";
+                    ubicacion = "T";
                     BI.confirm("¿Está seguro de querer actualizar todos los kioskos?", function () {
-                        Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion);
+                        Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion, ubicacion);
                     }, function () { }, "");
                 }
 
@@ -294,11 +310,10 @@ Inherits="aspx_EdicionRipleyMatico" %>
 
             $("#" + btnCompletar).click(function (e) { });
         });
-        function Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion) {
+        function Ejecutar(imageList, radio, values, usuario, password, dominio, email, descripcion,ubicacion) {
             BI.ShowAlert('', inicializador);
             $("#" + logPantalla).append("<li>" + "-Espere mientras se procesa la actualización..." + "</li>");
-            console.log(imageList, radio, values, usuario, password, dominio, email, descripcion);
-            var parameters = { Archivos: imageList, radio: radio, Kioscos: values, usuario: usuario, password: password, dominio: dominio, email: email, descripcion: descripcion };
+            var parameters = { Archivos: imageList, radio: radio, Kioscos: values, usuario: usuario, password: password, dominio: dominio, email: email, descripcion: descripcion,ubicacion:ubicacion };
             $.ajax({
                 type: "POST",
                 url: "EdicionRipleyMatico.aspx/Completar",
@@ -310,10 +325,6 @@ Inherits="aspx_EdicionRipleyMatico" %>
                 },
                 success: function (result) {
                     var res = result.hasOwnProperty("d") ? result.d : result;
-//                    var arr = res.split("|");
-//                    $("#" + txtSeleccionados).val(arr[1]);
-//                    $("#" + txtActualizados).val(arr[2]);
-//                    $("#" + txtNoActualizados).val(arr[3]);
                 }
             });
             setInterval(EscribirLog, 500);
@@ -354,11 +365,8 @@ Inherits="aspx_EdicionRipleyMatico" %>
             $('#' + LbxImagenes + ' > option').remove();
             $("#" + rbTodos).attr("checked", "checked");
             $("#" + cblKioscos).hide();
-            $("#Continuar").show();
             $("#controles").hide();
-        }
-        function ReloadPage() {
-            window.location.reload();
+            $("#Continuar").show();            
         }
     </script>
 </head>
@@ -426,8 +434,9 @@ Inherits="aspx_EdicionRipleyMatico" %>
             <td class="style4" style="width: 368px; height: 13px;">
                 <b>PASO 1:</b> Escoger Carpeta a actualizar</td>
             <td style="height: 13px">
-                                                <asp:Label ID="Label1" runat="server" ForeColor="Red" Text="Label" 
-                                                    Visible="False"></asp:Label>
+            <asp:Label ID="Label1" runat="server" ForeColor="Red" Text="Label" 
+                Visible="False"></asp:Label>
+                <asp:HiddenField ID="txthidden" runat="server" />
                                                 </td>
         </tr>
         <tr>
@@ -441,47 +450,55 @@ Inherits="aspx_EdicionRipleyMatico" %>
                         HorizontalPadding="0px" VerticalPadding="0px" />
                     <Nodes>
                         <asp:TreeNode Text="Promociones" Value="\Promociones">
-                            <asp:TreeNode Text="Ahora o Nunca" Value="\Promociones\Ahora_Nunca"></asp:TreeNode>
-                            <asp:TreeNode Text="Productos Financieros" 
-                                Value="\Promociones\producto_financiero">
+                            <asp:TreeNode Text="Ahora o Nunca" Value="\Promociones\Ahora_Nunca" ToolTip="pan"></asp:TreeNode>
+                            <asp:TreeNode Text="Productos Financieros" Value="\Promociones\producto_financiero" ToolTip="ppf">
                             </asp:TreeNode>
-                            <asp:TreeNode Text="Ofertas de Seguros" Value="\Promociones\ofertas_seguro">
+                            <asp:TreeNode Text="Ofertas de Seguros" Value="\Promociones\ofertas_seguro" ToolTip="pos">
                             </asp:TreeNode>
-                            <asp:TreeNode Text="Establecimientos" Value="\Promociones\establecimientos"></asp:TreeNode>
-                            <asp:TreeNode Text="Otras Promociones" Value="\Promociones\otras_promociones"></asp:TreeNode>
+                            <asp:TreeNode Text="Establecimientos" Value="\Promociones\establecimientos" ToolTip="pes"></asp:TreeNode>
+                            <asp:TreeNode Text="Otras Promociones" Value="\Promociones\otras_promociones" ToolTip="pop"></asp:TreeNode>
                         </asp:TreeNode>
                         <asp:TreeNode Text="Productos" Value="\productos">
-                            <asp:TreeNode Text="Ripley Clásica" Value="\productos\ripley_clasica"></asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Silver Visa" Value="\productos\ripley_silver_visa">
-                            </asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Silver Mastercard" 
-                                Value="\productos\ripley_silver_mc">
-                            </asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Gold MasterCard" Value="\productos\ripley_gold_mc">
-                            </asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Platinun " Value="\productos\ripley_platinum_visa"></asp:TreeNode>
-                            <asp:TreeNode Text="CTS" Value="\productos\cts"></asp:TreeNode>
-                            <asp:TreeNode Text="Depósito a Plazo" Value="\productos\deposito_plazo"></asp:TreeNode>
-                            <asp:TreeNode Text="Ahorros" Value="\productos\ahorros"></asp:TreeNode>
-                            <asp:TreeNode Text="Préstamos en Efectivos" Value="\productos\prestamos">
-                            </asp:TreeNode>
+                            <asp:TreeNode Text="Ripley Clásica" Value="\productos\ripley_clasica"  ToolTip="dcl"></asp:TreeNode>
+                            <asp:TreeNode Text="Ripley Silver Visa" Value="\productos\ripley_silver_visa" ToolTip="dsv"></asp:TreeNode>
+                            <asp:TreeNode Text="Ripley Silver Mastercard" Value="\productos\ripley_silver_mc" ToolTip="dsm"></asp:TreeNode>
+                            <asp:TreeNode Text="Ripley Gold MasterCard" Value="\productos\ripley_gold_mc" ToolTip="dgm"></asp:TreeNode>
+                            <asp:TreeNode Text="Ripley Platinun " Value="\productos\ripley_platinum_visa" ToolTip="dpl"></asp:TreeNode>
+                            <asp:TreeNode Text="CTS" Value="\productos\cts" ToolTip="dct"></asp:TreeNode>
+                            <asp:TreeNode Text="Depósito a Plazo" Value="\productos\deposito_plazo" ToolTip="ddp"></asp:TreeNode>
+                            <asp:TreeNode Text="Ahorros" Value="\productos\ahorros" ToolTip="dah"></asp:TreeNode>
+                            <asp:TreeNode Text="Préstamos en Efectivos" Value="\productos\prestamos" ToolTip="dpe"></asp:TreeNode>
                         </asp:TreeNode>
                         <asp:TreeNode Text="Tasas y Tarifas" Value="\tasas_tarifas">
-                                                    <asp:TreeNode Text="Ripley Clásica" Value="\tasas_tarifas\t_clasica"></asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Silver Visa" Value="\tasas_tarifas\t_silver_visa">
-                            </asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Silver Mastercard" Value="\tasas_tarifas\t_silver_mc">
-                            </asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Gold MasterCard" Value="\tasas_tarifas\t_gold_mc">
-                            </asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Platinun" Value="\tasas_tarifas\t_platinum"></asp:TreeNode>
-                            <asp:TreeNode Text="CTS" Value="\tasas_tarifas\cts"></asp:TreeNode>
-                            <asp:TreeNode Text="Depósito a Plazo" Value="\tasas_tarifas\deposito_plazo"></asp:TreeNode>
-                            <asp:TreeNode Text="Ahorros" Value="\tasas_tarifas\ahorros"></asp:TreeNode>
-                            <asp:TreeNode Text="Préstamos en Efectivo" Value="\tasas_tarifas\prestamo_efectivo">
-                            </asp:TreeNode>
+                            <asp:TreeNode Text="Ripley Clásica" Value="\tasas_tarifas\t_clasica" ToolTip="tcl"></asp:TreeNode>
+                            <asp:TreeNode Text="Ripley Silver Visa" Value="\tasas_tarifas\t_silver_visa" ToolTip="tsv"></asp:TreeNode>
+                            <asp:TreeNode Text="Ripley Silver Mastercard" Value="\tasas_tarifas\t_silver_mc" ToolTip="tsm"></asp:TreeNode>
+                            <asp:TreeNode Text="Ripley Gold MasterCard" Value="\tasas_tarifas\t_gold_mc" ToolTip="tgm"></asp:TreeNode>
+                            <asp:TreeNode Text="Ripley Platinun" Value="\tasas_tarifas\t_platinum" ToolTip="tpl"></asp:TreeNode>
+                            <asp:TreeNode Text="CTS" Value="\tasas_tarifas\cts" ToolTip="tct"></asp:TreeNode>
+                            <asp:TreeNode Text="Depósito a Plazo" Value="\tasas_tarifas\deposito_plazo" ToolTip="tdp"></asp:TreeNode>
+                            <asp:TreeNode Text="Ahorros" Value="\tasas_tarifas\ahorros" ToolTip="tah"></asp:TreeNode>
+                            <asp:TreeNode Text="Préstamos en Efectivo" Value="\tasas_tarifas\prestamo_efectivo" ToolTip="tpe"></asp:TreeNode>
                         </asp:TreeNode>
-                        <asp:TreeNode Text="Agencias" Value="\agencias"></asp:TreeNode>
+                        <asp:TreeNode Text="Agencias" Value="\agencias" ToolTip="aag"></asp:TreeNode>
+                        <asp:TreeNode Text="Documentos SEF" Value="\documentosSEF">
+                            <asp:TreeNode Text="Hoja Resumen" Value="\documentosSEF\SEF0001" ToolTip="SEF0001"></asp:TreeNode>
+                            <asp:TreeNode Text="Seguro Desgravamen" Value="\documentosSEF\SEF0002" ToolTip="SEF0002"></asp:TreeNode>
+                            <asp:TreeNode Text="Seguro Protección de Pagos" Value="\documentosSEF\SEF0003" ToolTip="SEF0003"></asp:TreeNode>
+                            <asp:TreeNode Text="Declaración Jurada" Value="\documentosSEF\SEF0004" ToolTip="SEF0004"></asp:TreeNode>
+                        </asp:TreeNode>
+                        <asp:TreeNode Text="Cambio Producto" Value="\CambioProducto">
+                            <asp:TreeNode Text="GOLD MASTERCARD" Value="\CambioProducto\GOLDMC" ToolTip="GOLDMC"></asp:TreeNode>
+                            <asp:TreeNode Text="SILVER MASTERCARD" Value="\CambioProducto\SILVERMC" ToolTip="SILVERMC"></asp:TreeNode>
+                            <asp:TreeNode Text="PLATINUM VISA" Value="\CambioProducto\PLAVISA" ToolTip="PLAVI"></asp:TreeNode>
+                            <asp:TreeNode Text="SILVER VISA" Value="\CambioProducto\SILVERVISA" ToolTip="SILVERVISA"></asp:TreeNode>
+                            <asp:TreeNode Text="SILVER MASTERCARD RSAT" Value="\CambioProducto\SILVERMCR" ToolTip="SILVERMCR"></asp:TreeNode>
+                            <asp:TreeNode Text="GOLD MASTERCARD RSAT" Value="\CambioProducto\GOLDMCR" ToolTip="GOLDMCR"></asp:TreeNode>
+                            <asp:TreeNode Text="SILVER VISA RSAT" Value="\CambioProducto\SILVERVISAR" ToolTip="SILVERVISAR"></asp:TreeNode>
+                            <asp:TreeNode Text="PLATINUM VISA RSAT" Value="\CambioProducto\PLAVISAR" ToolTip="PLAVISAR"></asp:TreeNode>
+                            <asp:TreeNode Text="CLÁSICA" Value="\CambioProducto\CLASICA" ToolTip="CLASICA"></asp:TreeNode>
+                            <asp:TreeNode Text="PLATINUM MASTERCARD" Value="\CambioProducto\PLAMC" ToolTip="PLAMC"></asp:TreeNode>
+                        </asp:TreeNode>
                     </Nodes>
                     <NodeStyle Font-Names="Tahoma" Font-Size="10pt" ForeColor="Black" 
                         HorizontalPadding="5px" NodeSpacing="0px" VerticalPadding="0px" />
@@ -588,8 +605,14 @@ Inherits="aspx_EdicionRipleyMatico" %>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <asp:RadioButton ID="rbUno" runat="server" AutoPostBack="True" 
                         GroupName="seleccion" Text="Seleccion Personalizada" />
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:RadioButton ID="rbLima" runat="server" AutoPostBack="True" 
+                        GroupName="seleccion" Text="Lima" />
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:RadioButton ID="rbProvincia" runat="server"  AutoPostBack="True" 
+                        GroupName="seleccion" Text="Provincia" />
                 </asp:Panel>
-                    </td>
+            </td>
             <td class="style31">
                 &nbsp;</td>
         </tr>
@@ -776,7 +799,7 @@ Inherits="aspx_EdicionRipleyMatico" %>
             </tr>
             </table>
         <div id ="Continuar-botton">
-            <asp:Button ID="btnContinuar" runat="server" Text="Continuar" Width="77px" CssClass="button" />
+            <asp:Button ID="btnContinuar" runat="server" Text="Continuar" Width="77px" CssClass="button"/>
         </div>
         </div>
 

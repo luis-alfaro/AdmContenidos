@@ -123,14 +123,43 @@ Public Class ClsReportes
         cn.cerrarconexion()
         Return dts
     End Function
+
+    Public Function sp_get_ConsultaCambioProductoPorRypleymatico(ByVal nro_DNI As String, ByVal nro_tarjeta As String, _
+                                        ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime, _
+                                        ByVal tienda As Integer, _
+                                        ByVal nro_contrato As String, _
+                                        ByVal nroRegistros As Integer, _
+                                        ByVal pagina As Integer) As DataSet
+        Dim dts As New DataSet
+        cn.abrirconexion()
+        dts = cn.consultar("dbo.Usp_Get_ConsultaCambioProductoPorRipleymatico", nro_DNI, nro_tarjeta, f1, f2, tienda, nro_contrato, nroRegistros, pagina)
+        cn.cerrarconexion()
+        Return dts
+    End Function
+
+    Public Function sp_get_ConsultaLPDP(ByVal nro_DNI As String, _
+                                        ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime, _
+                                        ByVal tipo As Integer, _
+                                        ByVal nroRegistros As Integer, _
+                                        ByVal pagina As Integer) As DataSet
+        Dim dts As New DataSet
+        cn.abrirconexion()
+        dts = cn.consultar("dbo.Usp_Get_ConsultaLPDP", nro_DNI, f1, f2, tipo, nroRegistros, pagina)
+        cn.cerrarconexion()
+        Return dts
+    End Function
+
     Public Function sp_get_ConsultaAceptacionIncremento(ByVal tipo As String, _
+                                                        ByVal canal As String, _
                                         ByVal f1 As DateTime, _
                                         ByVal f2 As DateTime, _
                                         ByVal nroRegistros As Integer, _
                                         ByVal pagina As Integer) As DataSet
         Dim dts As New DataSet
         cn.abrirconexion()
-        dts = cn.consultar("dbo.Usp_Get_ConsultaAceptacionIncremento", tipo, f1, f2, nroRegistros, pagina)
+        dts = cn.consultar("dbo.Usp_Get_ConsultaAceptacionIncremento", tipo, canal, f1, f2, nroRegistros, pagina)
         cn.cerrarconexion()
         Return dts
     End Function
@@ -675,12 +704,49 @@ Public Class ClsReportes
     End Function
 
     Public Function Usp_get_Count_ConsultaAceptacionIncremento(ByVal tipo As String, _
+                                                               ByVal canal As String, _
                                         ByVal f1 As DateTime, _
                                         ByVal f2 As DateTime) As Integer
         Try
             Dim nro As New Integer
             cn.abrirconexion()
-            nro = cn.contarRegistros("dbo.Usp_get_Count_ConsultaAceptacionIncremento", tipo, f1, f2)
+            nro = cn.contarRegistros("dbo.Usp_get_Count_ConsultaAceptacionIncremento", tipo, canal, f1, f2)
+            cn.cerrarconexion()
+
+            Return nro
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
+        Return 0
+    End Function
+
+    Public Function Usp_get_Count_ConsultaCambioProductoPorRipleymatico(ByVal nro_dni As String, _
+                                        ByVal nro_tarjeta As String, _
+                                        ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime, _
+                                        ByVal tienda As Integer, _
+                                        ByVal nro_contrato As String) As Integer
+        Try
+            Dim nro As New Integer
+            cn.abrirconexion()
+            nro = cn.contarRegistros("dbo.Usp_get_Count_ConsultaCambioProductoPorRipleymatico", nro_dni, nro_tarjeta, f1, f2, tienda, nro_contrato)
+            cn.cerrarconexion()
+
+            Return nro
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
+        Return 0
+    End Function
+
+    Public Function Usp_get_Count_ConsultaLPDP(ByVal nro_dni As String, _
+                                        ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime, _
+                                        ByVal tipo As Integer) As Integer
+        Try
+            Dim nro As New Integer
+            cn.abrirconexion()
+            nro = cn.contarRegistros("dbo.Usp_get_Count_ConsultaLPDP", nro_dni, f1, f2, tipo)
             cn.cerrarconexion()
 
             Return nro

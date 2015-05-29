@@ -127,13 +127,22 @@ Partial Class aspx_accesos
                 ckTiempos.Checked = oDT.Rows(0).Item("Tiempos")
                 ckMensajes.Checked = oDT.Rows(0).Item("Mensajes")
                 ckTarifas.Checked = oDT.Rows(0).Item("Tarifas")
-                ckSimuladores.Checked = oDT.Rows(0).Item("Simuladores")
                 ckEstadisticas.Checked = oDT.Rows(0).Item("Estadisticas")
                 ckConsultas.Checked = oDT.Rows(0).Item("Consultas")
                 ckConfiguracionKiosko.Checked = oDT.Rows(0).Item("ConfiguracionKiosko")
                 ckErrores.Checked = oDT.Rows(0).Item("Errores")
                 ckConsultaAceptacionIncremento.Checked = oDT.Rows(0).Item("ConsultaAceptacionIncremento")
                 ckActualizacionRipleymatico.Checked = oDT.Rows(0).Item("ActualizacionRipleymatico")
+                ckSIM_DPF.Checked = oDT.Rows(0).Item("SIM_DPF")
+                ckSIM_Reprogramaciones.Checked = oDT.Rows(0).Item("SIM_Reprogramaciones")
+                ckSIM_Diferido.Checked = oDT.Rows(0).Item("SIM_Diferido")
+                ckSIM_SEF.Checked = oDT.Rows(0).Item("SIM_SEF")
+                ckSIM_Compras.Checked = oDT.Rows(0).Item("SIM_Compras")
+                ckSIM_EFEX.Checked = oDT.Rows(0).Item("SIM_EFEX")
+                ckSIM_PEF.Checked = oDT.Rows(0).Item("SIM_PEF")
+                ckSIM_CDD.Checked = oDT.Rows(0).Item("SIM_CDD")
+
+
                 fun_buscar_acceso_rol = oDT.Rows(0).Item("AccessID")
             Else
 
@@ -193,8 +202,10 @@ Partial Class aspx_accesos
                                       CkRoles.Checked, CkAccesos.Checked, ckUbigeo.Checked, ckTiendas.Checked, ckKioscos.Checked, _
                                       ckAreas.Checked, ckCriterios.Checked, ckConsultas.Checked, ckReporte.Checked, _
                                       ckActualizar.Checked, ckTemporizador.Checked, ckMensajes.Checked, ckTiempos.Checked, _
-                                      ckSimuladores.Checked, ckEstadisticas.Checked, ckConfiguracionKiosko.Checked, _
-                                      ckErrores.Checked, ckConsultaAceptacionIncremento.Checked, ckActualizacionRipleymatico.Checked)
+                                      ckEstadisticas.Checked, ckConfiguracionKiosko.Checked, _
+                                      ckErrores.Checked, ckConsultaAceptacionIncremento.Checked, ckActualizacionRipleymatico.Checked, _
+                                      ckSIM_DPF.Checked, ckSIM_Reprogramaciones.Checked, ckSIM_Diferido.Checked, ckSIM_SEF.Checked, _
+                                      ckSIM_Compras.Checked, ckSIM_EFEX.Checked, ckSIM_PEF.Checked, ckSIM_CDD.Checked)
 
             'strSQL = "UPDATE  app_Accesos SET Pane=" & IIf(CkPanel.Checked = True, 1, 0) & ",Svid=" & IIf(CkSvideo.Checked = True, 1, 0)
             'strSQL = strSQL & ",Sban=" & IIf(CkSbanner.Checked = True, 1, 0) & ",Usu=" & IIf(CkUsuario.Checked = True, 1, 0)

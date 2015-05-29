@@ -545,4 +545,18 @@ Public Module DataAccess
         Return dt
 
     End Function
+
+    Public Function Sql_Get_DireccionesCorreo() As DataTable
+        Dim SQLCon As New SqlConnection(Get_CadenaConexion())
+        Log.ErrorLog("Antes de Usp_Get_DireccionesCorreo")
+        Dim da As New SqlDataAdapter("Usp_Get_DireccionesCorreo", SQLCon)
+        da.SelectCommand.CommandType = CommandType.StoredProcedure
+
+        Dim dt As New DataTable
+
+        da.Fill(dt)
+        Log.ErrorLog("Después de Usp_Get_DireccionesCorreo")
+        Return dt
+
+    End Function
 End Module

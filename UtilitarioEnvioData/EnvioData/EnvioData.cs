@@ -18,6 +18,7 @@ namespace UtilitarioEnvioData.EnvioData
         const string ActualizacionFlash = "F";
         const string ActualizacionImagenes = "I";
         const string ActualizacionPrograma = "P";
+        const string EliminacionLog = "E";
         //criteriosBusqueda[1] = "*.png";
         // Declare the logon types as constants
         //const long LOGON32_LOGON_INTERACTIVE = 2;
@@ -306,6 +307,111 @@ namespace UtilitarioEnvioData.EnvioData
             return ListaArchivos.ToArray();
         }
 
+        #region EliminacionLog
+
+        public bool EliminarArchivos(ENKiosco kiosco, string Directorio, string DirectorioPrincipal, string usuario, string password, string dominio, ref string textoLog, List<string> listaArchivos, string identificador)
+        {
+            string slog = "";
+            bool error = true;
+            List<string> listaReintento = new List<string>();
+            if (impersonateValidUser(usuario, dominio, password))
+            {
+                foreach (string item in listaArchivos)
+                {
+                    try
+                    {
+
+                        string archivo = Path.GetFileName(item);
+
+                        string destino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos + item.Replace(DirectorioPrincipal, "");
+                        //string destino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos + @"\" + archivo;
+
+                        //File.Copy(item, destino, true);
+
+                        textoLog = "    -Se ha eliminado el archivo " + archivo + " de " + kiosco.IpKiosco;
+                        EscribirLog(identificador, textoLog, EliminacionLog);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //no se pudo copiar
+                        try
+                        {
+                            listaReintento.Add(item);
+                            slog = DateTime.Now.ToString() + " " + kiosco.IpKiosco + " " + Path.GetFileName(item) + " " + ex.Message;
+                            EscribirLog(identificador, slog, EliminacionLog);
+                            error = false;
+                        }
+                        catch (IOException) { }
+                    }
+                }
+            }
+            else
+            {//usuario incorrecto 
+                slog = DateTime.Now.ToString() + " el usuario " + usuario + " no es valido";
+                EscribirLog(identificador, slog, ActualizacionImagenes);
+                error = false;
+            }
+
+            if (error == false)
+            {
+                error = ReintentarEliminar(kiosco, Directorio, DirectorioPrincipal, usuario, password, dominio, textoLog, listaReintento, identificador, EliminacionLog);
+                return error;
+            }
+            else
+                return true;
+
+        }
+
+        public bool ReintentarEliminar(ENKiosco kiosco, string Directorio, string DirectorioPrincipal, string usuario, string password, string dominio, string textoLog, List<string> listaReintento, string identificador, string eliminacion)
+        {
+            string slog = "";
+            int count = listaReintento.Count;
+            if (impersonateValidUser(usuario, dominio, password))
+            {
+                if (listaReintento.Count > 0)
+                {
+                    foreach (string item in listaReintento)
+                    {
+                        try
+                        {
+
+                            string archivo = Path.GetFileName(item);
+
+                            string destino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos + item.Replace(DirectorioPrincipal, "");
+                            //string destino = @"\\" + kiosco.IpKiosco + kiosco.RutaPathArchivos + @"\" + archivo;
+
+                            //File.Copy(item, destino, true);
+
+                            textoLog = "    -Reintento exitoso - se ha eliminado el archivo " + archivo + " de " + kiosco.IpKiosco;
+                            EscribirLog(identificador, textoLog, eliminacion);
+                            count--;
+                        }
+                        catch (Exception ex)
+                        {
+                            //no se pudo copiar
+                            try
+                            {
+                                listaReintento.Add(item);
+                                slog = DateTime.Now.ToString() + " Reintento fallido - " + kiosco.IpKiosco + " " + Path.GetFileName(item) + " " + ex.Message;
+                                EscribirLog(identificador, slog, eliminacion);
+                            }
+                            catch (IOException) { }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+            if (count == 0)
+                return true;
+            else
+                return false;
+        }
+
+        #endregion
 
         #region FLASH
 

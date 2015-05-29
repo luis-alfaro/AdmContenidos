@@ -35,6 +35,38 @@ Partial Class aspx_ReporteAceptacionIncremento
                 Me.ddltipo.DataValueField = "ID"
                 Me.ddltipo.DataBind()
 
+                'Dim dt As DataTable = New DataTable("consulta")
+                'dt.Columns.Add(New DataColumn("ID", GetType(Integer)))
+                'dt.Columns.Add(New DataColumn("TIPO", GetType(String)))
+                'Dim dr As DataRow = dt.NewRow()
+                'dr("ID") = 1
+                'dr("TIPO") = "Ripleymatico"
+                'dt.Rows.Add(dr)
+                'dr = dt.NewRow()
+                'dr("ID") = 2
+                'dr("TIPO") = "Plataforma"
+                'dt.Rows.Add(dr)
+                'dr = dt.NewRow()
+                'dr("ID") = 3
+                'dr("TIPO") = "Cajero"
+                'dt.Rows.Add(dr)
+                'Me.ddlCanal.DataSource = tipos.Tables(0).DefaultView.ToTable()
+                'Me.ddlCanal.DataTextField = "TIPO"
+                'Me.ddlCanal.DataValueField = "ID"
+                'Me.ddlCanal.DataBind()
+
+                Dim dt As DataTable
+                dt = menus.listartabla("TipoCanal").Tables("Consulta")
+                Dim dr As DataRow = dt.NewRow()
+                dr("codigo") = 0
+                dr("denominacion") = "--Seleccionar--"
+                dt.Rows.InsertAt(dr, 0)
+
+                Me.ddlCanal.DataSource = dt
+                Me.ddlCanal.DataTextField = "denominacion"
+                Me.ddlCanal.DataValueField = "codigo"
+                Me.ddlCanal.DataBind()
+
                 Call HabilitarTodos(False)
             End If
         Catch ex As Exception
@@ -82,34 +114,11 @@ Partial Class aspx_ReporteAceptacionIncremento
         End If
     End Sub
 
-    'Protected Sub BtnImprimir_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnImprimir.Click
-    '    If txtfechadesde.Text.Trim() = "" Then
-    '        lbldesde.Visible = True
-    '        lbldesde.Text = "Ingrese una fecha"
-    '        Exit Sub
-    '    Else
-    '        lbldesde.Visible = False
-    '    End If
-
-    '    If txtfechahasta.Text.Trim() = "" Then
-    '        lblhasta.Visible = True
-    '        lblhasta.Text = "Ingrese una fecha"
-    '        Exit Sub
-    '    Else
-    '        lblhasta.Visible = False
-    '    End If
-
-    '    Dim cadena As String = ""
-    '    cadena = "VistaImpresionConsultaIncremento.aspx?&fechainicio=" & Me.txtfechadesde.Text & "&fechafin=" & Me.txtfechahasta.Text
-    '    Response.Redirect("VistaImpresionConsultaIncremento.aspx?&fechainicio=" & Me.txtfechadesde.Text & "&fechafin=" & Me.txtfechahasta.Text)
-
-    'End Sub
-
     Sub MostrarDatos(ByVal page As Integer)
         Dim dts As New DataSet
         Try
             Dim f1 As DateTime : Dim f2 As DateTime
-            Dim tipo As String : Dim nro As Integer
+            Dim tipo As String : Dim nro As Integer : Dim canal As String
             f1 = New Date(txtfechadesde.Text.Substring(6, 4), txtfechadesde.Text.Substring(3, 2), txtfechadesde.Text.Substring(0, 2))
             f2 = New Date(txtfechahasta.Text.Substring(6, 4), txtfechahasta.Text.Substring(3, 2), txtfechahasta.Text.Substring(0, 2))
             nro = ddltipo.SelectedIndex
@@ -119,10 +128,16 @@ Partial Class aspx_ReporteAceptacionIncremento
                 tipo = ddltipo.SelectedItem.ToString()
             End If
 
+            nro = ddlCanal.SelectedIndex
+            If nro = 0 Then
+                canal = ""
+            Else
+                canal = ddlCanal.SelectedItem.ToString().Substring(0, 1)
+            End If
             Me.gvdetalle.Visible = True
 
             dts.Clear()
-            dts = menus.sp_get_ConsultaAceptacionIncremento(tipo, f1, f2, nroRegistros, page)
+            dts = menus.sp_get_ConsultaAceptacionIncremento(tipo, canal, f1, f2, nroRegistros, page)
             If dts.Tables("consulta").Rows.Count > 0 Then
                 Me.gvdetalle.DataSource = dts : Me.gvdetalle.DataBind()
                 Me.txtPagina.Text = paginaActual.ToString()
@@ -149,7 +164,7 @@ Partial Class aspx_ReporteAceptacionIncremento
 
         Try
             Dim f1 As DateTime : Dim f2 As DateTime
-            Dim tipo As String : Dim nro As Integer
+            Dim tipo As String : Dim nro As Integer : Dim canal As String
             f1 = New Date(txtfechadesde.Text.Substring(6, 4), txtfechadesde.Text.Substring(3, 2), txtfechadesde.Text.Substring(0, 2))
             f2 = New Date(txtfechahasta.Text.Substring(6, 4), txtfechahasta.Text.Substring(3, 2), txtfechahasta.Text.Substring(0, 2))
             nro = ddltipo.SelectedIndex
@@ -158,8 +173,15 @@ Partial Class aspx_ReporteAceptacionIncremento
             Else
                 tipo = ddltipo.SelectedItem.ToString()
             End If
+            nro = ddlCanal.SelectedIndex
+            If nro = 0 Then
+                canal = ""
+            Else
+                canal = ddlCanal.SelectedItem.ToString().Substring(0, 1)
+            End If
 
-            totalRegistros = menus.Usp_get_Count_ConsultaAceptacionIncremento(tipo, f1, f2)
+
+            totalRegistros = menus.Usp_get_Count_ConsultaAceptacionIncremento(tipo, canal, f1, f2)
             totalPaginas = totalRegistros / nroRegistros
             If totalRegistros Mod nroRegistros > 0 Then
                 totalPaginas += 1

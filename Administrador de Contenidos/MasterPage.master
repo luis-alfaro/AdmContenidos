@@ -67,101 +67,122 @@
                                     <SelectedNodeStyle Font-Underline="True" HorizontalPadding="0px" 
                                         VerticalPadding="0px" />
                                     <Nodes>
-                                        <asp:TreeNode Text="Panel" Value="P1" ImageUrl="~/images/panel.png"></asp:TreeNode>
+                                        <asp:TreeNode Text="Panel" Value="P1" ImageUrl="~/images/panel.png" 
+                                            SelectAction="None"></asp:TreeNode>
                                         <asp:TreeNode Text="Programación de Videos" Value="P2" 
-                                            ImageUrl="~/images/videos.png">
+                                            ImageUrl="~/images/videos.png" SelectAction="None">
                                         </asp:TreeNode>
                                         <asp:TreeNode Text="Secuencia de Banners" Value="P3" 
-                                            ImageUrl="~/images/banners.png">
+                                            ImageUrl="~/images/banners.png" SelectAction="None">
                                         </asp:TreeNode>
                                         <asp:TreeNode Text="Seguridad" Value="SG" ShowCheckBox="False" 
-                                            ImageUrl="~/images/seguridad.png">
-                                            <asp:TreeNode Text="Usuarios" Value="S1" ImageUrl="~/images/usuarios.png" NavigateUrl="~/aspx/lista_users.aspx"></asp:TreeNode>
-                                            <asp:TreeNode Text="Roles" Value="S2" ImageUrl="~/images/roles.png" NavigateUrl="~/aspx/lista_roles.aspx"></asp:TreeNode>
-                                            <asp:TreeNode Text="Accesos" Value="S3" ImageUrl="~/images/acceses.png" NavigateUrl="~/aspx/accesos.aspx"></asp:TreeNode>
+                                            ImageUrl="~/images/seguridad.png" SelectAction="None">
+                                            <asp:TreeNode Text="Usuarios" Value="S1" ImageUrl="~/images/usuarios.png" 
+                                                NavigateUrl="~/aspx/lista_users.aspx" SelectAction="None"></asp:TreeNode>
+                                            <asp:TreeNode Text="Roles" Value="S2" ImageUrl="~/images/roles.png" 
+                                                NavigateUrl="~/aspx/lista_roles.aspx" SelectAction="None"></asp:TreeNode>
+                                            <asp:TreeNode Text="Accesos" Value="S3" ImageUrl="~/images/acceses.png" 
+                                                NavigateUrl="~/aspx/access.aspx" SelectAction="None"></asp:TreeNode>
                                         </asp:TreeNode>
                                         <asp:TreeNode Text="Mantenimientos" Value="Ubigeo" 
-                                            ImageUrl="~/images/7.png">
+                                            ImageUrl="~/images/7.png" SelectAction="None">
                                             <asp:TreeNode Text="Ubigeo" Value="Uigeo" NavigateUrl="~/aspx/MantUbigeo.aspx" 
-                                                ImageUrl="~/images/25.png"></asp:TreeNode>
+                                                ImageUrl="~/images/25.png" SelectAction="None"></asp:TreeNode>
                                             <asp:TreeNode Text="Tiendas/Sucursales" Value="Tiendas/Sucursales" 
-                                                NavigateUrl="~/aspx/ListadoTiendas.aspx" ImageUrl="~/images/16.png">
+                                                NavigateUrl="~/aspx/ListadoTiendas.aspx" ImageUrl="~/images/16.png" 
+                                                SelectAction="None">
                                             </asp:TreeNode>
                                             <asp:TreeNode Text="Kioscos" Value="Kioskos" 
-                                                NavigateUrl="~/aspx/ListadoKioskos.aspx" ImageUrl="~/images/37.png"></asp:TreeNode>
+                                                NavigateUrl="~/aspx/ListadoKioskos.aspx" ImageUrl="~/images/37.png" 
+                                                SelectAction="None"></asp:TreeNode>
                                             <asp:TreeNode Text="Configuración Kioscos" Value="Configuración Kioskos" 
-                                                NavigateUrl="~/aspx/ListadoConfiguracionKioskos.aspx" ImageUrl="~/images/banners.png"></asp:TreeNode>
+                                                NavigateUrl="~/aspx/ListadoConfiguracionKioskos.aspx" 
+                                                ImageUrl="~/images/banners.png" SelectAction="None"></asp:TreeNode>
                                             <asp:TreeNode Text="Áreas" Value="Areas" NavigateUrl="~/aspx/MantAreas.aspx" 
-                                                ImageUrl="~/images/27.png"></asp:TreeNode>
+                                                ImageUrl="~/images/27.png" SelectAction="None"></asp:TreeNode>
                                         </asp:TreeNode>
                                         <asp:TreeNode NavigateUrl="~/aspx/ListadoCriterios.aspx" Text="Criterios" 
-                                            Value="Criterios" ImageUrl="~/images/20.png"></asp:TreeNode>
-                                        <asp:TreeNode ImageUrl="~/images/19.png" Text="Reportes" Value="Reportes">
+                                            Value="Criterios" ImageUrl="~/images/20.png" SelectAction="None"></asp:TreeNode>
+                                        <asp:TreeNode ImageUrl="~/images/19.png" Text="Reportes" Value="Reportes" 
+                                            SelectAction="None">
                                             <asp:TreeNode ImageUrl="~/images/13.png" 
                                                 NavigateUrl="~/aspx/ReporteEstadisticos.aspx" Text="Reporte Estadístico" 
-                                                Value="Reporte Estadistico"></asp:TreeNode>
+                                                Value="Reporte Estadistico" SelectAction="None"></asp:TreeNode>
                                                 <asp:TreeNode ImageUrl="~/images/13.png" 
                                                 NavigateUrl="~/aspx/ReporteConsultasRipleymatico.aspx" Text="Reporte Consultas" 
-                                                Value="Reporte Consultas"></asp:TreeNode>
+                                                Value="Reporte Consultas" SelectAction="None"></asp:TreeNode>
                                         </asp:TreeNode>
-                                        <asp:TreeNode ImageUrl="~/images/19.png" Text="Estadísticas" Value="Estadisticas">
+                                        <asp:TreeNode ImageUrl="~/images/19.png" Text="Estadísticas" 
+                                            Value="Estadisticas" SelectAction="None">
                                             <asp:TreeNode ImageUrl="~/images/13.png" 
                                                 NavigateUrl="~/aspx/ReporteEstadisticoIncremento.aspx" Text="Incremento de Línea" 
-                                                Value="Incremento de Linea"></asp:TreeNode>
+                                                Value="Incremento de Linea" SelectAction="None"></asp:TreeNode>
                                         </asp:TreeNode>
-                                        <asp:TreeNode ImageUrl="~/images/19.png" Text="Consultas" Value="Consultas">
+                                        <asp:TreeNode ImageUrl="~/images/19.png" Text="Consultas" Value="Consultas" 
+                                            SelectAction="None">
                                             <asp:TreeNode ImageUrl="~/images/13.png" 
                                                 NavigateUrl="~/aspx/ReporteConsultaIncremento.aspx" Text="Incremento de Línea" 
-                                                Value="Consulta Incremento de Linea"></asp:TreeNode>
-                                                <asp:TreeNode ImageUrl="~/images/13.png" 
+                                                Value="Consulta Incremento de Linea" SelectAction="None"></asp:TreeNode>
+                                            <asp:TreeNode ImageUrl="~/images/13.png" 
                                                 NavigateUrl="~/aspx/ReporteAceptacionIncremento.aspx" Text="Aceptación Incremento" 
-                                                Value="Aceptacion Incremento"></asp:TreeNode>
+                                                Value="Aceptacion Incremento" SelectAction="None"></asp:TreeNode>
+                                            <asp:TreeNode ImageUrl="~/images/13.png" 
+                                                NavigateUrl="~/aspx/ReporteConsultaCambioProducto.aspx" Text="Cambio Producto" 
+                                                Value="Consulta Cambio Producto" SelectAction="None"></asp:TreeNode>
+                                            <asp:TreeNode ImageUrl="~/images/13.png" 
+                                                NavigateUrl="~/aspx/ReporteLPDP.aspx" Text="LPDP Aceptación" 
+                                                Value="Consulta LPDP" SelectAction="None"></asp:TreeNode>
                                         </asp:TreeNode>
-                                        <asp:TreeNode ImageUrl="~/images/18.png" Text="Actualización" Value="Actualizacion">
+                                        <asp:TreeNode ImageUrl="~/images/18.png" Text="Actualización" 
+                                            Value="Actualizacion" SelectAction="None">
                                             <asp:TreeNode ImageUrl="~/images/18.png" 
                                                 NavigateUrl="~/aspx/EdicionRipleyMatico.aspx" Text="Actualizar Imágenes" 
-                                                Value="Actualizar Imagenes"></asp:TreeNode>
+                                                Value="Actualizar Imagenes" SelectAction="None"></asp:TreeNode>
                                                 <asp:TreeNode ImageUrl="~/images/18.png" 
                                                 NavigateUrl="~/aspx/ActualizacionRipleyMatico.aspx" Text="Actualizar Ripleymático" 
-                                                Value="Aceptacion Ripleymatico"></asp:TreeNode>
+                                                Value="Aceptacion Ripleymatico" SelectAction="None"></asp:TreeNode>
                                         </asp:TreeNode>
                                         <asp:TreeNode NavigateUrl="~/aspx/EdiciónTiempoSalvapantallas.aspx" 
                                             Text="Temporizador" Value="Nuevo nodo" 
-                                            ImageUrl="~/aspx/images/15.png"></asp:TreeNode>
+                                            ImageUrl="~/aspx/images/15.png" SelectAction="None"></asp:TreeNode>
                                         <asp:TreeNode ImageUrl="~/aspx/images/CommentHS.png" 
                                             NavigateUrl="~/aspx/lista_mensajes.aspx" Text="Mensajes Ticket" 
-                                            Value="Mensajes Ticket"></asp:TreeNode>
+                                            Value="Mensajes Ticket" SelectAction="None"></asp:TreeNode>
                                         <asp:TreeNode ImageUrl="~/aspx/images/ExpirationHS.png" 
                                             NavigateUrl="~/aspx/MantTiempos.aspx" Text="Tiempos de Inactividad" 
-                                            Value="Tiempos de Inactividad"></asp:TreeNode>
+                                            Value="Tiempos de Inactividad" SelectAction="None"></asp:TreeNode>
                                         <%--<asp:TreeNode NavigateUrl="~/aspx/MantTarifa.aspx" Text="Tarifas DPF" 
                                             Value="New Node" ImageUrl="~/images/calculator.ico"></asp:TreeNode>--%>
                                         <asp:TreeNode Text="Simuladores" Value="Simuladores" 
-                                            ImageUrl="~/images/7.png">
+                                            ImageUrl="~/images/7.png" SelectAction="None">
                                             <asp:TreeNode Text="Depósito a Plazo" Value="Depósito a Plazo" NavigateUrl="~/aspx/MantSimDepositoPlazo.aspx" 
-                                                ImageUrl="~/images/16.png"></asp:TreeNode>
+                                                ImageUrl="~/images/16.png" SelectAction="None"></asp:TreeNode>
                                             <asp:TreeNode Text="Reprogramaciones" Value="Reprogramaciones" NavigateUrl="~/aspx/MantSimReprogramaciones.aspx" 
-                                                ImageUrl="~/images/16.png"></asp:TreeNode>     
+                                                ImageUrl="~/images/16.png" SelectAction="None"></asp:TreeNode>     
                                             <asp:TreeNode Text="Diferido" Value="Diferido" NavigateUrl="~/aspx/MantSimDiferido.aspx" 
-                                                ImageUrl="~/images/16.png"></asp:TreeNode> 
+                                                ImageUrl="~/images/16.png" SelectAction="None"></asp:TreeNode> 
                                             <asp:TreeNode Text="Super Efectivo" Value="Super Efectivo" NavigateUrl="~/aspx/MantSimSuperEfectivo.aspx" 
-                                                ImageUrl="~/images/16.png"></asp:TreeNode> 
+                                                ImageUrl="~/images/16.png" SelectAction="None"></asp:TreeNode> 
                                             <asp:TreeNode Text="Compras" Value="Compras" NavigateUrl="~/aspx/MantSimCompras.aspx" 
-                                                ImageUrl="~/images/16.png"></asp:TreeNode> 
+                                                ImageUrl="~/images/16.png" SelectAction="None"></asp:TreeNode> 
                                             <asp:TreeNode Text="Efectivo Express" Value="Efectivo Express" NavigateUrl="~/aspx/MantSimEfectivoExpress.aspx" 
-                                                ImageUrl="~/images/16.png"></asp:TreeNode> 
+                                                ImageUrl="~/images/16.png" SelectAction="None"></asp:TreeNode> 
                                             <asp:TreeNode Text="Préstamo de Efectivo" Value="Préstamo de Efectivo" NavigateUrl="~/aspx/MantSimPrestamoEfectivo.aspx" 
-                                                ImageUrl="~/images/16.png"></asp:TreeNode> 
+                                                ImageUrl="~/images/16.png" SelectAction="None"></asp:TreeNode> 
                                             <asp:TreeNode Text="Consolidación De Deuda" Value="Consolidación De Deuda" NavigateUrl="~/aspx/MantSimConsolidacionDeDeuda.aspx" 
-                                                ImageUrl="~/images/16.png"></asp:TreeNode>                                        
+                                                ImageUrl="~/images/16.png" SelectAction="None"></asp:TreeNode>                                        
                                         </asp:TreeNode>
-                                        <asp:TreeNode ImageUrl="~/images/table_edit.ico" Text="Registro de Errores" Value="Registro de Errores">
+                                        <asp:TreeNode ImageUrl="~/images/table_edit.ico" Text="Registro de Errores" 
+                                            Value="Registro de Errores" SelectAction="None">
                                             <asp:TreeNode ImageUrl="~/images/table_edit.ico" 
                                                 NavigateUrl="~/aspx/LogDeEnvioData.aspx" Text="Carga de Imágenes" 
-                                                Value="Imagenes"></asp:TreeNode>
+                                                Value="Imagenes" SelectAction="None"></asp:TreeNode>
                                                 <asp:TreeNode ImageUrl="~/images/table_edit.ico" 
                                                 NavigateUrl="~/aspx/LogDeActualizacionRipleymatico.aspx" Text="Actualización de Aplicativo" 
-                                                Value="Ripleymatico"></asp:TreeNode>
+                                                Value="Ripleymatico" SelectAction="None"></asp:TreeNode>
+                                                <asp:TreeNode ImageUrl="~/images/table_edit.ico" 
+                                                NavigateUrl="~/aspx/AdmLog.aspx" Text="Adm Log" 
+                                                Value="Ripleymatico" SelectAction="None"></asp:TreeNode>
                                         </asp:TreeNode>
                                         <asp:TreeNode Text="Cerrar Sesión" Value="CS" ImageUrl="~/images/cerrar.png"></asp:TreeNode>
                                     </Nodes>

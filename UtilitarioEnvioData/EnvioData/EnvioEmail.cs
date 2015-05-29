@@ -124,6 +124,54 @@ namespace UtilitarioEnvioData.EnvioData
                 AdjuntarFile(ref message, fileAttach);
 
                 SmtpClient smtp = new SmtpClient();
+                Log.EscribirLog("Cuentas por Defecto, se envió con RPARRA");
+                smtp.Send(message);
+                result = true;
+            }
+            catch (SmtpException ex)
+            {
+                string inner = ex.InnerException != null ? ex.InnerException.Message : string.Empty;
+            }
+            finally
+            {
+                message.Dispose();
+            }
+            return result;
+        }
+
+        public bool SendEmailMasivoDefaultFrom(List<EmailMessage> addresses, string subject, string body, List<EmailFile> fileAttach,DireccionCorreo remite)
+        {            
+
+            if (remite == null)
+            {
+                Log.EscribirLog("Remitente null");
+                return SendEmailMasivoDefaultFrom(addresses, subject, body, fileAttach);
+            }
+            bool result = false;
+            MailMessage message = new MailMessage();
+            try
+            {
+                foreach (EmailMessage email in addresses)
+                {
+                    message.To.Add(new MailAddress(email.To));
+                }
+                message.Subject = subject;
+                message.SubjectEncoding = Encoding.UTF8;
+                message.Body = body;
+                message.BodyEncoding = Encoding.UTF8;
+                message.IsBodyHtml = true;
+                message.Priority = MailPriority.Normal;
+                message.From = new MailAddress(remite.Direccion, "ADM Contenidos");
+
+                //adjuntar archivo
+                AdjuntarFile(ref message, fileAttach);
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = remite.Server;
+                smtp.Port = remite.Puerto;
+                smtp.UseDefaultCredentials = false;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.Credentials = new System.Net.NetworkCredential(remite.Direccion, remite.Password);
                 smtp.Send(message);
                 result = true;
             }

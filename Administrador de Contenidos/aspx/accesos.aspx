@@ -230,7 +230,8 @@
                     <asp:CheckBox ID="ckEstadisticas" runat="server" Text="Estadísticas" />
                 </td>
                 <td style="height: 22px; width: 222px;">
-                        <asp:CheckBox ID="ckSimuladores" runat="server" Text="Simuladores" />
+                        <asp:CheckBox ID="ckSimuladores" Visible="false" runat="server" Text="Simuladores" />
+                        <asp:CheckBox ID="ckActualizacionRipleymatico" runat="server" Text="Actualización Ripleymático" />
                     </td>
                 <td style="height: 22px">
                     &nbsp;</td>
@@ -256,15 +257,63 @@
                 <td style="height: 22px">                
                     &nbsp;</td>
             </tr>
+            <!-- INI - SIMULADORES -->
             <tr>
                 <td class="style9" style="width: 24px; height: 22px;">
                     &nbsp;</td>
                 <td class="style9" style="width: 173px; height: 22px;">
-                    <asp:CheckBox ID="ckActualizacionRipleymatico" runat="server" Text="Actualización Ripleymático" />
+                    <asp:CheckBox ID="ckSIM_DPF" runat="server" Text="Sim. Depósito Plazo" />
                 </td>
-                <td style="height: 22px; width: 222px;"></td>
-                <td style="height: 22px">                
+                <td style="height: 22px; width: 222px;">
+                    <asp:CheckBox ID="ckSIM_Reprogramaciones" runat="server" Text="Sim. Reprogramaciones" />
+                </td>
+                <td style="height: 22px">
                     &nbsp;</td>
+            </tr>
+            <tr>
+                <td class="style9" style="width: 24px; height: 22px;">
+                    &nbsp;</td>
+                <td class="style9" style="width: 173px; height: 22px;">
+                    <asp:CheckBox ID="ckSIM_Diferido" runat="server" Text="Sim. Diferido" />
+                </td>
+                <td style="height: 22px; width: 222px;">
+                    <asp:CheckBox ID="ckSIM_SEF" runat="server" Text="Sim. Super Efectivo" />
+                </td>
+                <td style="height: 22px">
+                    &nbsp;</td>
+            </tr>
+            <tr>
+                <td class="style9" style="width: 24px; height: 22px;">
+                    &nbsp;</td>
+                <td class="style9" style="width: 173px; height: 22px;">
+                    <asp:CheckBox ID="ckSIM_Compras" runat="server" Text="Sim. Compras" />
+                </td>
+                <td style="height: 22px; width: 222px;">
+                    <asp:CheckBox ID="ckSIM_EFEX" runat="server" Text="Sim. Efectivo Express" />
+                </td>
+                <td style="height: 22px">
+                    &nbsp;</td>
+            </tr>
+            <tr>
+                <td class="style9" style="width: 24px; height: 22px;">
+                    &nbsp;</td>
+                <td class="style9" style="width: 173px; height: 22px;">
+                    <asp:CheckBox ID="ckSIM_PEF" runat="server" Text="Sim. Préstamo Efectivo" />
+                </td>
+                <td style="height: 22px; width: 222px;">
+                    <asp:CheckBox ID="ckSIM_CDD" runat="server" Text="Sim. Consolidación Deuda" />
+                </td>
+                <td style="height: 22px">
+                    &nbsp;</td>
+            </tr>
+            <!-- FIN - SIMULADORES -->
+            <tr>
+                <td class="style9" style="width: 24px; height: 22px;">
+                    &nbsp;</td>
+                <td class="style9" style="width: 222px; height: 22px;">
+                    <asp:CheckBox ID="ckCambioProducto" runat="server" Text="Consultas Cambio Producto" />
+                </td>
+                <td colspan="2"></td>
             </tr>
             </table>
     </td>    

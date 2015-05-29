@@ -28,6 +28,13 @@ Partial Class aspx_MantTiendas
                 lblmsg.Visible = False
             End If
 
+            Dim place As String = "L"
+            If rbLima.Checked Then
+                place = "L"
+            ElseIf rbProvincia.Checked Then
+                place = "P"
+            End If
+
             Dim es As Integer = 2
             If Me.CheckBox1.Checked = True Then
                 es = 1
@@ -36,7 +43,7 @@ Partial Class aspx_MantTiendas
             End If
             If Me.hddtienda.Value > 0 Then
                 'cambio v2
-                If cn.grabar(Me.txtdireccion.Text, Me.hddtienda.Value, Me.txttienda.Text, Me.hddidubigeo.Value, es, Me.txtcod_suc_banco.Text, txtHor1Inicio.Text, txtHor1Fin.Text, txtHor2Inicio.Text, txtHor2Fin.Text, txthini_cli.Text, txthfin_cli.Text, 2, rp, rpp) >= 1 Then
+                If cn.grabar(Me.txtdireccion.Text, Me.hddtienda.Value, Me.txttienda.Text, Me.hddidubigeo.Value, es, Me.txtcod_suc_banco.Text, txtHor1Inicio.Text, txtHor1Fin.Text, txtHor2Inicio.Text, txtHor2Fin.Text, txthini_cli.Text, txthfin_cli.Text, place, txtBanco.Text, 2, rp, rpp) >= 1 Then
                     'edita
                     For cant As Integer = 0 To Me.chklstareas.Items.Count - 1
                         Dim val As Integer
@@ -52,7 +59,7 @@ Partial Class aspx_MantTiendas
                 End If
             Else
 
-                If cn.grabar(Me.txtdireccion.Text, 0, Me.txttienda.Text, Me.hddidubigeo.Value, es, Me.txtcod_suc_banco.Text, txtHor1Inicio.Text, txtHor1Fin.Text, txtHor2Inicio.Text, txtHor2Fin.Text, txthini_cli.Text, txthfin_cli.Text, 1, rp, rpp) >= 1 Then
+                If cn.grabar(Me.txtdireccion.Text, 0, Me.txttienda.Text, Me.hddidubigeo.Value, es, Me.txtcod_suc_banco.Text, txtHor1Inicio.Text, txtHor1Fin.Text, txtHor2Inicio.Text, txtHor2Fin.Text, txthini_cli.Text, txthfin_cli.Text, place, txtBanco.Text, 1, rp, rpp) >= 1 Then
                     For cant As Integer = 0 To Me.chklstareas.Items.Count - 1
                         If Me.chklstareas.Items(cant).Selected = True Then
                             If Me.chklstareas.Items(cant).Selected = True Then
@@ -133,10 +140,18 @@ Partial Class aspx_MantTiendas
                     txtHor2Fin.Text = dts.Rows(0).Item("hfin_com2").ToString()
                     txthini_cli.Text = dts.Rows(0).Item("hini_cli").ToString()
                     txthfin_cli.Text = dts.Rows(0).Item("hfin_cli").ToString()
+                    txtBanco.Text = dts.Rows(0).Item("banco").ToString()
                     If dts.Rows(0).Item("esttienda").ToString() = "1" Then
                         Me.CheckBox1.Checked = True
                     Else
                         Me.CheckBox1.Checked = False
+                    End If
+                    If dts.Rows(0).Item("place").ToString() = "L" Then
+                        Me.rbLima.Checked = True
+                        Me.rbProvincia.Checked = False
+                    Else
+                        Me.rbProvincia.Checked = True
+                        Me.rbLima.Checked = False
                     End If
                     dts = funciones_otras.obtenerubigeo(Me.hddidubigeo.Value).Tables(0)
                     If dts.Rows.Count > 0 Then

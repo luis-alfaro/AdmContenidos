@@ -240,7 +240,29 @@
             <td style="width: 17px">&nbsp;</td>
             <td style="width: 323px">
                 &nbsp;</td>
-        </tr><tr>
+        </tr>
+        <tr>
+            <td class="style29" style="width: 52px">
+                &nbsp;</td>
+            <td class="style30" style="width: 368px">
+                <asp:Panel ID="Panel2" runat="server">
+                    &nbsp;<asp:RadioButton ID="rbLima" runat="server"
+                        GroupName="Ubicacion" Text="Lima" />
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:RadioButton ID="rbProvincia" runat="server" 
+                        GroupName="Ubicacion" Text="Provincia" />
+                </asp:Panel>
+                    </td>
+            <td class="style31">
+                &nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width: 17px">&nbsp;</td>
+            <td style="width: 17px">&nbsp;</td>
+            <td style="width: 323px">
+                &nbsp;</td>
+        </tr>
+        <tr>
             <td style="width: 17px">&nbsp;</td>
             <td style="width: 17px">Ubigeo</td>
             <td style="width: 323px">
@@ -294,6 +316,13 @@
                 <asp:CheckBoxList ID="chklstareas" runat="server">
                 </asp:CheckBoxList>
                 </td>
+        </tr>
+        <tr>
+            <td >&nbsp;</td>
+            <td >Mensaje Ticket SEF:</td>
+            <td >
+                <asp:TextBox ID="txtBanco" runat="server" Width="400px"></asp:TextBox>
+            </td>
         </tr>
         <tr>
         <td style="width: 17px; height: 40px;"></td>

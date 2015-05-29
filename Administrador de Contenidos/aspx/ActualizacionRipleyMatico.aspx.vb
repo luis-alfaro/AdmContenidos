@@ -10,6 +10,7 @@ Partial Class aspx_ActualizacionRipleyMatico
     Inherits System.Web.UI.Page
 
     Public Shared listaKioscos As List(Of ENKiosco)
+    Public Shared listaTemp As List(Of ENKiosco)
     Public Shared directorioSeleccionado As String
     Public Shared ActualizacionFlash As String = "F"
     Public Shared modulo As String = "Actualización de Ripleymatico"
@@ -29,7 +30,7 @@ Partial Class aspx_ActualizacionRipleyMatico
 
                 InicarIdentificador()
                 listaKioscos = New List(Of ENKiosco)
-
+                listaTemp = New List(Of ENKiosco)
                 Dim dt As DataTable = Sql_Get_KioscosIP()
 
                 For Each dr As DataRow In dt.Rows
@@ -38,6 +39,9 @@ Partial Class aspx_ActualizacionRipleyMatico
                     kio.RutaPathArchivos = pathCliente
 
                     listaKioscos.Add(kio)
+
+                    kio.Ubicacion = dr(2).ToString()
+                    listaTemp.Add(kio)
                 Next
 
                 cblKioscos.Items.Clear()
@@ -108,7 +112,9 @@ Partial Class aspx_ActualizacionRipleyMatico
         End Try
     End Sub
 
-    Public Shared Sub GuardarArchivosEnKioscos(ByVal Archivos As List(Of String), ByVal radio As String, ByVal Kioscos As List(Of String), ByVal usuario As String, ByVal password As String, ByVal dominio As String, ByVal email As String, ByVal descripcion As String)
+    Public Shared Sub GuardarArchivosEnKioscos(ByVal Archivos As List(Of String), ByVal radio As String, ByVal Kioscos As List(Of String), ByVal usuario As String, ByVal password As String, ByVal dominio As String, ByVal email As String, ByVal descripcion As String, ByVal ubicacion As String)
+        Dim cantidadKioskos As Integer = 0
+        Dim contenido As String = 0
         Try
             rptaCompletar = ""
             If Archivos.Count < 1 Then
@@ -144,9 +150,13 @@ Partial Class aspx_ActualizacionRipleyMatico
                     listaFinalKioscos = listTempKioscos
                 End If
             Else
-                listaFinalKioscos = listaKioscos
+                If ubicacion = "T" Then
+                    listaFinalKioscos = listaTemp
+                Else
+                    listaFinalKioscos = listaTemp.Where(Function(y) y.Ubicacion = ubicacion).ToList()
+                End If                
             End If
-
+            cantidadKioskos = listaFinalKioscos.Count
 
             EnvioData.Instancia.EscribirLog(identificador, "- " + DateTime.Now + " - Actualizando Programa RipleyMático", ActualizacionFlash)
             EnvioData.Instancia.EscribirLog(identificador, "Descripción: " + descripcion, ActualizacionFlash)
@@ -170,53 +180,79 @@ Partial Class aspx_ActualizacionRipleyMatico
                     End If
                 Catch ex As Exception
                     EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Es posible que no tenga permiso de acceso a un archivo, o haya sido borrado durante la ejecución.", ActualizacionFlash)
-                    
+
                 End Try
             Next
             EnvioData.Instancia.EscribirLog(identificador, "-Fin Proceso: " + "Se terminó de ejecutar el proceso. ", ActualizacionFlash)
             Dim success As Boolean = GuardarEnBackUp(listaARchivos)
 
             rptaCompletar = "exito|" + listaFinalKioscos.Count.ToString() + "|" + contar.ToString() + "|" + (listaFinalKioscos.Count - contar).ToString()
-            EnviarEmailConfirmacion(email, Archivos, Kioscos, descripcion)
+            If contar > 0 Then
+                contenido = String.Format("Se ha enviado {0} nuevos archivos para actualizar a {1} Ripleymatico(s) desde el modulo de {2}.", Archivos.Count.ToString(), cantidadKioskos.ToString(), modulo)
+                EnviarEmailConfirmacion(email, Archivos, cantidadKioskos, descripcion, contenido)
+            End If
             InicarIdentificador()
             Return
         Catch ex As Exception
             EnvioData.Instancia.EscribirLog(identificador, "Error: " + "Intentelo nuevamente más tarde. " + ex.Message, ActualizacionFlash)
             rptaCompletar = "Ha ocurrido un error en el código, revise las fuentes." + ex.Message
-            EnviarEmailConfirmacion(email, Archivos, Kioscos, descripcion)
+            contenido = String.Format("Ha ocurrido un error en el proceso de {0}. Revisar el Log para mayor detalle.", modulo)
+            EnviarEmailConfirmacion(email, Archivos, cantidadKioskos, descripcion, contenido)
             Return
         End Try
     End Sub
 
     <WebMethod()> _
-    Public Shared Sub Completar(ByVal Archivos As List(Of String), ByVal radio As String, ByVal Kioscos As List(Of String), ByVal usuario As String, ByVal password As String, ByVal dominio As String, ByVal email As String, ByVal descripcion As String)
-        Dim t As New Thread(New ThreadStart(Sub() GuardarArchivosEnKioscos(Archivos, radio, Kioscos, usuario, password, dominio, email, descripcion)))
+    Public Shared Sub Completar(ByVal Archivos As List(Of String), ByVal radio As String, ByVal Kioscos As List(Of String), ByVal usuario As String, ByVal password As String, ByVal dominio As String, ByVal email As String, ByVal descripcion As String, ByVal ubicacion As String)
+        Dim t As New Thread(New ThreadStart(Sub() GuardarArchivosEnKioscos(Archivos, radio, Kioscos, usuario, password, dominio, email, descripcion, ubicacion)))
         t.Start()
     End Sub
 
-    Public Shared Sub EnviarEmailConfirmacion(ByVal email As String, ByVal Archivos As List(Of String), ByVal Kioscos As List(Of String), ByVal descripcion As String)
-        If String.IsNullOrEmpty(email) = False Then
+    Public Shared Sub EnviarEmailConfirmacion(ByVal email As String, ByVal Archivos As List(Of String), ByVal cantidadKioskos As Integer, ByVal descripcion As String, ByVal contenido As String)
+        Log.ErrorLog("EnviarEmailConfirmacion")
+        Dim listaMails As List(Of DireccionCorreo)
+        Dim listaDirecciones As List(Of DireccionCorreo) = ObtenerDirecciones()
+        Dim remite As DireccionCorreo = New DireccionCorreo
+        Dim remiten As List(Of DireccionCorreo) = listaDirecciones.Where(Function(i) i.Remitente = True).Take(1).ToList()
+        Log.ErrorLog("Cantidad de remitentes = " & remiten.Count)
+        If remiten.Count > 0 Then
+            remite = remiten(0)
+        Else
+            remite = Nothing
+        End If
+        listaMails = listaDirecciones.Where(Function(i) i.Remitente = False).ToList()
+        If String.IsNullOrEmpty(email) = False Or listaMails.Count > 0 Then
             Dim body As String = System.IO.File.ReadAllText(rutaTemplate + "EdicionTemplate.htm")
+            Dim tiempo As DateTime = DateTime.Now
             body = body.Replace("#Nombre#", GetNombreUsuario())
-            body = body.Replace("#Contenido#", String.Format("Se ha enviado {0} nuevos archivos para actualizar a {1} Ripleymatico(s) desde el módulo de {2}.", Archivos.Count, Kioscos.Count, modulo))
+            body = body.Replace("#Contenido#", contenido)
             body = body.Replace("#Descripcion#", descripcion)
-            body = body.Replace("#Fecha#", DateTime.Now.ToShortDateString())
-            body = body.Replace("#Hora#", DateTime.Now.ToShortTimeString())
+            body = body.Replace("#Fecha#", tiempo.ToShortDateString())
+            body = body.Replace("#Hora#", tiempo.ToShortTimeString())
 
             Dim array As List(Of EmailMessage) = New List(Of EmailMessage)
             Dim eMessage As EmailMessage
             Dim cantidadCorreos As String() = Split(email, ";", , CompareMethod.Binary)
             For y As Integer = 0 To cantidadCorreos.Length - 1 Step +1
-                eMessage = New EmailMessage
-                If cantidadCorreos(y).Contains("@") Then
-                    eMessage.To = cantidadCorreos(y)
-                Else
-                    eMessage.To = cantidadCorreos(y) + "@bancoripley.com.pe"
-                End If
+                If String.IsNullOrEmpty(cantidadCorreos(y)) = False Then
+                    eMessage = New EmailMessage
+                    If cantidadCorreos(y).Contains("@") Then
+                        eMessage.To = cantidadCorreos(y)
+                    Else
+                        eMessage.To = cantidadCorreos(y) + "@bancoripley.com.pe"
+                    End If
 
+                    array.Add(eMessage)
+                End If
+            Next
+            For Each Mail As DireccionCorreo In listaMails
+                eMessage = New EmailMessage
+                eMessage.To = Mail.Direccion
                 array.Add(eMessage)
             Next
-            EnvioEmail.Instancia.SendEmailMasivoDefaultFrom(array, "Actualizacion de Ripleymático", body, Nothing)
+            array = array.Distinct().ToList()
+            Dim asunto As String = "Actualización de Ripleymático el " + tiempo.ToShortDateString() + " a las  " + tiempo.ToShortTimeString()
+            EnvioEmail.Instancia.SendEmailMasivoDefaultFrom(array, asunto, body, Nothing, remite)
         End If
 
     End Sub
@@ -347,5 +383,33 @@ Partial Class aspx_ActualizacionRipleyMatico
             End If
         End If
         Return username
+    End Function
+
+    Protected Sub btnContinuar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnContinuar.Click
+        Try
+            Response.Redirect(Request.RawUrl)
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Public Shared Function ObtenerDirecciones() As List(Of DireccionCorreo)
+        Dim listaCorreos = New List(Of DireccionCorreo)
+
+        Dim dt As DataTable = Sql_Get_DireccionesCorreo()
+
+        For Each dr As DataRow In dt.Rows
+            Dim correo As New DireccionCorreo()
+            correo.ID = dr("ID")
+            correo.Nombre = dr("NOMBRE")
+            correo.Direccion = dr("DIRECCION")
+            correo.Password = dr("PASSWORD")
+            correo.Server = dr("SERVER")
+            correo.Puerto = dr("PUERTO")
+            correo.Remitente = dr("REMITENTE")
+            Log.ErrorLog("Remitente= " & correo.Remitente)
+            listaCorreos.Add(correo)
+        Next
+        Return listaCorreos
     End Function
 End Class
