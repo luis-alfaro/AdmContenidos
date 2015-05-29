@@ -2,6 +2,7 @@
 Imports System.Configuration
 Imports System.Web.Security
 Imports DataAccess
+Imports AdministradorContenidos.ActiveDirectory
 
 Public Class _Default
     Inherits System.Web.UI.Page
@@ -51,6 +52,19 @@ Public Class _Default
     End Sub
 
     Private Sub m_ValidarUsuario()
+        Dim username As String = txtLogin.Value
+        Dim password As String = txtPassword.Value
+        Dim IsLoggedAD As Boolean = False
+
+        Try
+            IsLoggedAD = UsuarioAD.Instance.Login(username, password)
+        Catch ex As Exception
+            Log.ErrorLog(ex.Message)
+            Response.Redirect("aspx/error.aspx?mensajeerror=" + ex.Message)
+            Return
+        End Try
+
+
         Dim oDataTable As New DataTable
         Dim strSQL As String
         Dim sMensajeError As String
@@ -66,14 +80,14 @@ Public Class _Default
         Try
             strSQL = "SELECT app_UserAcoount.UserID, app_UserAcoount.FullNames, app_UserAcoount.Enabled, app_UserAcoount.Owner, app_UserAcoount.ChangePassword, app_UserAcoount.RoleID"
             strSQL = strSQL & " FROM  app_UserAcoount"
-            strSQL = strSQL & " WHERE (app_UserAcoount.Flag_ToDelete = 0) AND (app_UserAcoount.UserName = '" & txtLogin.Value & "') AND (app_UserAcoount.Password = '" & txtPassword.Value & "')"
+            strSQL = strSQL & " WHERE (app_UserAcoount.Flag_ToDelete = 0) AND (app_UserAcoount.UserName = '" & username & "') AND (app_UserAcoount.Password = '" & password & "')"
             SQL_ExecuteDataTable(oConexion, strSQL, oDataTable)
             SQL_ConnectionClose(oConexion)
         Catch ex As Exception
-            sMensajeError = ""
             sMensajeError = ex.Message.Trim
             Response.Redirect("aspx/error.aspx?mensajeerror=" + sMensajeError)
         End Try
+
         If oDataTable Is Nothing Then
             Response.Redirect("aspx/errorAuthentication.aspx?f_Caption=Acceso No Autorizado&f_Message=Lo sentimos, usted no esta autorizado a ver el contenido de este módulo.")
         End If
