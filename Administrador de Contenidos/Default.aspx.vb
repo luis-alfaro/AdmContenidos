@@ -56,13 +56,16 @@ Public Class _Default
         Dim password As String = txtPassword.Value
         Dim IsLoggedAD As Boolean = False
 
-        Try
-            IsLoggedAD = UsuarioAD.Instance.Login(username, password)
-        Catch ex As Exception
-            Log.ErrorLog(ex.Message)
-            Response.Redirect("aspx/error.aspx?mensajeerror=" + ex.Message)
-            Return
-        End Try
+        'Codigo4545
+        'Active Directory
+        '----------------
+        'Try
+        '    IsLoggedAD = UsuarioAD.Instance.Login(username, password)
+        'Catch ex As Exception
+        '    Log.ErrorLog(ex.Message)
+        '    Response.Redirect("aspx/error.aspx?mensajeerror=" + ex.Message)
+        '    Return
+        'End Try
 
 
         Dim oDataTable As New DataTable
