@@ -63,7 +63,8 @@ Public Class _Default
         '    IsLoggedAD = UsuarioAD.Instance.Login(username, password)
         'Catch ex As Exception
         '    Log.ErrorLog(ex.Message)
-        '    Response.Redirect("aspx/error.aspx?mensajeerror=" + ex.Message)
+        '    Dim errorMessage As String = ex.Message.Replace(System.Environment.NewLine, "")
+        '    Response.Redirect("aspx/error.aspx?mensajeerror=" + errorMessage)
         '    Return
         'End Try
 

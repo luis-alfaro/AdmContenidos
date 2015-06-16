@@ -16,12 +16,15 @@ namespace AdministradorContenidos.ActiveDirectory
             string connectionAD = ConfigurationManager.AppSettings["ActiveDirectoryConnection"].ToString();
             string domainAD = ConfigurationManager.AppSettings["ActiveDirectoryDomain"].ToString();
 
-            DirectoryEntry entryAD = new DirectoryEntry(connectionAD, domainAD + @"\" + username, password);
-            DirectorySearcher searchAD = new DirectorySearcher(entryAD);
-            searchAD.Filter = "(SAMAccountName=" + username + ")";
-
-            SearchResult resultAD = searchAD.FindOne();
-            if (resultAD != null) return true;
+            using (DirectoryEntry entryAD = new DirectoryEntry(connectionAD, domainAD + @"\" + username, password))
+            {
+                using (DirectorySearcher searchAD = new DirectorySearcher(entryAD))
+                {
+                    searchAD.Filter = "(SAMAccountName=" + username + ")";
+                    SearchResult resultAD = searchAD.FindOne();
+                    if (resultAD != null) return true;
+                }
+            }
             return false;
         }
     }
