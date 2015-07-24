@@ -56,7 +56,7 @@ Public Class _Default
         Dim password As String = txtPassword.Value
         Dim IsLoggedAD As Boolean = False
 
-        'Codigo4545
+        'Codigo4444
         'Active Directory
         '----------------
         'Try
@@ -85,6 +85,8 @@ Public Class _Default
             strSQL = "SELECT app_UserAcoount.UserID, app_UserAcoount.FullNames, app_UserAcoount.Enabled, app_UserAcoount.Owner, app_UserAcoount.ChangePassword, app_UserAcoount.RoleID"
             strSQL = strSQL & " FROM  app_UserAcoount"
             strSQL = strSQL & " WHERE (app_UserAcoount.Flag_ToDelete = 0) AND (app_UserAcoount.UserName = '" & username & "') AND (app_UserAcoount.Password = '" & password & "')"
+            'Codigo4444
+            'strSQL = strSQL & " WHERE (app_UserAcoount.Flag_ToDelete = 0) AND (app_UserAcoount.UserName = '" & username & "')"
             SQL_ExecuteDataTable(oConexion, strSQL, oDataTable)
             SQL_ConnectionClose(oConexion)
         Catch ex As Exception
