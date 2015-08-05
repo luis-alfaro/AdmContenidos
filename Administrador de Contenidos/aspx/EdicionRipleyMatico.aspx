@@ -449,14 +449,19 @@ Inherits="aspx_EdicionRipleyMatico" %>
                     <SelectedNodeStyle Font-Underline="True" ForeColor="#5555DD" 
                         HorizontalPadding="0px" VerticalPadding="0px" />
                     <Nodes>
-                        <asp:TreeNode Text="Promociones" Value="\Promociones">
-                            <asp:TreeNode Text="Ahora o Nunca" Value="\Promociones\Ahora_Nunca" ToolTip="pan"></asp:TreeNode>
-                            <asp:TreeNode Text="Productos Financieros" Value="\Promociones\producto_financiero" ToolTip="ppf">
+                        <asp:TreeNode Text="Promociones" Value="\promociones">
+                            <asp:TreeNode Text="Ahora o Nunca" Value="\promociones\ahora_nunca" 
+                                ToolTip="pan"></asp:TreeNode>
+                            <asp:TreeNode Text="Productos Financieros" 
+                                Value="\promociones\producto_financiero" ToolTip="ppf">
                             </asp:TreeNode>
-                            <asp:TreeNode Text="Ofertas de Seguros" Value="\Promociones\ofertas_seguro" ToolTip="pos">
+                            <asp:TreeNode Text="Ofertas de Seguros" Value="\promociones\ofertas_seguro" 
+                                ToolTip="pos">
                             </asp:TreeNode>
-                            <asp:TreeNode Text="Establecimientos" Value="\Promociones\establecimientos" ToolTip="pes"></asp:TreeNode>
-                            <asp:TreeNode Text="Otras Promociones" Value="\Promociones\otras_promociones" ToolTip="pop"></asp:TreeNode>
+                            <asp:TreeNode Text="Establecimientos" Value="\promociones\establecimientos" 
+                                ToolTip="pes"></asp:TreeNode>
+                            <asp:TreeNode Text="Otras Promociones" Value="\promociones\otras_promociones" 
+                                ToolTip="pop"></asp:TreeNode>
                         </asp:TreeNode>
                         <asp:TreeNode Text="Productos" Value="\productos">
                             <asp:TreeNode Text="Ripley Clásica" Value="\productos\ripley_clasica"  ToolTip="dcl"></asp:TreeNode>

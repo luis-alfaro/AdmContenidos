@@ -93,6 +93,7 @@ Partial Class aspx_EdicionRipleyMatico
                                 Dim widthDocumentoSEF As String
                                 imageDocumentoSEF = System.Drawing.Image.FromFile(rutaTemporal)
                                 widthDocumentoSEF = imageDocumentoSEF.Width.ToString()
+                                imageDocumentoSEF.Dispose()
 
                                 If Convert.ToInt32(widthDocumentoSEF) <= Convert.ToInt32("760") Then
                                     'Guardar en Disco Final
@@ -127,6 +128,7 @@ Partial Class aspx_EdicionRipleyMatico
                                 Dim widthCambioProducto As String
                                 imageCambioProducto = System.Drawing.Image.FromFile(rutaTemporal)
                                 widthCambioProducto = imageCambioProducto.Width.ToString()
+                                imageCambioProducto.Dispose()
 
                                 If Convert.ToInt32(widthCambioProducto) <= Convert.ToInt32("760") Then
                                     'Guardar en Disco Final
@@ -173,6 +175,7 @@ Partial Class aspx_EdicionRipleyMatico
                                     image = System.Drawing.Image.FromFile(rutaArchivo)
                                     width = image.Width.ToString()
                                     height = image.Height.ToString()
+                                    image.Dispose()
 
                                     If width = "910" And height = "555" Then
                                         ok = True
@@ -184,6 +187,8 @@ Partial Class aspx_EdicionRipleyMatico
                                     image = System.Drawing.Image.FromFile(rutaArchivo)
                                     width = image.Width.ToString()
                                     height = image.Height.ToString()
+                                    image.Dispose()
+
                                     If width = "910" And height = "555" Then
                                         ok = True
                                     Else
@@ -198,7 +203,6 @@ Partial Class aspx_EdicionRipleyMatico
                                         txthidden.Value = "La extensión del archivo no es admitida, por favor revisar."
                                         ok = False
                                     End If
-
                                 Case Else
                                     txthidden.Value = "La extensión del archivo no es admitida, por favor revisar."
                                     ok = False
@@ -218,7 +222,7 @@ Partial Class aspx_EdicionRipleyMatico
             LbxImagenes.Focus()
 
         Catch ex As Exception
-
+            EnvioData.Instancia.hacerLinea(ex.Message)
         End Try
     End Sub
 

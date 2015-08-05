@@ -7,7 +7,7 @@ Imports System.Data.OracleClient
 Public Class DataAccess
     Inherits Singleton(Of DataAccess)
     Private mCadenaConexion_ORA As String = "User ID=" & ReadAppConfig("USER_NAME_ORA") & ";Data Source=" + ReadAppConfig("SERVICE_NAME_ORA") & ";Password=" & ReadAppConfig("PASSWORD_ORA")
-    Private mCadenaConexion_ORASEF As String = "User ID=" & ReadAppConfig("USER_NAME_ORA_SEF") & ";Data Source=" + ReadAppConfig("SERVICE_NAME_ORA_SEF") & ";Password=" & ReadAppConfig("PASSWORD_ORA_SEF")
+    'Private mCadenaConexion_ORASEF As String = "User ID=" & ReadAppConfig("USER_NAME_ORA_SEF") & ";Data Source=" + ReadAppConfig("SERVICE_NAME_ORA_SEF") & ";Password=" & ReadAppConfig("PASSWORD_ORA_SEF")
 
 
     Public Function SQL_ConnectionOpen(ByVal sCadenaConexion As String, ByRef msgError As String) As SqlClient.SqlConnection
