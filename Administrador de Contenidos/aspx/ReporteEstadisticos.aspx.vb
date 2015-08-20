@@ -22,15 +22,19 @@ Partial Class ReporteEstadisticos
     Public ss As String = "" : Public sumadetalle As String : Public COD As Integer : Public c1 As String = "" : Public c2 As String = ""
 
     Dim feet0 As Integer = 0
+    Dim feetClasicaChip As Integer = 0
     Dim feet1 As Integer = 0
     Dim feet2 As Integer = 0
     Dim feet3 As Integer = 0
     Dim feet4 As Integer = 0
     Dim feet5 As Integer = 0
+    Dim feetClasicaChipDetalle As Integer = 0
     Dim feet6 As Integer = 0
     Dim feet7 As Integer = 0
     Dim feet8 As Integer = 0
     Dim feet9 As Integer = 0
+    Public Shared existenRegistrosClasicaChip As Boolean = True
+    Public Shared existenRegistrosClasicaChipDetalle As Boolean = True
     Public Shared existenRegistros0 As Boolean = True
     Public Shared existenRegistros1 As Boolean = True
     Public Shared existenRegistros2 As Boolean = True
@@ -104,11 +108,11 @@ Partial Class ReporteEstadisticos
             f2 = New Date(txtfechahasta.Text.Substring(6, 4), txtfechahasta.Text.Substring(3, 2), txtfechahasta.Text.Substring(0, 2))
 
             If Me.ddltiendas.SelectedValue = 0 And (idtienda = 0 Or idtienda = Nothing) And Me.ddltiporeporte.SelectedValue = 1 Then
-                Me.GridView4.Visible = True : Me.GridView5.Visible = True
-                Me.Button11.Visible = True : Me.Button12.Visible = True
-                Me.gvdetalle.Visible = False : Me.gvdetalle2.Visible = False : Me.gvdetalle3.Visible = False : Me.gvdetalle4.Visible = False : Me.gvdetalle5.Visible = False
                 Call HabilitarTodos(True)
-                Me.Button13.Visible = False : Me.Button14.Visible = False : Me.Button15.Visible = False : Me.Button16.Visible = False : Me.Button17.Visible = False
+                Me.grdClasicaChip.Visible = True : Me.GridView4.Visible = True : Me.GridView5.Visible = True
+                Me.gvdetalle.Visible = False : Me.grdClasicaChipDetalle.Visible = False : Me.gvdetalle2.Visible = False : Me.gvdetalle3.Visible = False : Me.gvdetalle4.Visible = False : Me.gvdetalle5.Visible = False
+                Me.Button13.Visible = False : Me.btnClasicaChipDetalle.Visible = False : Me.Button14.Visible = False : Me.Button15.Visible = False : Me.Button16.Visible = False : Me.Button17.Visible = False
+
                 'Mostrar Todo Reporte:Producto
                 '/*GridView1--------------------------------------------------------------*/
                 dts.Clear()
@@ -116,10 +120,21 @@ Partial Class ReporteEstadisticos
                 If dts.Tables("consulta").Rows.Count > 0 Then
                     existenRegistros0 = True
                     Me.GridView1.DataSource = dts : Me.GridView1.DataBind()
-
                 Else
                     existenRegistros0 = False
                     Me.GridView1.DataSource = menus.MENSAJEGRID : Me.GridView1.DataBind()
+                End If
+                '/*----------------------------------------------------------------------*/
+
+                '/*grdClasicaChip--------------------------------------------------------------*/
+                dts.Clear()
+                dts = menus.sp_contar_consultas("1", "1", "7", Me.ddltiendas.SelectedValue, f1, f2)
+                If dts.Tables("consulta").Rows.Count > 0 Then
+                    existenRegistrosClasicaChip = True
+                    Me.grdClasicaChip.DataSource = dts : Me.grdClasicaChip.DataBind()
+                Else
+                    existenRegistrosClasicaChip = False
+                    Me.grdClasicaChip.DataSource = menus.MENSAJEGRID : Me.grdClasicaChip.DataBind()
                 End If
                 '/*----------------------------------------------------------------------*/
 
@@ -170,20 +185,15 @@ Partial Class ReporteEstadisticos
                     Me.GridView5.DataSource = menus.MENSAJEGRID : Me.GridView5.DataBind()
                 End If
                 '/*----------------------------------------------------------------------*/
-
             ElseIf Me.ddltiendas.SelectedValue = 0 And (idtienda = 0 Or idtienda = Nothing) And Me.ddltiporeporte.SelectedValue = 2 Then
                 '/*Mostrar Todo Reporte Marcas*/
-
                 Call HabilitarTodos(False)
-                Me.Button8.Visible = True : Me.Button9.Visible = True : Me.Button10.Visible = True : Me.Button11.Visible = False
-                Me.Button12.Visible = False : Me.Button13.Visible = False : Me.Button14.Visible = False : Me.Button15.Visible = False : Me.Button16.Visible = False : Me.Button17.Visible = False
-
                 Me.GridView2.Visible = True : Me.GridView3.Visible = True
-                Me.GridView4.Visible = False : Me.GridView5.Visible = False
-                Me.Button11.Visible = False : Me.Button12.Visible = False
-                Me.gvdetalle.Visible = False : Me.gvdetalle2.Visible = False : Me.gvdetalle3.Visible = False : Me.gvdetalle4.Visible = False : Me.gvdetalle5.Visible = False
-                '/*GridView1--------------------------------------------------------------*/
+                Me.Button8.Visible = True : Me.Button9.Visible = True : Me.Button10.Visible = True
+                Me.grdClasicaChip.Visible = False : Me.GridView4.Visible = False : Me.GridView5.Visible = False
+                Me.gvdetalle.Visible = False : Me.grdClasicaChipDetalle.Visible = False : Me.gvdetalle2.Visible = False : Me.gvdetalle3.Visible = False : Me.gvdetalle4.Visible = False : Me.gvdetalle5.Visible = False
 
+                '/*GridView1--------------------------------------------------------------*/
                 dts.Clear()
                 dts = menus.sp_contar_consultas("1", "2", "1", Me.ddltiendas.SelectedValue, f1, f2)
                 If dts.Tables("consulta").Rows.Count > 0 Then
@@ -194,7 +204,6 @@ Partial Class ReporteEstadisticos
                     Me.GridView1.DataSource = menus.MENSAJEGRID : Me.GridView1.DataBind()
                 End If
                 '/*----------------------------------------------------------------------*/
-
                 '/*GridView2-----agrupar las tarjetas---------------------------------------------------------*/
                 dts.Clear()
                 dts = menus.sp_contar_consultas("1", "2", "2", Me.ddltiendas.SelectedValue, f1, f2)
@@ -219,11 +228,10 @@ Partial Class ReporteEstadisticos
                 End If
                 '/*----------------------------------------------------------------------*/
             ElseIf Me.ddltiendas.SelectedValue > 0 And (idtienda = 0 Or idtienda = Nothing) And Me.ddltiporeporte.SelectedValue = 1 Then
-
                 Call HabilitarTodos(True)
-                Me.GridView4.Visible = True : Me.GridView5.Visible = True
-                'Me.Button11.Visible = True : Me.Button12.Visible = True
-                Me.gvdetalle.Visible = True : Me.gvdetalle2.Visible = True : Me.gvdetalle3.Visible = True : Me.gvdetalle4.Visible = True : Me.gvdetalle5.Visible = True
+                Me.grdClasicaChip.Visible = True : Me.GridView4.Visible = True : Me.GridView5.Visible = True
+                Me.gvdetalle.Visible = True : Me.grdClasicaChipDetalle.Visible = True : Me.gvdetalle2.Visible = True : Me.gvdetalle3.Visible = True : Me.gvdetalle4.Visible = True : Me.gvdetalle5.Visible = True
+
                 'Mostrar Todo Reporte:Producto
                 '/*GridView1--------------------------------------------------------------*/
                 dts.Clear()
@@ -234,6 +242,18 @@ Partial Class ReporteEstadisticos
                 Else
                     existenRegistros0 = False
                     Me.GridView1.DataSource = menus.MENSAJEGRID : Me.GridView1.DataBind()
+                End If
+                '/*----------------------------------------------------------------------*/
+
+                '/*grdClasicaChip--------------------------------------------------------------*/
+                dts.Clear()
+                dts = menus.sp_contar_consultas("1", "1", "7", Me.ddltiendas.SelectedValue, f1, f2)
+                If dts.Tables("consulta").Rows.Count > 0 Then
+                    existenRegistrosClasicaChip = True
+                    Me.grdClasicaChip.DataSource = dts : Me.grdClasicaChip.DataBind()
+                Else
+                    existenRegistrosClasicaChip = False
+                    Me.grdClasicaChip.DataSource = menus.MENSAJEGRID : Me.grdClasicaChip.DataBind()
                 End If
                 '/*----------------------------------------------------------------------*/
 
@@ -298,6 +318,18 @@ Partial Class ReporteEstadisticos
                 End If
                 '/*----------------------------------------------------------------------*/
 
+                '/*grdClasicaChipDetalle--------------------------------------------------------------*/
+                dts.Clear()
+                dts = menus.sp_contar_consultas("2", "1", "7", Me.ddltiendas.SelectedValue, f1, f2)
+                If dts.Tables("consulta").Rows.Count > 0 Then
+                    existenRegistros5 = True
+                    Me.grdClasicaChipDetalle.DataSource = dts : Me.grdClasicaChipDetalle.DataBind()
+                Else
+                    existenRegistros5 = False
+                    Me.grdClasicaChipDetalle.DataSource = menus.MENSAJEGRID : Me.grdClasicaChipDetalle.DataBind()
+                End If
+                '/*----------------------------------------------------------------------*/
+
                 '/*gvdetalle2--------------------------------------------------------------*/
                 dts.Clear()
                 dts = menus.sp_contar_consultas("2", "1", "2", Me.ddltiendas.SelectedValue, f1, f2)
@@ -345,19 +377,15 @@ Partial Class ReporteEstadisticos
                     Me.gvdetalle5.DataSource = menus.MENSAJEGRID : Me.gvdetalle5.DataBind()
                 End If
                 '/*----------------------------------------------------------------------*/
-
-
             ElseIf Me.ddltiendas.SelectedValue > 0 And (idtienda = 0 Or idtienda = Nothing) And Me.ddltiporeporte.SelectedValue = 2 Then
                 '/*Mostrar Todo Reporte Marcas*/
                 Call HabilitarTodos(True)
-                Me.Button11.Visible = False
-                Me.Button16.Visible = False : Me.Button17.Visible = False
+                Me.grdClasicaChip.Visible = False : Me.GridView4.Visible = False : Me.GridView5.Visible = False
+                Me.btnClasicaChip.Visible = False : Me.Button11.Visible = False : Me.Button12.Visible = False
+                Me.gvdetalle.Visible = True : Me.gvdetalle2.Visible = True : Me.gvdetalle3.Visible = True
+                Me.grdClasicaChipDetalle.Visible = False : Me.gvdetalle4.Visible = False : Me.gvdetalle5.Visible = False
+                Me.btnClasicaChipDetalle.Visible = False : Me.Button16.Visible = False : Me.Button17.Visible = False
 
-
-
-                Me.GridView4.Visible = False : Me.GridView5.Visible = False
-                Me.Button11.Visible = False : Me.Button12.Visible = False
-                Me.gvdetalle.Visible = True : Me.gvdetalle2.Visible = True : Me.gvdetalle3.Visible = True : Me.gvdetalle4.Visible = False : Me.gvdetalle5.Visible = False
                 '/*GridView1--------------------------------------------------------------*/
                 dts.Clear()
                 dts = menus.sp_contar_consultas("1", "2", "1", Me.ddltiendas.SelectedValue, f1, f2)
@@ -431,25 +459,9 @@ Partial Class ReporteEstadisticos
                 '/*----------------------------------------------------------------------*/
             End If
             If Me.ddltiporeporte.SelectedValue = 3 Then
-                Call HabilitarTodos(True)
-                Me.GridView2.Visible = False
-                Me.GridView3.Visible = False
-                Me.GridView4.Visible = False
-                Me.GridView5.Visible = False
-                Me.Button9.Visible = False
-                Me.Button10.Visible = False
-                Me.Button11.Visible = False
-                Me.Button12.Visible = False
-                Me.gvdetalle.Visible = False
-                Me.gvdetalle2.Visible = False
-                Me.gvdetalle3.Visible = False
-                Me.gvdetalle4.Visible = False
-                Me.gvdetalle5.Visible = False
-                Me.Button13.Visible = False
-                Me.Button14.Visible = False
-                Me.Button15.Visible = False
-                Me.Button16.Visible = False
-                Me.Button17.Visible = False
+                Call HabilitarTodos(False)
+                Me.grdClasicaChip.Visible = False : Me.GridView4.Visible = False : Me.GridView5.Visible = False
+                Me.gvdetalle.Visible = False : Me.grdClasicaChipDetalle.Visible = False : Me.gvdetalle2.Visible = False : Me.gvdetalle3.Visible = False : Me.gvdetalle4.Visible = False : Me.gvdetalle5.Visible = False
                 'Mostrar Todo Reporte:Producto
                 '/*GridView1--------------------------------------------------------------*/
                 dts.Clear()
@@ -537,47 +549,44 @@ Partial Class ReporteEstadisticos
         'Call MOSTRAR(Me.GridView1)
         Call exportarExcel(Me.GridView1)
     End Sub
-
+    Protected Sub btnClasicaChip_Click(sender As Object, e As System.EventArgs) Handles btnClasicaChip.Click
+        Call exportarExcel(Me.grdClasicaChip)
+    End Sub
     Protected Sub Button9_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button9.Click
         'Call MOSTRAR(Me.GridView2)
         Call exportarExcel(Me.GridView2)
     End Sub
-
     Protected Sub Button10_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button10.Click
         'Call MOSTRAR(Me.GridView3)
         Call exportarExcel(Me.GridView3)
     End Sub
-
     Protected Sub Button11_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button11.Click
         'Call MOSTRAR(Me.GridView4)
         Call exportarExcel(Me.GridView4)
     End Sub
-
     Protected Sub Button12_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button12.Click
         'Call MOSTRAR(Me.GridView5)
         Call exportarExcel(Me.GridView5)
     End Sub
-
     Protected Sub Button13_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button13.Click
         'Call MOSTRAR(Me.gvdetalle)
         Call exportarExcel(Me.gvdetalle)
     End Sub
-
+    Protected Sub btnClasicaChipDetalle_Click(sender As Object, e As System.EventArgs) Handles btnClasicaChipDetalle.Click
+        Call exportarExcel(Me.grdClasicaChipDetalle)
+    End Sub
     Protected Sub Button14_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button14.Click
         'Call MOSTRAR(Me.gvdetalle2)
         Call exportarExcel(Me.gvdetalle2)
     End Sub
-
     Protected Sub Button15_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button15.Click
         'Call MOSTRAR(Me.gvdetalle3)
         Call exportarExcel(Me.gvdetalle3)
     End Sub
-
     Protected Sub Button16_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button16.Click
         'Call MOSTRAR(Me.gvdetalle4)
         Call exportarExcel(Me.gvdetalle4)
     End Sub
-
     Protected Sub Button17_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button17.Click
         'Call MOSTRAR(Me.gvdetalle5)
         Call exportarExcel(Me.gvdetalle5)
@@ -600,7 +609,6 @@ Partial Class ReporteEstadisticos
         Else
             lblhasta.Visible = False
         End If
-
 
         Dim rep As String = ""
         rep = Microsoft.VisualBasic.Trim(Me.ddltiporeporte.SelectedItem.Text)
@@ -636,11 +644,13 @@ Partial Class ReporteEstadisticos
         Me.GridView3.Visible = valor
         'Me.Button7.Visible = valor
         Me.Button8.Visible = valor
+        Me.btnClasicaChip.Visible = valor
         Me.Button9.Visible = valor
         Me.Button10.Visible = valor
         Me.Button11.Visible = valor
         Me.Button12.Visible = valor
         Me.Button13.Visible = valor
+        Me.btnClasicaChipDetalle.Visible = valor
         Me.Button14.Visible = valor
         Me.Button15.Visible = valor
         Me.Button16.Visible = valor
@@ -652,13 +662,10 @@ Partial Class ReporteEstadisticos
         Try
             Response.Redirect("welcome.aspx")
         Catch ex As Exception
-
         End Try
     End Sub
 
     Private Function ObtenerHabilitados(ByVal dt As DataTable) As DataTable
-
-
         Dim dtTempTienda As New DataTable
 
         dtTempTienda.Columns.Add("ID")
@@ -736,11 +743,13 @@ Partial Class ReporteEstadisticos
     End Sub
     Public Sub IniciarVariables()
         feet0 = 0
+        feetClasicaChip = 0
         feet1 = 0
         feet2 = 0
         feet3 = 0
         feet4 = 0
         feet5 = 0
+        feetClasicaChipDetalle = 0
         feet6 = 0
         feet7 = 0
         feet8 = 0
@@ -749,7 +758,6 @@ Partial Class ReporteEstadisticos
 
     Public Sub GridView1_RowCreated(sender As Object, e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles GridView1.RowCreated
         If existenRegistros0 Then
-
             If e.Row.RowType = DataControlRowType.Footer Then
                 Dim cantColumnas As Integer = e.Row.Cells.Count
                 Dim colsTexto As Integer = 3
@@ -793,6 +801,55 @@ Partial Class ReporteEstadisticos
                 If feet0 = 0 Then
                     GridView1.Controls(0).Controls.Add(rowFooter1)
                     feet0 = 1
+                End If
+            End If
+        End If
+    End Sub
+    Protected Sub grdClasicaChip_RowCreated(sender As Object, e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles grdClasicaChip.RowCreated
+        If existenRegistrosClasicaChip Then
+            If e.Row.RowType = DataControlRowType.Footer Then
+                Dim cantColumnas As Integer = e.Row.Cells.Count
+                Dim colsTexto As Integer = 3
+                Dim colsHidden As Integer = 1
+
+                Dim rowFooter1 As GridViewRow = New GridViewRow(0, 0, DataControlRowType.Footer, DataControlRowState.Normal)
+                Dim listaCeldas As List(Of TableCell) = New List(Of TableCell)
+                Dim footerCell As TableCell
+                For index = 0 To cantColumnas - 1
+                    footerCell = New TableCell()
+                    listaCeldas.Add(footerCell)
+                Next
+
+                listaCeldas(0).ColumnSpan = (colsTexto - colsHidden)
+                listaCeldas(0).Text = "TOTAL"
+                listaCeldas(0).HorizontalAlign = HorizontalAlign.Center
+                listaCeldas(0).BackColor = Drawing.Color.LightGray
+
+
+                Dim listaSumas As List(Of Integer) = New List(Of Integer)
+                Dim footerSum As Integer
+                For index = 0 To cantColumnas - (colsTexto + 1)
+                    footerSum = 0
+                    listaSumas.Add(footerSum)
+                Next
+
+                For i = 0 To Me.grdClasicaChip.Rows.Count - 1
+                    For j As Integer = colsTexto To Me.grdClasicaChip.Rows(i).Cells.Count - 1
+                        listaSumas(j - colsTexto) = listaSumas(j - colsTexto) + CInt(IIf(Me.grdClasicaChip.Rows(i).Cells(j).Text = "" Or Me.grdClasicaChip.Rows(i).Cells(j).Text = "&nbsp;", 0, Me.grdClasicaChip.Rows(i).Cells(j).Text))
+                    Next
+                Next
+
+                rowFooter1.Cells.Add(listaCeldas(0))
+
+                For index = 0 To listaCeldas.Count - (colsTexto + 1)
+                    listaCeldas(index + colsTexto).Text = listaSumas(index)
+                    listaCeldas(index + colsTexto).BackColor = Drawing.Color.LightGray
+                    rowFooter1.Cells.Add(listaCeldas(index + colsTexto))
+                Next
+
+                If feetClasicaChip = 0 Then
+                    grdClasicaChip.Controls(0).Controls.Add(rowFooter1)
+                    feetClasicaChip = 1
                 End If
             End If
         End If
@@ -1043,6 +1100,54 @@ Partial Class ReporteEstadisticos
                 If feet5 = 0 Then
                     gvdetalle.Controls(0).Controls.Add(rowFooter1)
                     feet5 = 1
+                End If
+            End If
+        End If
+    End Sub
+    Protected Sub grdClasicaChipDetalle_RowCreated(sender As Object, e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles grdClasicaChipDetalle.RowCreated
+        If existenRegistrosClasicaChipDetalle Then
+            If e.Row.RowType = DataControlRowType.Footer Then
+                Dim cantColumnas As Integer = e.Row.Cells.Count
+                Dim colsTexto As Integer = 2
+                Dim colsHidden As Integer = 0
+
+                Dim rowFooter1 As GridViewRow = New GridViewRow(0, 0, DataControlRowType.Footer, DataControlRowState.Normal)
+                Dim listaCeldas As List(Of TableCell) = New List(Of TableCell)
+                Dim footerCell As TableCell
+                For index = 0 To cantColumnas - 1
+                    footerCell = New TableCell()
+                    listaCeldas.Add(footerCell)
+                Next
+
+                listaCeldas(0).ColumnSpan = (colsTexto - colsHidden)
+                listaCeldas(0).Text = "TOTAL"
+                listaCeldas(0).HorizontalAlign = HorizontalAlign.Center
+                listaCeldas(0).BackColor = Drawing.Color.LightGray
+
+                Dim listaSumas As List(Of Integer) = New List(Of Integer)
+                Dim footerSum As Integer
+                For index = 0 To cantColumnas - (colsTexto + 1)
+                    footerSum = 0
+                    listaSumas.Add(footerSum)
+                Next
+
+                For i = 0 To Me.grdClasicaChipDetalle.Rows.Count - 1
+                    For j As Integer = colsTexto To Me.grdClasicaChipDetalle.Rows(i).Cells.Count - 1
+                        listaSumas(j - colsTexto) = listaSumas(j - colsTexto) + CInt(IIf(Me.grdClasicaChipDetalle.Rows(i).Cells(j).Text = "" Or Me.grdClasicaChipDetalle.Rows(i).Cells(j).Text = "&nbsp;", 0, Me.grdClasicaChipDetalle.Rows(i).Cells(j).Text))
+                    Next
+                Next
+
+                rowFooter1.Cells.Add(listaCeldas(0))
+
+                For index = 0 To listaCeldas.Count - (colsTexto + 1)
+                    listaCeldas(index + colsTexto).Text = listaSumas(index)
+                    listaCeldas(index + colsTexto).BackColor = Drawing.Color.LightGray
+                    rowFooter1.Cells.Add(listaCeldas(index + colsTexto))
+                Next
+
+                If feetClasicaChipDetalle = 0 Then
+                    grdClasicaChipDetalle.Controls(0).Controls.Add(rowFooter1)
+                    feetClasicaChipDetalle = 1
                 End If
             End If
         End If

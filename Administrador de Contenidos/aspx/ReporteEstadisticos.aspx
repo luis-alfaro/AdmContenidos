@@ -131,11 +131,33 @@
         <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
         <AlternatingRowStyle BackColor="White" />
     </asp:GridView>
-
     <asp:Button ID="Button8" runat="server" Text="Exportar a Excel" 
         CssClass="button" />
     </div><br><br />
     <div class="scrolling">
+    
+    <asp:GridView ID="grdClasicaChip" runat="server" BackColor="White" 
+        BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" 
+        ForeColor="Black" Font-Size="Small">
+        <RowStyle BackColor="#F7F7DE" />
+        <Columns>
+            <asp:TemplateField HeaderText="Acciones" Visible="False">
+                <ItemTemplate>
+                    <asp:HyperLink ID="lnkver0" runat="server">Detalles</asp:HyperLink>
+                </ItemTemplate>
+            </asp:TemplateField>
+        </Columns>
+        <FooterStyle BackColor="#CCCC99" />
+        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
+        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
+        <AlternatingRowStyle BackColor="White" />
+    </asp:GridView>
+    <asp:Button ID="btnClasicaChip" runat="server" Text="Exportar a Excel" 
+        CssClass="button" />
+    </div><br><br />
+    <div class="scrolling">
+    
     <asp:GridView ID="GridView2" runat="server" BackColor="White" 
         BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" 
         ForeColor="Black" Font-Size="Small">
@@ -214,8 +236,21 @@
     <asp:Button ID="Button13" runat="server" Text="Exportar a Excel" CssClass="button"/>
     
     </div><br><br>
-    <div class="scroll">
+    <div class="scroll">    
+    <asp:GridView ID="grdClasicaChipDetalle" runat="server" BackColor="White" 
+        BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" 
+        ForeColor="Black" Font-Size="Small">
+        <RowStyle BackColor="#F7F7DE" />
+        <FooterStyle BackColor="#CCCC99" />
+        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
+        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
+        <AlternatingRowStyle BackColor="White" />
+    </asp:GridView>
+    <asp:Button ID="btnClasicaChipDetalle" runat="server" Text="Exportar a Excel" CssClass="button"/>    
+    </div><br><br>
 
+    <div class="scroll">
     <asp:GridView ID="gvdetalle2" runat="server" BackColor="White" 
         BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" 
         ForeColor="Black" Font-Size="Small">
