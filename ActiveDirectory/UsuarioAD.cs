@@ -11,11 +11,22 @@ namespace AdministradorContenidos.ActiveDirectory
 
         private UsuarioAD() { }
 
-        public bool Login(string username, string password)
+        public bool LoginBanco(string username, string password)
         {
-            string connectionAD = ConfigurationManager.AppSettings["ActiveDirectoryConnection"].ToString();
-            string domainAD = ConfigurationManager.AppSettings["ActiveDirectoryDomain"].ToString();
+            string connectionAD = ConfigurationManager.AppSettings["LDAPBancoConnection"].ToString();
+            string domainAD = ConfigurationManager.AppSettings["LDAPBancoDomain"].ToString();
+            return this.Login(connectionAD, domainAD, username, password);
+        }
 
+        public bool LoginTienda(string username, string password)
+        {
+            string connectionAD = ConfigurationManager.AppSettings["LDAPTiendaConnection"].ToString();
+            string domainAD = ConfigurationManager.AppSettings["LDAPTiendaDomain"].ToString();
+            return this.Login(connectionAD, domainAD, username, password);
+        }
+
+        private bool Login(string connectionAD, string domainAD, string username, string password)
+        {
             using (DirectoryEntry entryAD = new DirectoryEntry(connectionAD, domainAD + @"\" + username, password))
             {
                 using (DirectorySearcher searchAD = new DirectorySearcher(entryAD))

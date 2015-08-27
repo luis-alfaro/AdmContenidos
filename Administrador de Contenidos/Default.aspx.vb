@@ -55,18 +55,33 @@ Public Class _Default
         Dim username As String = txtLogin.Value
         Dim password As String = txtPassword.Value
         Dim IsLoggedAD As Boolean = False
+        Dim errorMessage As String = ""
 
-        'Codigo4444
         'Active Directory
         '----------------
-        'Try
-        '    IsLoggedAD = UsuarioAD.Instance.Login(username, password)
-        'Catch ex As Exception
-        '    Log.ErrorLog(ex.Message)
-        '    Dim errorMessage As String = ex.Message.Replace(System.Environment.NewLine, "")
-        '    Response.Redirect("aspx/error.aspx?mensajeerror=" + errorMessage)
-        '    Return
-        'End Try
+        Try
+            IsLoggedAD = UsuarioAD.Instance.LoginBanco(username, password)
+        Catch ex As Exception
+            errorMessage = ex.Message.Replace(System.Environment.NewLine, "")
+            Log.ErrorLog("Error al loguearse en banco")
+            Log.ErrorLog(errorMessage)
+        End Try
+        If Not IsLoggedAD Then
+            Try
+                IsLoggedAD = UsuarioAD.Instance.LoginTienda(username, password)
+            Catch ex As Exception
+                errorMessage = ex.Message.Replace(System.Environment.NewLine, "")
+                Log.ErrorLog("Error al loguearse en tienda")
+                Log.ErrorLog(errorMessage)
+            End Try
+        End If
+        If Not IsLoggedAD Then
+            If errorMessage = "" Then
+                errorMessage = "No se encontró información para las credenciales buscadas."
+            End If
+            Response.Redirect("aspx/error.aspx?mensajeerror=" + errorMessage)
+            Return
+        End If
 
 
         Dim oDataTable As New DataTable
@@ -84,9 +99,9 @@ Public Class _Default
         Try
             strSQL = "SELECT app_UserAcoount.UserID, app_UserAcoount.FullNames, app_UserAcoount.Enabled, app_UserAcoount.Owner, app_UserAcoount.ChangePassword, app_UserAcoount.RoleID"
             strSQL = strSQL & " FROM  app_UserAcoount"
-            strSQL = strSQL & " WHERE (app_UserAcoount.Flag_ToDelete = 0) AND (app_UserAcoount.UserName = '" & username & "') AND (app_UserAcoount.Password = '" & password & "')"
+            'strSQL = strSQL & " WHERE (app_UserAcoount.Flag_ToDelete = 0) AND (app_UserAcoount.UserName = '" & username & "') AND (app_UserAcoount.Password = '" & password & "')"
             'Codigo4444
-            'strSQL = strSQL & " WHERE (app_UserAcoount.Flag_ToDelete = 0) AND (app_UserAcoount.UserName = '" & username & "')"
+            strSQL = strSQL & " WHERE (app_UserAcoount.Flag_ToDelete = 0) AND (app_UserAcoount.UserName = '" & username & "')"
             SQL_ExecuteDataTable(oConexion, strSQL, oDataTable)
             SQL_ConnectionClose(oConexion)
         Catch ex As Exception
@@ -119,11 +134,7 @@ Public Class _Default
     End Sub
 
     Protected Sub btniniciar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btniniciar.Click
-        'Iniciar la validacion del usuario
-
-        Log.ErrorLog("btniniciar_Click")
         Call m_ValidarUsuario()
-
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load

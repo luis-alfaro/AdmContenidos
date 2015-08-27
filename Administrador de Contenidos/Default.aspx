@@ -45,7 +45,7 @@
         <link href="estilos/Estilos.css" rel=Stylesheet type="text/css" />
 	</HEAD>
 	<BODY leftMargin="0" topMargin="0" bgcolor="#545454"><center>
-		z<TABLE background="images/back.png"id="table1" 
+		<TABLE background="images/back.png"id="table1" 
             style="FONT-SIZE: 8pt; FONT-FAMILY: Verdana; height: 616px; width: 85%;" 
             cellSpacing="0" width:1024px;
 			cellPadding="0" border="0">
