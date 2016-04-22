@@ -59,29 +59,30 @@ Public Class _Default
 
         'Active Directory
         '----------------
-        Try
-            IsLoggedAD = UsuarioAD.Instance.LoginBanco(username, password)
-        Catch ex As Exception
-            errorMessage = ex.Message.Replace(System.Environment.NewLine, "")
-            Log.ErrorLog("Error al loguearse en banco")
-            Log.ErrorLog(errorMessage)
-        End Try
-        If Not IsLoggedAD Then
-            Try
-                IsLoggedAD = UsuarioAD.Instance.LoginTienda(username, password)
-            Catch ex As Exception
-                errorMessage = ex.Message.Replace(System.Environment.NewLine, "")
-                Log.ErrorLog("Error al loguearse en tienda")
-                Log.ErrorLog(errorMessage)
-            End Try
-        End If
-        If Not IsLoggedAD Then
-            If errorMessage = "" Then
-                errorMessage = "No se encontró información para las credenciales buscadas."
-            End If
-            Response.Redirect("aspx/error.aspx?mensajeerror=" + errorMessage)
-            Return
-        End If
+        IsLoggedAD = True
+        'Try
+        '    IsLoggedAD = UsuarioAD.Instance.LoginBanco(username, password)
+        'Catch ex As Exception
+        '    errorMessage = ex.Message.Replace(System.Environment.NewLine, "")
+        '    Log.ErrorLog("Error al loguearse en banco")
+        '    Log.ErrorLog(errorMessage)
+        'End Try
+        'If Not IsLoggedAD Then
+        '    Try
+        '        IsLoggedAD = UsuarioAD.Instance.LoginTienda(username, password)
+        '    Catch ex As Exception
+        '        errorMessage = ex.Message.Replace(System.Environment.NewLine, "")
+        '        Log.ErrorLog("Error al loguearse en tienda")
+        '        Log.ErrorLog(errorMessage)
+        '    End Try
+        'End If
+        'If Not IsLoggedAD Then
+        '    If errorMessage = "" Then
+        '        errorMessage = "No se encontró información para las credenciales buscadas."
+        '    End If
+        '    Response.Redirect("aspx/error.aspx?mensajeerror=" + errorMessage)
+        '    Return
+        'End If
 
 
         Dim oDataTable As New DataTable
