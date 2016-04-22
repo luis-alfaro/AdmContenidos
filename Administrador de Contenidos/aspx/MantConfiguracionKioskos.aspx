@@ -178,6 +178,40 @@
 			    <td style="width: 50px;" >
                 </td>
 			</tr>
+			
+            <tr>
+			    <td style="height: 10px; width: 38px;" >&nbsp;</td>
+			    <td style="height: 10px; width: 620px;" ></td>
+			    <td style="width: 50px; height: 10px;" ></td>
+			    <td style="width: 50px; height: 10px;" >&nbsp;</td>
+			</tr>
+            <tr>
+			    <td style="width: 38px;" >
+                </td>
+			    <td style="width: 620px;" >
+                    <table style="width:100%; height: 72px;">                    
+                        <tr>
+                            <td style="width: 160px">Intentos Fallidos (PIN4):</td>
+                            <td style="width: 320px">
+                                <input id="txtPin4Intentos" type="text" onchange="validarSiNumero(this.value);" runat="server" style="width: 80px"/>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 160px">Horas Bloqueo (PIN4):</td>
+                            <td style="width: 320px">
+                                <input id="txtPin4HorasBloqueo" type="text" onchange="validarSiNumero(this.value);" runat="server" style="width: 80px"/>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </td>
+			    <td style="width: 50px;" >
+                </td>
+			    <td style="width: 50px;" >
+                </td>
+			</tr>
+
 			<tr>
 			    <td style="height: 8px; width: 38px;">&nbsp;</td>
 			    <td style="height: 8px; width: 620px;">&nbsp;</td>

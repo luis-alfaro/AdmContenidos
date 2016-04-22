@@ -57,27 +57,29 @@ Public Class kioskos
     End Function
 
     Public Function grabarConfiguracionKiosko(ByVal ID As Integer, _
-                           ByVal NOMBRE As String, _
-                           ByVal SERVER As String, _
-                           ByVal SERVER_SIMULADOR As String, _
-                           ByVal SERVER_PRINT As String, _
-                           ByVal SERVER_COM As String, _
-                           ByVal BIN1 As String, _
-                           ByVal LONGITUD_TARJETA_BIN1 As Integer, _
-                           ByVal POSINI_BIN1 As Integer, _
-                           ByVal LONGITUD_BIN_BIN1 As Integer, _
-                           ByVal BIN2 As String, _
-                           ByVal LONGITUD_TARJETA_BIN2 As Integer, _
-                           ByVal POSINI_BIN2 As Integer, _
-                           ByVal LONGITUD_BIN_BIN2 As Integer, _
+                        ByVal NOMBRE As String, _
+                        ByVal SERVER As String, _
+                        ByVal SERVER_SIMULADOR As String, _
+                        ByVal SERVER_PRINT As String, _
+                        ByVal SERVER_COM As String, _
+                        ByVal BIN1 As String, _
+                        ByVal LONGITUD_TARJETA_BIN1 As Integer, _
+                        ByVal POSINI_BIN1 As Integer, _
+                        ByVal LONGITUD_BIN_BIN1 As Integer, _
+                        ByVal BIN2 As String, _
+                        ByVal LONGITUD_TARJETA_BIN2 As Integer, _
+                        ByVal POSINI_BIN2 As Integer, _
+                        ByVal LONGITUD_BIN_BIN2 As Integer, _
+                        ByVal PIN4_INTENTOS As Short, _
+                        ByVal PIN4_HORAS_BLOQUEO As Short, _
                         ByRef rpta As Integer, ByRef mensaje As String) As Integer
         Dim r As Integer = 0
         Try
             cn.abrirconexion()
-            cn.ejecutar("dbo.Usp_grabar_ConfiguracionKiosko", True, rpta, mensaje, _
-                        ID, NOMBRE, SERVER, SERVER_SIMULADOR, SERVER_PRINT, SERVER_COM, _
-                        BIN1, LONGITUD_TARJETA_BIN1, POSINI_BIN1, LONGITUD_BIN_BIN1, _
-                        BIN2, LONGITUD_TARJETA_BIN2, POSINI_BIN2, LONGITUD_BIN_BIN2, 0, "")
+            cn.ejecutar("dbo.Usp_grabar_ConfiguracionKiosko", True, rpta, mensaje, ID, NOMBRE, _
+                        SERVER, SERVER_SIMULADOR, SERVER_PRINT, SERVER_COM, BIN1, LONGITUD_TARJETA_BIN1, _
+                        POSINI_BIN1, LONGITUD_BIN_BIN1, BIN2, LONGITUD_TARJETA_BIN2, POSINI_BIN2, _
+                        LONGITUD_BIN_BIN2, PIN4_INTENTOS, PIN4_HORAS_BLOQUEO, 0, "")
             cn.cerrarconexion()
             r = 1
         Catch ex As Exception
