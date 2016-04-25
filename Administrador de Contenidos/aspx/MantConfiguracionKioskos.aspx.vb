@@ -40,6 +40,7 @@ Partial Class aspx_MantConfiguracionKioskos
 
                         Me.txtPin4Intentos.Value = dts.Tables("consulta").Rows(0).Item("PIN4_INTENTOS").ToString
                         Me.txtPin4HorasBloqueo.Value = dts.Tables("consulta").Rows(0).Item("PIN4_HORAS_BLOQUEO").ToString
+                        Me.txtPin4MensajeBloqueo.Value = dts.Tables("consulta").Rows(0).Item("PIN4_MENSAJE_BLOQUEO").ToString
                     End If
                 End If
 
@@ -53,11 +54,11 @@ Partial Class aspx_MantConfiguracionKioskos
     Protected Sub btngrabar_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btngrabar.Click
         Try
             If valor = "N" Then
-                If kio.grabarConfiguracionKiosko(0, txtnombre.Text, txtServer.Text, txtServerSimulador.Text, txtServerPrint.Text, txtServerCom.Text, txtBin1.Value, txtLongitudTarjetaBin1.Value, txtPosicionInicialBin1.Value, txtLongitudBinBin1.Value, txtBin2.Value, txtLongitudTarjetaBin2.Value, txtPosicionInicialBin2.Value, txtLongitudBinBin2.Value, txtPin4Intentos.Value, txtPin4HorasBloqueo.Value, rp, mensaje) >= 1 Then
+                If kio.grabarConfiguracionKiosko(0, txtnombre.Text, txtServer.Text, txtServerSimulador.Text, txtServerPrint.Text, txtServerCom.Text, txtBin1.Value, txtLongitudTarjetaBin1.Value, txtPosicionInicialBin1.Value, txtLongitudBinBin1.Value, txtBin2.Value, txtLongitudTarjetaBin2.Value, txtPosicionInicialBin2.Value, txtLongitudBinBin2.Value, txtPin4Intentos.Value, txtPin4HorasBloqueo.Value, txtPin4MensajeBloqueo.Value, rp, mensaje) >= 1 Then
                     Response.Redirect("ListadoConfiguracionKioskos.aspx")
                 End If
             Else
-                If kio.grabarConfiguracionKiosko(Me.hddID.Value, txtnombre.Text, txtServer.Text, txtServerSimulador.Text, txtServerPrint.Text, txtServerCom.Text, txtBin1.Value, txtLongitudTarjetaBin1.Value, txtPosicionInicialBin1.Value, txtLongitudBinBin1.Value, txtBin2.Value, txtLongitudTarjetaBin2.Value, txtPosicionInicialBin2.Value, txtLongitudBinBin2.Value, txtPin4Intentos.Value, txtPin4HorasBloqueo.Value, rp, mensaje) >= 1 Then
+                If kio.grabarConfiguracionKiosko(Me.hddID.Value, txtnombre.Text, txtServer.Text, txtServerSimulador.Text, txtServerPrint.Text, txtServerCom.Text, txtBin1.Value, txtLongitudTarjetaBin1.Value, txtPosicionInicialBin1.Value, txtLongitudBinBin1.Value, txtBin2.Value, txtLongitudTarjetaBin2.Value, txtPosicionInicialBin2.Value, txtLongitudBinBin2.Value, txtPin4Intentos.Value, txtPin4HorasBloqueo.Value, txtPin4MensajeBloqueo.Value, rp, mensaje) >= 1 Then
                     Response.Redirect("ListadoConfiguracionKioskos.aspx")
                 End If
             End If

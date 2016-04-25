@@ -38,7 +38,7 @@
 			    <td style="height: 10px; " colspan="4"> &nbsp;</td>
 			</tr>
 			<tr>
-			<td style="width: 38px; height="10px" >
+			<td style="width: 38px;" height="10px" >
                 </td>
 			<td style="width: 620px;" >
                 <table style="width:100%; height: 72px;">
@@ -189,7 +189,7 @@
 			    <td style="width: 38px;" >
                 </td>
 			    <td style="width: 620px;" >
-                    <table style="width:100%; height: 72px;">                    
+                    <table style="width:100%; height: 54px;">                    
                         <tr>
                             <td style="width: 160px">Intentos Fallidos (PIN4):</td>
                             <td style="width: 320px">
@@ -201,6 +201,13 @@
                             <td style="width: 160px">Horas Bloqueo (PIN4):</td>
                             <td style="width: 320px">
                                 <input id="txtPin4HorasBloqueo" type="text" onchange="validarSiNumero(this.value);" runat="server" style="width: 80px"/>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 160px">Mensaje Bloqueo (PIN4):</td>
+                            <td style="width: 320px">
+                                <input id="txtPin4MensajeBloqueo" type="text" runat="server" style="width: 320px"/>
                             </td>
                             <td></td>
                         </tr>
