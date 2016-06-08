@@ -28,16 +28,16 @@ Partial Class MasterPage
 
             If lista.Count > 0 Then
                 For Each entidad As AppAccess In lista
-                    If entidad.Estado = True Then
-                        If entidad.ChildNode > 0 Then
-                            TViewIndice.Nodes.Item(entidad.Node - 1).ChildNodes.Item(entidad.ChildNode - 1).SelectAction = TreeNodeSelectAction.Select
+                    Dim oSelectAction As TreeNodeSelectAction = IIf(entidad.Estado, TreeNodeSelectAction.Select, TreeNodeSelectAction.None)
+                    Dim oTreeNode As TreeNode = Nothing
+
+                    If entidad.Node <= TViewIndice.Nodes.Count Then
+                        oTreeNode = TViewIndice.Nodes.Item(entidad.Node - 1)
+
+                        If entidad.ChildNode > 0 And entidad.ChildNode <= oTreeNode.ChildNodes.Count Then
+                            oTreeNode.ChildNodes.Item(entidad.ChildNode - 1).SelectAction = oSelectAction
                         End If
-                        TViewIndice.Nodes.Item(entidad.Node - 1).SelectAction = TreeNodeSelectAction.Select
-                    Else
-                        If entidad.ChildNode > 0 Then
-                            TViewIndice.Nodes.Item(entidad.Node - 1).ChildNodes.Item(entidad.ChildNode - 1).SelectAction = TreeNodeSelectAction.None
-                        End If
-                        TViewIndice.Nodes.Item(entidad.Node - 1).SelectAction = TreeNodeSelectAction.None
+                        oTreeNode.SelectAction = oSelectAction
                     End If
                 Next
             End If
