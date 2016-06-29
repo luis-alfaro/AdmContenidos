@@ -29,7 +29,7 @@ Public Class _Global
     Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
         ' Código que se ejecuta al iniciarse la aplicación
         'Register the default hubs route: ~/signalr
-        RouteTable.Routes.MapHubs()
+        'RouteTable.Routes.MapHubs()
     End Sub
 
     Sub Application_End(ByVal sender As Object, ByVal e As EventArgs)

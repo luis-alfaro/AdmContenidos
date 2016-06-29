@@ -464,26 +464,10 @@ Inherits="aspx_EdicionRipleyMatico" %>
                                 ToolTip="pop"></asp:TreeNode>
                         </asp:TreeNode>
                         <asp:TreeNode Text="Productos" Value="\productos">
-                            <asp:TreeNode Text="Ripley Clásica" Value="\productos\ripley_clasica"  ToolTip="dcl"></asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Silver Visa" Value="\productos\ripley_silver_visa" ToolTip="dsv"></asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Silver Mastercard" Value="\productos\ripley_silver_mc" ToolTip="dsm"></asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Gold MasterCard" Value="\productos\ripley_gold_mc" ToolTip="dgm"></asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Platinun " Value="\productos\ripley_platinum_visa" ToolTip="dpl"></asp:TreeNode>
-                            <asp:TreeNode Text="CTS" Value="\productos\cts" ToolTip="dct"></asp:TreeNode>
-                            <asp:TreeNode Text="Depósito a Plazo" Value="\productos\deposito_plazo" ToolTip="ddp"></asp:TreeNode>
-                            <asp:TreeNode Text="Ahorros" Value="\productos\ahorros" ToolTip="dah"></asp:TreeNode>
-                            <asp:TreeNode Text="Préstamos en Efectivos" Value="\productos\prestamos" ToolTip="dpe"></asp:TreeNode>
+                            <asp:TreeNode Text="Universal" Value="\productos\universal"  ToolTip="dcl"></asp:TreeNode>
                         </asp:TreeNode>
                         <asp:TreeNode Text="Tasas y Tarifas" Value="\tasas_tarifas">
-                            <asp:TreeNode Text="Ripley Clásica" Value="\tasas_tarifas\t_clasica" ToolTip="tcl"></asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Silver Visa" Value="\tasas_tarifas\t_silver_visa" ToolTip="tsv"></asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Silver Mastercard" Value="\tasas_tarifas\t_silver_mc" ToolTip="tsm"></asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Gold MasterCard" Value="\tasas_tarifas\t_gold_mc" ToolTip="tgm"></asp:TreeNode>
-                            <asp:TreeNode Text="Ripley Platinun" Value="\tasas_tarifas\t_platinum" ToolTip="tpl"></asp:TreeNode>
-                            <asp:TreeNode Text="CTS" Value="\tasas_tarifas\cts" ToolTip="tct"></asp:TreeNode>
-                            <asp:TreeNode Text="Depósito a Plazo" Value="\tasas_tarifas\deposito_plazo" ToolTip="tdp"></asp:TreeNode>
-                            <asp:TreeNode Text="Ahorros" Value="\tasas_tarifas\ahorros" ToolTip="tah"></asp:TreeNode>
-                            <asp:TreeNode Text="Préstamos en Efectivo" Value="\tasas_tarifas\prestamo_efectivo" ToolTip="tpe"></asp:TreeNode>
+                            <asp:TreeNode Text="Universal" Value="\tasas_tarifas\universal" ToolTip="tcl"></asp:TreeNode>
                         </asp:TreeNode>
                         <asp:TreeNode Text="Agencias" Value="\agencias" ToolTip="aag"></asp:TreeNode>
                         <asp:TreeNode Text="Documentos SEF" Value="\documentosSEF">

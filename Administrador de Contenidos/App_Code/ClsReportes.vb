@@ -51,44 +51,33 @@ Public Class ClsReportes
                                         ByVal f1 As DateTime, _
                                         ByVal f2 As DateTime) As DataSet
         Dim dts As New DataSet
-        cn.abrirconexion()
-        'Dim d1, d2, d4, d3 As String
-        'd1 = "" : d2 = ""
-        'Dim a, b, c, d As Integer
-        'a = Day(f1)
-        'b = Day(f2)
-        'c = Month(f1)
-        'd = Month(f2)
-        'If a < 10 Then
-        '    d1 = "0" & Day(f1)
-        'Else
-        '    d1 = a
-        'End If
-
-        'If b < 10 Then
-        '    d2 = "0" & Day(f2)
-        'Else
-        '    d2 = b
-        'End If
-
-        'If c < 10 Then
-        '    d3 = "0" & Month(f1)
-        'Else
-        '    d3 = c
-        'End If
-
-        'If d < 10 Then
-        '    d4 = "0" & Month(f2)
-        'Else
-        '    d4 = d
-        'End If
-
-        'f1 = d1 & "-" & d3 & "-" & Year(f1)
-        'f2 = d2 & "-" & d4 & "-" & Year(f2)
+        cn.abrirconexion()        
         dts = cn.consultar("dbo.SP_Reporte_Cabeza_Detalle", tipo, tipoReporte, Orden, suc, f1, f2)
         cn.cerrarconexion()
         Return dts
     End Function
+
+    Public Function sp_Reporte_Usuarios_Canal_Ripleymaticos(ByVal tipo As String, _
+                                        ByVal tipoReporte As Integer, _
+                                        ByVal Orden As Integer, _
+                                        ByVal suc As String, _
+                                        ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime) As DataSet
+        Dim dts As New DataSet
+        cn.abrirconexion()
+        dts = cn.consultar("dbo.SP_Reporte_Usuarios_Canal_Ripleymatico", tipo, tipoReporte, Orden, suc, f1, f2)
+        cn.cerrarconexion()
+        Return dts
+    End Function
+
+    Public Function sp_Reporte_Detalle_Usuarios_Canal_Ripleymaticos(ByVal f1 As DateTime, ByVal f2 As DateTime) As DataSet
+        Dim dts As New DataSet
+        cn.abrirconexion()
+        dts = cn.consultar("dbo.SP_RPT_DETALLE_USUARIOS_RIPLEYMATICO", f1, f2)
+        cn.cerrarconexion()
+        Return dts
+    End Function
+
     Public Function agregardetallereporte(ByVal tipo As Integer, ByVal idkio As String, _
                                       ByVal kio As String, ByRef rpta As Integer, _
                                       ByRef mensaje As String) As Integer
@@ -150,6 +139,21 @@ Public Class ClsReportes
         cn.cerrarconexion()
         Return dts
     End Function
+
+
+    Public Function sp_get_ConsultaAceptacionTC(ByVal tipo As String, _
+                                        ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime, _
+                                        ByVal canal As String, _
+                                        ByVal nroRegistros As Integer, _
+                                        ByVal pagina As Integer) As DataSet
+        Dim dts As New DataSet
+        cn.abrirconexion()
+        dts = cn.consultar("dbo.Usp_Get_ConsultaAceptacionTC", tipo, f1, f2, nroRegistros, pagina)
+        cn.cerrarconexion()
+        Return dts
+    End Function
+
 
     Public Function sp_get_ConsultaAceptacionIncremento(ByVal tipo As String, _
                                                         ByVal canal As String, _
@@ -711,6 +715,22 @@ Public Class ClsReportes
             Dim nro As New Integer
             cn.abrirconexion()
             nro = cn.contarRegistros("dbo.Usp_get_Count_ConsultaAceptacionIncremento", tipo, canal, f1, f2)
+            cn.cerrarconexion()
+
+            Return nro
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
+        Return 0
+    End Function
+
+    Public Function Usp_get_Count_ConsultaAceptacionTC(ByVal tipo As String, _
+                                        ByVal f1 As DateTime, _
+                                        ByVal f2 As DateTime) As Integer
+        Try
+            Dim nro As New Integer
+            cn.abrirconexion()
+            nro = cn.contarRegistros("dbo.Usp_get_Count_ConsultaAceptacionTC", tipo, f1, f2)
             cn.cerrarconexion()
 
             Return nro

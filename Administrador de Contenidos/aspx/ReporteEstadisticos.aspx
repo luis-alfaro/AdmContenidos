@@ -4,19 +4,18 @@
 
     <head>
         <script type="text/javascript" src="js/styleswitcher.js"></script>
-
         <link href="estilos/Estilos.css" rel="stylesheet" type="text/css" />   
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.16.custom.css"rel="stylesheet" />
 	    <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 	    <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(DocReady);
-    function DocReady()
-    {
-        $("input[data-entryType = 'Date']").datepicker();
-    }
-    </script>
-</head>
+        <script type="text/javascript">
+            $(document).ready(DocReady);
+            function DocReady()
+            {
+                $("input[data-entryType = 'Date']").datepicker();
+            }
+        </script>
+    </head>
 <body>
 
     <table style="width:100%;" bgcolor="#FFFFFF">

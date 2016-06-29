@@ -13,7 +13,7 @@
             .Gridlayout
             {
                 table-layout:inherit !important;
-                }
+            }
         </style>
     </head>
     <body>

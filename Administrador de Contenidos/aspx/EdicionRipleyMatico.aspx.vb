@@ -171,7 +171,7 @@ Partial Class aspx_EdicionRipleyMatico
                             size = arch.Length.ToString()
 
                             Select Case ext.ToLower()
-                                Case ".jpg"
+                                Case ".png"
                                     image = System.Drawing.Image.FromFile(rutaArchivo)
                                     width = image.Width.ToString()
                                     height = image.Height.ToString()
@@ -183,7 +183,19 @@ Partial Class aspx_EdicionRipleyMatico
                                         txthidden.Value = "Las dimensiones del archivo no pueden ser admitidas."
                                         ok = False
                                     End If
-                                Case ".png"
+                                Case ".jpeg"
+                                    image = System.Drawing.Image.FromFile(rutaArchivo)
+                                    width = image.Width.ToString()
+                                    height = image.Height.ToString()
+                                    image.Dispose()
+
+                                    If width = "910" And height = "555" Then
+                                        ok = True
+                                    Else
+                                        txthidden.Value = "Las dimensiones del archivo no pueden ser admitidas."
+                                        ok = False
+                                    End If
+                                Case ".jpg"
                                     image = System.Drawing.Image.FromFile(rutaArchivo)
                                     width = image.Width.ToString()
                                     height = image.Height.ToString()
