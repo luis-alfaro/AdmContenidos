@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="VB" MasterPageFile="~/MasterPage.master" AutoEventWireup="false" CodeFile="MantTiendas.aspx.vb" Inherits="aspx_MantTiendas" title="Untitled Page" %>
 
-<%@ Register assembly="ASTreeView" namespace="Geekees.Common.Controls" tagprefix="cc1" %>
+<%--<%@ Register assembly="ASTreeView" namespace="Geekees.Common.Controls" tagprefix="cc1" %>--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="CPHContenido" Runat="Server">
  

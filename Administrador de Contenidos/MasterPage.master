@@ -29,7 +29,7 @@
 
 <body topmargin="0" leftmargin="0" rightmargin="0" bottommargn="0" 
     marginwidth="0" marginheight="0" bgcolor="#FFFFFF" alink="#ffffff">
-    <FORM id="formMaster" name="frmMaster" method="post" encType="application/x-www-form-urlencoded" runat="server">
+    <form id="formMaster" name="frmMaster" method="post" encType="application/x-www-form-urlencoded" runat="server">
     <div>
        
         <table cellpadding="0" cellspacing="0" class="style1" 
@@ -108,9 +108,17 @@
                                             <asp:TreeNode ImageUrl="~/images/13.png" 
                                                 NavigateUrl="~/aspx/ReporteEstadisticos.aspx" Text="Reporte Estadístico" 
                                                 Value="Reporte Estadistico" SelectAction="None"></asp:TreeNode>
-                                                <asp:TreeNode ImageUrl="~/images/13.png" 
+                                            <asp:TreeNode ImageUrl="~/images/13.png" 
                                                 NavigateUrl="~/aspx/ReporteConsultasRipleymatico.aspx" Text="Reporte Consultas" 
                                                 Value="Reporte Consultas" SelectAction="None"></asp:TreeNode>
+                                                <%--INICIO RQ-1255--%>
+                                            <asp:TreeNode ImageUrl="~/images/13.png" 
+                                                NavigateUrl="~/aspx/ReporteUsuariosCanalRipleymático.aspx" Text="Reporte Usuarios Unicos" 
+                                                Value="Reporte Canal Ripleymático" SelectAction="None"></asp:TreeNode>
+                                            <asp:TreeNode ImageUrl="~/images/13.png" 
+                                                NavigateUrl="~/aspx/ReporteDetalleUsuariosRipleymatico.aspx" Text="Reporte Detalle Usuarios" 
+                                                Value="Reporte Detalle Usuarios" SelectAction="None"></asp:TreeNode>
+                                                 <%--FIN RQ-1255--%>
                                         </asp:TreeNode>
                                         <asp:TreeNode ImageUrl="~/images/19.png" Text="Estadísticas" 
                                             Value="Estadisticas" SelectAction="None">
@@ -132,6 +140,11 @@
                                             <asp:TreeNode ImageUrl="~/images/13.png" 
                                                 NavigateUrl="~/aspx/ReporteLPDP.aspx" Text="LPDP Aceptación" 
                                                 Value="Consulta LPDP" SelectAction="None"></asp:TreeNode>
+                                                <%--INICIO RQ-1255--%>
+                                            <asp:TreeNode ImageUrl="~/images/13.png" 
+                                                NavigateUrl="~/aspx/ReporteAceptacionPenalidadesTC.aspx" Text="Aceptación TC" 
+                                                Value="Aceptación TC" SelectAction="None"></asp:TreeNode>
+                                                <%--FIN RQ-1255--%>
                                         </asp:TreeNode>
                                         <asp:TreeNode ImageUrl="~/images/18.png" Text="Actualización" 
                                             Value="Actualizacion" SelectAction="None">
