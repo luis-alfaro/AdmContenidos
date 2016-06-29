@@ -28,6 +28,7 @@ Partial Class MasterPage
 
             If lista.Count > 0 Then
                 For Each entidad As AppAccess In lista
+                    '<INI RQ-590: Corregir bug consistente en que si de la base de datos se traen permisos de pantallas que no existen en el menú arroja error>
                     Dim oSelectAction As TreeNodeSelectAction = IIf(entidad.Estado, TreeNodeSelectAction.Select, TreeNodeSelectAction.None)
                     Dim oTreeNode As TreeNode = Nothing
 
@@ -39,6 +40,7 @@ Partial Class MasterPage
                         End If
                         oTreeNode.SelectAction = oSelectAction
                     End If
+                    '<FIN RQ-590>
                 Next
             End If
             'oDT = objAccesos.Get_AccesosByRoleID(lRoleID)

@@ -56,6 +56,7 @@ Public Class kioskos
         Return dts
     End Function
 
+    '<INI RQ-590: Agregar los parámetros PIN4_INTENTOS, PIN4_HORAS_BLOQUEO y PIN4_MENSAJE_BLOQUEO>
     Public Function grabarConfiguracionKiosko(ByVal ID As Integer, _
                         ByVal NOMBRE As String, _
                         ByVal SERVER As String, _
@@ -74,13 +75,16 @@ Public Class kioskos
                         ByVal PIN4_HORAS_BLOQUEO As Short, _
                         ByVal PIN4_MENSAJE_BLOQUEO As String, _
                         ByRef rpta As Integer, ByRef mensaje As String) As Integer
+        '<FIN RQ-590>
         Dim r As Integer = 0
         Try
             cn.abrirconexion()
+            '<INI RQ-590: Agregar los parámetros PIN4_INTENTOS, PIN4_HORAS_BLOQUEO y PIN4_MENSAJE_BLOQUEO>
             cn.ejecutar("dbo.Usp_grabar_ConfiguracionKiosko", True, rpta, mensaje, ID, NOMBRE, _
                         SERVER, SERVER_SIMULADOR, SERVER_PRINT, SERVER_COM, BIN1, LONGITUD_TARJETA_BIN1, _
                         POSINI_BIN1, LONGITUD_BIN_BIN1, BIN2, LONGITUD_TARJETA_BIN2, POSINI_BIN2, _
                         LONGITUD_BIN_BIN2, PIN4_INTENTOS, PIN4_HORAS_BLOQUEO, PIN4_MENSAJE_BLOQUEO, 0, "")
+            '<FIN RQ-590>
             cn.cerrarconexion()
             r = 1
         Catch ex As Exception

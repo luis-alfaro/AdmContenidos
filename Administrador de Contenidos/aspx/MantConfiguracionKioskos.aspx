@@ -178,7 +178,8 @@
 			    <td style="width: 50px;" >
                 </td>
 			</tr>
-			
+			                
+            <!--INI RQ-590-->
             <tr>
 			    <td style="height: 10px; width: 38px;" >&nbsp;</td>
 			    <td style="height: 10px; width: 620px;" ></td>
@@ -217,7 +218,8 @@
                 </td>
 			    <td style="width: 50px;" >
                 </td>
-			</tr>
+			</tr>                
+            <!--FIN RQ-590-->
 
 			<tr>
 			    <td style="height: 8px; width: 38px;">&nbsp;</td>
